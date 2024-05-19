@@ -4,11 +4,13 @@
  */
 package Ventanas;
 
+import java.awt.BorderLayout;
 import java.awt.Image;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
@@ -27,6 +29,9 @@ public class Principal extends javax.swing.JFrame {
         btnHorarios.setIcon(setIcono("/images/horarios.png",btnHorarios));
         btnReservas.setIcon(setIcono("/images/reservas.png",btnReservas));
         logo.setIcon(SetImageLabel("/images/logo.png",logo));
+        
+        
+        
     }
    
     
@@ -191,7 +196,16 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEdificiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEdificiosActionPerformed
-        // TODO add your handling code here:
+        JPanel edificios = Edificios.getPanelEdificios();
+        
+        
+        edificios.setSize(690, 490);
+        edificios.setLocation(0, 0);
+        jpContent.removeAll();
+        jpContent.add(edificios,BorderLayout.CENTER);
+        jpContent.revalidate();
+        jpContent.repaint();
+        
     }//GEN-LAST:event_btnEdificiosActionPerformed
 
     private void btnLaboratoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaboratoriosActionPerformed
