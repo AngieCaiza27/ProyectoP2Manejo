@@ -23,6 +23,7 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+        this.setLocationRelativeTo(this);
         btnEdificios.setIcon(setIcono("/images/edificios.png",btnEdificios));
         btnAulas.setIcon(setIcono("/images/aulas.png",btnAulas));
         btnLaboratorios.setIcon(setIcono("/images/laboratorio.png",btnLaboratorios));
@@ -30,6 +31,8 @@ public class Principal extends javax.swing.JFrame {
         btnReservas.setIcon(setIcono("/images/reservas.png",btnReservas));
         btnResponsables.setIcon(setIcono("/images/Responsable.png",btnResponsables));
         logo.setIcon(SetImageLabel("/images/logo.png",logo));
+        
+        
         
         
         
@@ -214,6 +217,8 @@ public class Principal extends javax.swing.JFrame {
         jpContent.add(edificios,BorderLayout.CENTER);
         jpContent.revalidate();
         jpContent.repaint();
+        
+        
         
     }//GEN-LAST:event_btnEdificiosActionPerformed
 
