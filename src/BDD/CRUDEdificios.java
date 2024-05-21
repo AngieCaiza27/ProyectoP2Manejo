@@ -70,7 +70,7 @@ public class CRUDEdificios {
         
         
         try{
-            String sql = "insert into Edificios (nombre_Edificio) values (?);";
+            String sql = "insert into edificios (nombreEdificio) values (?);";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
            
             this.ps.setString(1, getNombreEdificio());
@@ -88,7 +88,7 @@ public class CRUDEdificios {
     
     public void mostrarEdificios(JTable parametrosCompletosED ){
         try{
-            String sql = "select * from Edificios;";
+            String sql = "select * from edificios;";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
             
@@ -146,7 +146,7 @@ public class CRUDEdificios {
         setNombreEdificio(paraNombre.getText());
         
         try{
-            String sql = "update Edificios set Edificios.nombre_Edificio = ? WHERE Edificios.id_Edificio = ?;";
+            String sql = "update edificios set edificios.nombreEdificio = ? WHERE Edificios.idEdificio = ?;";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             
             
@@ -168,7 +168,7 @@ public class CRUDEdificios {
         
         setIdEdificio(Integer.parseInt(paraId.getText()));
         try{
-            String sql = "DELETE FROM  Edificios WHERE id_Edificio = ?";
+            String sql = "DELETE FROM  edificios WHERE idEdificio = ?";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.ps.setInt(1,getIdEdificio());
             this.ps.executeUpdate();
@@ -181,29 +181,7 @@ public class CRUDEdificios {
         }
     }
     
-    public void comprarProductosCarrito(int codigoProducto, int cantidad){
-        try{
-            String sql = "DELETE FROM CARRITO WHERE ID_PER_CAR= ? AND COD_PRO_CAR = ?";
-            this.ps = this.conexion.getConnection().prepareStatement(sql);
-            this.ps.setInt(2,codigoProducto);
-            this.ps.executeUpdate();
-        }catch(Exception e){
-            System.out.println(e);
-        }
-    }
     
-    public void alterarCantidadProductos(int codigoProducto, int cantidad, char operacion){
-        try{
-            String sql = "UPDATE PRODUCTOS SET UNI_DIS_PRO = UNI_DIS_PRO " + operacion + " ? " +
-                    "WHERE COD_PRO = ?";
-            this.ps = this.conexion.getConnection().prepareStatement(sql);
-            this.ps.setInt(1,cantidad);
-            this.ps.setInt(2,codigoProducto);
-            this.ps.executeUpdate();
-        }catch(Exception e){
-            System.out.println(e);
-        }
-    }
     
     
 }
