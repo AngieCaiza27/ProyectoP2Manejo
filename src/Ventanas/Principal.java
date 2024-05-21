@@ -38,21 +38,8 @@ public class Principal extends javax.swing.JFrame {
         logo.setIcon(SetImageLabel("/images/REServation.png",logo));
         
        
-        
-
-        
-        
-        
-        
-        
     }
     
-
-    
-    
-   
-    
-
 
     /**
      * This method is called from within the constructor to initialize the form.
