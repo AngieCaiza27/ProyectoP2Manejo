@@ -17,9 +17,8 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Jake
  */
-public class CRUDEAulas {
-    
-    int idEspacio;
+public class CRUDLaboratorios {
+     int idEspacio;
     String nombreEspacio; 
     
     
@@ -68,7 +67,7 @@ public class CRUDEAulas {
     private PreparedStatement ps;
     private ResultSet rs;
     
-    public CRUDEAulas(){
+    public CRUDLaboratorios(){
         this.conexion = new Conexion();
     }
     
@@ -95,7 +94,7 @@ public class CRUDEAulas {
     }
     public void mostrarEdificios(JTable parametrosCompletosED ){
         try{
-            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad,espacios.idEdificioPertenece,espacios.idTipoEspacioPertenece, edificios.nombreEdificio,tipoespacio.nombreTipoEspacio from espacios,edificios,tipoespacio where espacios.idEdificioPertenece=edificios.idEdificio and espacios.idTipoEspacioPertenece=tipoespacio.idTipoEspacio AND espacios.idTipoEspacioPertenece = 1";
+            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad,espacios.idEdificioPertenece,espacios.idTipoEspacioPertenece, edificios.nombreEdificio,tipoespacio.nombreTipoEspacio from espacios,edificios,tipoespacio where espacios.idEdificioPertenece=edificios.idEdificio and espacios.idTipoEspacioPertenece=tipoespacio.idTipoEspacio AND espacios.idTipoEspacioPertenece = 2";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
             
@@ -198,5 +197,4 @@ public class CRUDEAulas {
     
     
 }
-    
 
