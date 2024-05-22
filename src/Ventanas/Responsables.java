@@ -15,8 +15,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+import BDD.CRUDResponsables;
+import BDD.CRUDResponsables;
+import BDD.Conexion;
+import java.awt.Image;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+
 public class Responsables extends javax.swing.JPanel {
 
+    private  static JPanel instance = null;
+    
     private  static JPanel instance = null;
     
     public Responsables() {
