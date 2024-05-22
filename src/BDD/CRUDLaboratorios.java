@@ -94,7 +94,7 @@ public class CRUDLaboratorios {
     }
     public void mostrarLaboratorio(JTable parametrosCompletosED ){
         try{
-            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad,espacios.idEdificioPertenece,espacios.idTipoEspacioPertenece, edificios.nombreEdificio,tipoespacio.nombreTipoEspacio from espacios,edificios,tipoespacio where espacios.idEdificioPertenece=edificios.idEdificio and espacios.idTipoEspacioPertenece=tipoespacio.idTipoEspacio AND espacios.idTipoEspacioPertenece = 2";
+            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad,espacios.idEdificioPertenece,espacios.idTipoEspacioPertenece, edificios.nombreEdificio,tipoespacio.descripcionTipoEspacio from espacios,edificios,tipoespacio where espacios.idEdificioPertenece=edificios.idEdificio and espacios.idTipoEspacioPertenece=tipoespacio.idTipoEspacio AND espacios.idTipoEspacioPertenece = 2";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
             
@@ -102,11 +102,11 @@ public class CRUDLaboratorios {
             TableRowSorter<TableModel> OrdenarTabla = new TableRowSorter<TableModel>(modelo);
             parametrosCompletosED.setRowSorter(OrdenarTabla);
             
-            modelo.addColumn("IdEspacio");
-            modelo.addColumn("nombreEspacio");
-            modelo.addColumn("capacidad");
-            modelo.addColumn("nombreEdificio");
-            modelo.addColumn("nombreTipoEspacio");
+            modelo.addColumn("Id");
+            modelo.addColumn("Nombre");
+            modelo.addColumn("Capacidad");
+            modelo.addColumn("Edificio Ubicado");
+            modelo.addColumn("Descripción");
             
             parametrosCompletosED.setModel(modelo);
             
