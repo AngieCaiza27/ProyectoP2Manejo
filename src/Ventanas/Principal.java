@@ -131,6 +131,12 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        btnAulas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAulasActionPerformed(evt);
+            }
+        });
+
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel2.setText("Aulas");
 
@@ -177,7 +183,7 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnResponsables, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(btnResponsables, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAulas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnLaboratorios, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnHorarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -273,6 +279,20 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnLaboratoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaboratoriosActionPerformed
         // TODO add your handling code here:
+        cardLayout = new CardLayout();
+        jpContent.setLayout(cardLayout);
+
+        panelLaboratorios = new Laboratorios(); 
+        
+        JPanel laboratorios = Laboratorios.getPanelLaboratorios();
+         cardLayout.show(jpContent, "Laboratorios");
+        
+        laboratorios.setSize(1000, 800);
+        laboratorios.setLocation(0, 0);
+        jpContent.removeAll();
+        jpContent.add(laboratorios,BorderLayout.CENTER);
+        jpContent.revalidate();
+        jpContent.repaint();
     }//GEN-LAST:event_btnLaboratoriosActionPerformed
 
     private void btnHorariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHorariosActionPerformed
@@ -309,20 +329,18 @@ public class Principal extends javax.swing.JFrame {
         cardLayout = new CardLayout();
         jpContent.setLayout(cardLayout);
 
-        panelResponsables = new Responsables(); 
+        panelAulas = new Aulas(); 
         
-        JPanel responsables = Responsables.getPanelResponsables();
-         cardLayout.show(jpContent, "Responsables");
+        JPanel aulas = Aulas.getPanelAulas();
+         cardLayout.show(jpContent, "Aulas");
         
-        responsables.setSize(1000, 800);
-        responsables.setLocation(0, 0);
+        aulas.setSize(1000, 800);
+        aulas.setLocation(0, 0);
         jpContent.removeAll();
-        jpContent.add(responsables,BorderLayout.CENTER);
+        jpContent.add(aulas,BorderLayout.CENTER);
         jpContent.revalidate();
         jpContent.repaint();
-        
-        
-    }//GEN-LAST:event_btnResponsablesActionPerformed
+    }//GEN-LAST:event_btnAulasActionPerformed
 
     /**
      * @param args the command line arguments
