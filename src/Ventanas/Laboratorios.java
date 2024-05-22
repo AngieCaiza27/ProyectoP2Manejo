@@ -5,6 +5,7 @@
 package Ventanas;
 
 
+import BDD.CRUDEAulas;
 import BDD.CRUDLaboratorios;
 import javax.swing.JPanel;
 
@@ -27,7 +28,7 @@ public class Laboratorios extends javax.swing.JPanel {
          jtxtID.setEditable(false);
         
         CRUDLaboratorios objLaboratorios = new CRUDLaboratorios();
-        objLaboratorios.mostrarEdificios(jtblListaLaboratorios);
+        objLaboratorios.mostrarLaboratorio(jtblListaLaboratorios);
     }
     
     
@@ -93,6 +94,11 @@ public class Laboratorios extends javax.swing.JPanel {
         });
 
         jbtnModificar.setText("Modificar");
+        jbtnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnModificarActionPerformed(evt);
+            }
+        });
 
         jbtnEliminar.setText("Eliminar");
         jbtnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -178,6 +184,11 @@ public class Laboratorios extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jtblListaLaboratorios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtblListaLaboratoriosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtblListaLaboratorios);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -229,14 +240,30 @@ public class Laboratorios extends javax.swing.JPanel {
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
         // TODO add your handling code here:
+        CRUDLaboratorios objetoAulas = new CRUDLaboratorios();
+        objetoAulas.deleteLaboratorio(jtxtID);
+        objetoAulas.mostrarLaboratorio(jtblListaLaboratorios);
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         // TODO add your handling code here:
         CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
-        objetoLaboratorios.insertarEdificio(jtxtNombre);
-        objetoLaboratorios.mostrarEdificios(jtblListaLaboratorios);
+        objetoLaboratorios.insertarLaboratorio(jtxtNombre);
+        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios);
     }//GEN-LAST:event_jbtnGuardarActionPerformed
+
+    private void jbtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModificarActionPerformed
+        // TODO add your handling code here:
+        CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
+        objetoLaboratorios.updateLaboratorio(jtxtID, jtxtNombre);
+        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios);
+    }//GEN-LAST:event_jbtnModificarActionPerformed
+
+    private void jtblListaLaboratoriosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaLaboratoriosMouseClicked
+        // TODO add your handling code here:
+        CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
+        objetoLaboratorios.SelecionarLaboratorio(jtblListaLaboratorios, jtxtID, jtxtNombre);
+    }//GEN-LAST:event_jtblListaLaboratoriosMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

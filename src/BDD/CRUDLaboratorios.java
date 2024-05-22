@@ -71,13 +71,13 @@ public class CRUDLaboratorios {
         this.conexion = new Conexion();
     }
     
-    public void insertarEdificio(JTextField parametrosNombre ){
+    public void insertarLaboratorio(JTextField parametrosNombre ){
         
         setNombreEspacio(parametrosNombre.getText());
         
         
         try{
-            String sql = "insert into edificios (nombreEdificio) values (?);";
+            String sql = "insert into espacio (nombreEspacio) values (?);";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
            
             this.ps.setString(1, getNombreEspacio());
@@ -92,7 +92,7 @@ public class CRUDLaboratorios {
             JOptionPane.showMessageDialog(null, "No se guardaron los datos ERROR");
         }
     }
-    public void mostrarEdificios(JTable parametrosCompletosED ){
+    public void mostrarLaboratorio(JTable parametrosCompletosED ){
         try{
             String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad,espacios.idEdificioPertenece,espacios.idTipoEspacioPertenece, edificios.nombreEdificio,tipoespacio.nombreTipoEspacio from espacios,edificios,tipoespacio where espacios.idEdificioPertenece=edificios.idEdificio and espacios.idTipoEspacioPertenece=tipoespacio.idTipoEspacio AND espacios.idTipoEspacioPertenece = 2";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
@@ -133,7 +133,7 @@ public class CRUDLaboratorios {
     
     
     
-    public void SelecionarEdificios(JTable parametrosED , JTextField paraId, JTextField paraNombre ){
+    public void SelecionarLaboratorio(JTable parametrosED , JTextField paraId, JTextField paraNombre ){
         try{
             int fila = parametrosED.getSelectedRow();
             
@@ -152,13 +152,13 @@ public class CRUDLaboratorios {
         }
     }
     
-    public void updateEdificios(JTextField paraId,JTextField paraNombre ){
+    public void updateLaboratorio(JTextField paraId,JTextField paraNombre ){
         
         setIdEspacio(Integer.parseInt(paraId.getText()));
         setNombreEspacio(paraNombre.getText());
         
         try{
-            String sql = "update edificios set edificios.nombreEdificio = ? WHERE Edificios.idEdificio = ?;";
+            String sql = "update espacios set espacios.nombreEspacio = ? WHERE espacios.idEspacio = ?;";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             
             
@@ -176,11 +176,11 @@ public class CRUDLaboratorios {
         }
     }
     
-    public void deleteEdidicios(JTextField paraId){
+    public void deleteLaboratorio(JTextField paraId){
         
         setIdEspacio(Integer.parseInt(paraId.getText()));
         try{
-            String sql = "DELETE FROM  edificios WHERE idEdificio = ?";
+            String sql = "DELETE FROM  edificios WHERE idEspacio = ?";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.ps.setInt(1,getIdEspacio());
             this.ps.executeUpdate();
