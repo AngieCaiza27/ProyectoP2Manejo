@@ -106,8 +106,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jtxtNombre1" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jtxtNombre" alignment="1" max="32767" attributes="0"/>
-                      <Component id="jtxtNombre2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jtxtCapacidad" alignment="1" max="32767" attributes="0"/>
+                      <Component id="jtxtEdificio" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -116,7 +116,7 @@
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="jtxtNombre3" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jtxtTipo" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -137,15 +137,15 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jtxtNombre" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtxtCapacidad" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jtxtNombre2" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtxtEdificio" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jtxtNombre3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtxtTipo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="141" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jbtnGuardar" min="-2" max="-2" attributes="0"/>
@@ -187,7 +187,10 @@
             <Property name="text" type="java.lang.String" value="Nombre:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jtxtNombre">
+        <Component class="javax.swing.JTextField" name="jtxtCapacidad">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtxtCapacidadActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jbtnGuardar">
           <Properties>
@@ -246,14 +249,14 @@
             <Property name="text" type="java.lang.String" value="Edificio Ubicado"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jtxtNombre2">
+        <Component class="javax.swing.JTextField" name="jtxtEdificio">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Descripci&#xf3;n"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jtxtNombre3">
+        <Component class="javax.swing.JTextField" name="jtxtTipo">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>

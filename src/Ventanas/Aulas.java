@@ -31,7 +31,7 @@ public class Aulas extends javax.swing.JPanel {
          jtxtID.setEditable(false);
         
         CRUDEAulas objAulas = new CRUDEAulas();
-        objAulas.mostrarEdificios(jtblListaAulas);
+        objAulas.mostrarAulas(jtblListaAulas);
     }
     
     
@@ -58,7 +58,7 @@ public class Aulas extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jtxtID = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jtxtNombre = new javax.swing.JTextField();
+        jtxtCapacidad = new javax.swing.JTextField();
         jbtnGuardar = new javax.swing.JButton();
         jbtnModificar = new javax.swing.JButton();
         jbtnEliminar = new javax.swing.JButton();
@@ -68,9 +68,9 @@ public class Aulas extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jtxtNombre1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jtxtNombre2 = new javax.swing.JTextField();
+        jtxtEdificio = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jtxtNombre3 = new javax.swing.JTextField();
+        jtxtTipo = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -94,6 +94,12 @@ public class Aulas extends javax.swing.JPanel {
         });
 
         jLabel2.setText("Nombre:");
+
+        jtxtCapacidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtxtCapacidadActionPerformed(evt);
+            }
+        });
 
         jbtnGuardar.setText("Guardar");
         jbtnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -164,15 +170,15 @@ public class Aulas extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jtxtNombre1)
-                    .addComponent(jtxtNombre, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jtxtNombre2)
+                    .addComponent(jtxtCapacidad, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jtxtEdificio)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(jLabel7)
                             .addComponent(jLabel8))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jtxtNombre3))
+                    .addComponent(jtxtTipo))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -189,15 +195,15 @@ public class Aulas extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtxtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jtxtCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jtxtNombre2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jtxtEdificio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtxtNombre3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jtxtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jbtnGuardar)
@@ -309,33 +315,37 @@ public class Aulas extends javax.swing.JPanel {
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         // TODO add your handling code here
         CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.insertarEdificio(jtxtNombre);
-        objetoAulas.mostrarEdificios(jtblListaAulas);
+        objetoAulas.insertarAulas(jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
+        objetoAulas.mostrarAulas(jtblListaAulas);
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.deleteEdidicios(jtxtID);
-        objetoAulas.mostrarEdificios(jtblListaAulas);
+        objetoAulas.deleteEspacios(jtxtID);
+        objetoAulas.mostrarAulas(jtblListaAulas);
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
     private void jbtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModificarActionPerformed
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.updateEdificios(jtxtID, jtxtNombre);
-        objetoAulas.mostrarEdificios(jtblListaAulas);
+        objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
+      objetoAulas.mostrarAulas(jtblListaAulas);
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
     private void jtblListaAulasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaAulasMouseClicked
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.SelecionarEdificios(jtblListaAulas, jtxtID, jtxtNombre);
+         objetoAulas.SelecionarAulas(jtblListaAulas,jtxtID,jtxtNombre1,jtxtCapacidad,jtxtEdificio,jtxtTipo);
     }//GEN-LAST:event_jtblListaAulasMouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jtxtCapacidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtCapacidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtxtCapacidadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -358,10 +368,10 @@ public class Aulas extends javax.swing.JPanel {
     private javax.swing.JButton jbtnGuardar;
     private javax.swing.JButton jbtnModificar;
     private javax.swing.JTable jtblListaAulas;
+    private javax.swing.JTextField jtxtCapacidad;
+    private javax.swing.JTextField jtxtEdificio;
     private javax.swing.JTextField jtxtID;
-    private javax.swing.JTextField jtxtNombre;
     private javax.swing.JTextField jtxtNombre1;
-    private javax.swing.JTextField jtxtNombre2;
-    private javax.swing.JTextField jtxtNombre3;
+    private javax.swing.JTextField jtxtTipo;
     // End of variables declaration//GEN-END:variables
 }
