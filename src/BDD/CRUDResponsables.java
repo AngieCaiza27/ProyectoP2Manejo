@@ -1,11 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package BDD;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -13,30 +11,25 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-/**
- *
- * @author Jake
- */
-public class CRUDLaboratorios {
-     int idEspacio;
-    String nombreEspacio; 
+public class CRUDResponsables {
     
-    
-    
-    public int getIdEspacio() {
-        return idEspacio;
+    int idResponsable;
+    String nombreResponsable; 
+
+    public int getIdResponsable() {
+        return idResponsable;
     }
 
-    public void setIdEspacio(int idEspacio) {
-        this.idEspacio = idEspacio;
+    public void setIdResponsable(int idResponsable) {
+        this.idResponsable = idResponsable;
     }
 
-    public String getNombreEspacio() {
-        return nombreEspacio;
+    public String getNombreResponsable() {
+        return nombreResponsable;
     }
 
-    public void setNombreEspacio(String nombreEspacio) {
-        this.nombreEspacio = nombreEspacio;
+    public void setNombreResponsable(String nombreResponsable) {
+        this.nombreResponsable = nombreResponsable;
     }
 
     public Conexion getConexion() {
@@ -67,20 +60,20 @@ public class CRUDLaboratorios {
     private PreparedStatement ps;
     private ResultSet rs;
     
-    public CRUDLaboratorios(){
+    public CRUDResponsables(){
         this.conexion = new Conexion();
     }
     
-    public void insertarLaboratorio(JTextField parametrosNombre ){
+    public void insertarResponsable(JTextField parametrosNombre ){
         
-        setNombreEspacio(parametrosNombre.getText());
+        setNombreResponsable(parametrosNombre.getText());
         
         
         try{
-            String sql = "insert into espacio (nombreEspacio) values (?);";
+            String sql = "insert into Responsables (nombreResponsable) values (?);";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
            
-            this.ps.setString(1, getNombreEspacio());
+            this.ps.setString(1, getNombreResponsable());
             this.ps.executeUpdate();
             
             JOptionPane.showMessageDialog(null, "Se guardaron los datos");
@@ -92,9 +85,10 @@ public class CRUDLaboratorios {
             JOptionPane.showMessageDialog(null, "No se guardaron los datos ERROR");
         }
     }
-    public void mostrarLaboratorio(JTable parametrosCompletosED ){
+    
+    public void mostrarResponsables(JTable parametrosCompletosED ){
         try{
-            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad,espacios.idEdificioPertenece,espacios.idTipoEspacioPertenece, edificios.nombreEdificio,tipoespacio.descripcionTipoEspacio from espacios,edificios,tipoespacio where espacios.idEdificioPertenece=edificios.idEdificio and espacios.idTipoEspacioPertenece=tipoespacio.idTipoEspacio AND espacios.idTipoEspacioPertenece = 2";
+            String sql = "select * from responsables;";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
             
@@ -104,20 +98,14 @@ public class CRUDLaboratorios {
             
             modelo.addColumn("Id");
             modelo.addColumn("Nombre");
-            modelo.addColumn("Capacidad");
-            modelo.addColumn("Edificio Ubicado");
-            modelo.addColumn("Descripción");
             
             parametrosCompletosED.setModel(modelo);
             
             
             while(this.rs.next()){
-                String[] datos = new String[5];
+                String[] datos = new String[2];
                 datos[0] = String.valueOf(this.rs.getInt(1));
                 datos[1] = this.rs.getString(2);
-                datos[2] = this.rs.getString(3);
-                datos[3] = this.rs.getString(6);
-                datos[4] = this.rs.getString(7);
                 
                modelo.addRow(datos);
             }
@@ -133,7 +121,7 @@ public class CRUDLaboratorios {
     
     
     
-    public void SelecionarLaboratorio(JTable parametrosED , JTextField paraId, JTextField paraNombre ){
+    public void SelecionarResponsables(JTable parametrosED , JTextField paraId, JTextField paraNombre ){
         try{
             int fila = parametrosED.getSelectedRow();
             
@@ -152,19 +140,19 @@ public class CRUDLaboratorios {
         }
     }
     
-    public void updateLaboratorio(JTextField paraId,JTextField paraNombre ){
+    public void updateResponsables(JTextField paraId,JTextField paraNombre ){
         
-        setIdEspacio(Integer.parseInt(paraId.getText()));
-        setNombreEspacio(paraNombre.getText());
+        setIdResponsable(Integer.parseInt(paraId.getText()));
+        setNombreResponsable(paraNombre.getText());
         
         try{
-            String sql = "update espacios set espacios.nombreEspacio = ? WHERE espacios.idEspacio = ?;";
+            String sql = "update responsables set responsables.nombreResponsable = ? WHERE Responsables.idResponsable = ?;";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             
             
             
-            this.ps.setString(1,getNombreEspacio());
-            this.ps.setInt(2,getIdEspacio());
+            this.ps.setString(1,getNombreResponsable());
+            this.ps.setInt(2,getIdResponsable());
             this.ps.executeUpdate();
             
             JOptionPane.showMessageDialog(null, "Datos modificados");
@@ -176,13 +164,13 @@ public class CRUDLaboratorios {
         }
     }
     
-    public void deleteLaboratorio(JTextField paraId){
+    public void deleteEdidicios(JTextField paraId){
         
-        setIdEspacio(Integer.parseInt(paraId.getText()));
+        setIdResponsable(Integer.parseInt(paraId.getText()));
         try{
-            String sql = "DELETE FROM  espacios WHERE idEspacio = ?";
+            String sql = "DELETE FROM  responsables WHERE idResponsable = ?";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
-            this.ps.setInt(1,getIdEspacio());
+            this.ps.setInt(1,getIdResponsable());
             this.ps.executeUpdate();
             
             JOptionPane.showMessageDialog(null, "Datos eliminados");
@@ -197,4 +185,3 @@ public class CRUDLaboratorios {
     
     
 }
-
