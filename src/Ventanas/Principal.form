@@ -29,7 +29,7 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="btnResponsables" pref="47" max="32767" attributes="0"/>
+                  <Component id="btnResponsables" max="32767" attributes="0"/>
                   <Component id="btnAulas" max="32767" attributes="0"/>
                   <Component id="btnLaboratorios" alignment="1" max="32767" attributes="0"/>
                   <Component id="btnHorarios" alignment="0" max="32767" attributes="0"/>
@@ -226,6 +226,9 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="btnAulas">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAulasActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
