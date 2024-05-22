@@ -24,6 +24,7 @@ public class Principal extends javax.swing.JFrame {
     private JPanel panelEdificios;
     private JPanel panelAulas;
     private JPanel panelLaboratorios;
+    private JPanel panelResponsables;
 
     /**
      * Creates new form Principal
@@ -304,6 +305,23 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnResponsablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResponsablesActionPerformed
         // TODO add your handling code here:
+        cardLayout = new CardLayout();
+        jpContent.setLayout(cardLayout);
+
+        panelResponsables = new Responsables(); 
+        
+        JPanel responsables = Responsables.getPanelResponsables();
+         cardLayout.show(jpContent, "Responsables");
+        
+        responsables.setSize(1000, 800);
+        responsables.setLocation(0, 0);
+        jpContent.removeAll();
+        jpContent.add(responsables,BorderLayout.CENTER);
+        jpContent.revalidate();
+        jpContent.repaint();
+        
+        
+        
     }//GEN-LAST:event_btnResponsablesActionPerformed
 
     private void btnAulasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAulasActionPerformed
