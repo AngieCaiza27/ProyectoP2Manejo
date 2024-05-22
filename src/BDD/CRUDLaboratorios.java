@@ -180,7 +180,7 @@ public class CRUDLaboratorios {
         
         setIdEspacio(Integer.parseInt(paraId.getText()));
         try{
-            String sql = "DELETE FROM  edificios WHERE idEspacio = ?";
+            String sql = "DELETE FROM  espacios WHERE idEspacio = ?";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.ps.setInt(1,getIdEspacio());
             this.ps.executeUpdate();
