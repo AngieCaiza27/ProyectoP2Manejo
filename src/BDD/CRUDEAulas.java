@@ -126,9 +126,17 @@ public class CRUDEAulas {
             JOptionPane.showMessageDialog(null, "No se guardaron los datos ERROR");
         }
     }
-    public void mostrarAulas(JTable parametrosCompletosED ){
+    public void mostrarAulas(JTable parametrosCompletosED,String buscar ){
+        
+       
         try{
-            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio from espacios, edificios, tipoespacio where espacios.idEdificioPertenece = edificios.idEdificio and espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio AND (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3)";
+            String sql = "SELECT espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio " +
+             "FROM espacios " +
+             "JOIN edificios ON espacios.idEdificioPertenece = edificios.idEdificio " +
+             "JOIN tipoespacio ON espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio " +
+             "WHERE (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3) " +
+             "AND (espacios.nombreEspacio LIKE '%" + buscar + "%')";
+
 
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
@@ -165,6 +173,26 @@ public class CRUDEAulas {
             JOptionPane.showMessageDialog(null, "No se pudo mostrar los datos ERROR");
         }
     }
+    
+    /*public void buscarAulas(String buscar){
+        try{
+            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio from espacios, edificios, tipoespacio where espacios.idEdificioPertenece = edificios.idEdificio and espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio AND (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3 )where idEspacio LIKE '%"+buscar+"%', OR nombreEspacio LIKE '%"+buscar+"% ";
+
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.rs = this.ps.executeQuery();
+            
+            DefaultTableModel modelo = new DefaultTableModel();
+           
+            
+            
+            
+            
+        }catch(Exception e){
+            System.out.println(e);
+            
+            JOptionPane.showMessageDialog(null, "No se pudo mostrar los datos ERROR");
+        }
+    }*/
     
     
     
