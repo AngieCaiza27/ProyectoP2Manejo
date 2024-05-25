@@ -124,9 +124,15 @@ public class CRUDLaboratorios {
         }
     }
 
-    public void mostrarLaboratorio(JTable parametrosCompletosED) {
+    public void mostrarLaboratorio(JTable parametrosCompletosED,String buscar) {
         try {
-            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad,espacios.idEdificioPertenece,espacios.idTipoEspacioPertenece, edificios.nombreEdificio,tipoespacio.descripcionTipoEspacio from espacios,edificios,tipoespacio where espacios.idEdificioPertenece=edificios.idEdificio and espacios.idTipoEspacioPertenece=tipoespacio.idTipoEspacio AND espacios.idTipoEspacioPertenece = 2";
+             String sql = "SELECT espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio " +
+             "FROM espacios " +
+             "JOIN edificios ON espacios.idEdificioPertenece = edificios.idEdificio " +
+             "JOIN tipoespacio ON espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio " +
+             "WHERE (espacios.idTipoEspacioPertenece = 2) " +
+             "AND (espacios.nombreEspacio LIKE '%" + buscar + "%')";   
+             
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
 

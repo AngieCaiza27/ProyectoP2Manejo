@@ -9,6 +9,7 @@ import BDD.CRUDEAulas;
 import BDD.CRUDLaboratorios;
 import javax.swing.JPanel;
 import BDD.Conexion;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,7 +38,7 @@ public class Laboratorios extends javax.swing.JPanel {
          jtxtID.setEditable(false);
         
         CRUDLaboratorios objLaboratorios = new CRUDLaboratorios();
-        objLaboratorios.mostrarLaboratorio(jtblListaLaboratorios);
+        objLaboratorios.mostrarLaboratorio(jtblListaLaboratorios,busqueda.getText());
         limpiarCampos();
       
         
@@ -96,9 +97,9 @@ public class Laboratorios extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblListaLaboratorios = new javax.swing.JTable();
-        jtxtBuscar = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        busqueda = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(783, 544));
@@ -269,20 +270,28 @@ public class Laboratorios extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jtblListaLaboratorios);
 
-        jtxtBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtxtBuscarActionPerformed(evt);
-            }
-        });
-        jtxtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jtxtBuscarKeyReleased(evt);
-            }
-        });
-
         jLabel10.setText("Buscar :");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buscar2.png"))); // NOI18N
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buscar2.png"))); // NOI18N
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        busqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                busquedaActionPerformed(evt);
+            }
+        });
+        busqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                busquedaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                busquedaKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -296,9 +305,9 @@ public class Laboratorios extends javax.swing.JPanel {
                 .addGap(17, 17, 17)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtxtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -306,9 +315,9 @@ public class Laboratorios extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jtxtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel10))
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel10)
+                        .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(24, Short.MAX_VALUE))
@@ -349,23 +358,23 @@ public class Laboratorios extends javax.swing.JPanel {
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
         // TODO add your handling code here:
-        CRUDLaboratorios objetoAulas = new CRUDLaboratorios();
-        objetoAulas.deleteLaboratorio(jtxtID);
-        objetoAulas.mostrarLaboratorio(jtblListaLaboratorios);
+        CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
+        objetoLaboratorios.deleteLaboratorio(jtxtID);
+        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios,busqueda.getText());
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         // TODO add your handling code here:
         CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
         objetoLaboratorios.insertarLaboratorio(jtxtNombre,jtxtCapacidad,jtxtEdificio,jtxtDescripcion);
-        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios);
+        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios,busqueda.getText());
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
     private void jbtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModificarActionPerformed
         // TODO add your handling code here:
         CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
         objetoLaboratorios.updateLaboratorio(jtxtID, jtxtNombre,jtxtCapacidad,jtxtEdificio,jtxtDescripcion);
-        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios);
+        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios,busqueda.getText());
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
     private void jtblListaLaboratoriosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaLaboratoriosMouseClicked
@@ -383,18 +392,33 @@ public class Laboratorios extends javax.swing.JPanel {
         limpiarCampos();
     }//GEN-LAST:event_jbtnLimpiarActionPerformed
 
-    private void jtxtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtxtBuscarActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
+        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios,busqueda.getText());
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void jtxtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtBuscarKeyReleased
+    private void busquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaActionPerformed
         // TODO add your handling code here:
-     
-    }//GEN-LAST:event_jtxtBuscarKeyReleased
+    }//GEN-LAST:event_busquedaActionPerformed
 
+    private void busquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyReleased
+        CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
+        if (busqueda.getText().trim().equals("")) {
+        objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios,busqueda.getText());
+          } 
+    }//GEN-LAST:event_busquedaKeyReleased
+
+    private void busquedaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyPressed
+        CRUDLaboratorios objetoLaboratorios = new CRUDLaboratorios();
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+            objetoLaboratorios.mostrarLaboratorio(jtblListaLaboratorios,busqueda.getText());
+
+        }
+    }//GEN-LAST:event_busquedaKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JTextField busqueda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -413,7 +437,6 @@ public class Laboratorios extends javax.swing.JPanel {
     private javax.swing.JButton jbtnLimpiar;
     private javax.swing.JButton jbtnModificar;
     private javax.swing.JTable jtblListaLaboratorios;
-    private javax.swing.JTextField jtxtBuscar;
     private javax.swing.JTextField jtxtCapacidad;
     private javax.swing.JTextField jtxtDescripcion;
     private javax.swing.JTextField jtxtEdificio;
