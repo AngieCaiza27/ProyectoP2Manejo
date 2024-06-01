@@ -8,10 +8,12 @@ import BDD.CRUDResponsables;
 import BDD.CRUDResponsables;
 import BDD.Conexion;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -24,10 +26,8 @@ public class Responsables extends javax.swing.JPanel {
         txtId.setEditable(false);
         
         CRUDResponsables objResponsables = new CRUDResponsables();
-        objResponsables.mostrarResponsables(tbResponsables);
-        
-        
-        
+        objResponsables.mostrarResponsables(tbResponsables, busqueda.getText());
+        objResponsables.llenarComboBox(jCmbxTipoResponsable);
       //btnGuardar.setIcon(setIcono("/images/icguardar.png",btnGuardar));
         
         
@@ -60,7 +60,7 @@ public class Responsables extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        ButtonLimpiar = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txtApellido = new javax.swing.JTextField();
@@ -72,8 +72,8 @@ public class Responsables extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbResponsables = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        busqueda = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -125,10 +125,10 @@ public class Responsables extends javax.swing.JPanel {
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/deleico.png"))); // NOI18N
 
-        jButton1.setText("Limpiar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        ButtonLimpiar.setText("Limpiar");
+        ButtonLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                ButtonLimpiarActionPerformed(evt);
             }
         });
 
@@ -191,7 +191,7 @@ public class Responsables extends javax.swing.JPanel {
                                     .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
                                         .addComponent(jLabel9)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                        .addComponent(ButtonLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                         .addGap(10, 10, 10))
                     .addComponent(txtApellido)
                     .addComponent(txtCedula)
@@ -242,7 +242,7 @@ public class Responsables extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(ButtonLimpiar))
                 .addContainerGap())
         );
 
@@ -272,13 +272,26 @@ public class Responsables extends javax.swing.JPanel {
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel11.setText("Buscar:");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        busqueda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                busquedaActionPerformed(evt);
+            }
+        });
+        busqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                busquedaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                busquedaKeyReleased(evt);
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buscar2.png"))); // NOI18N
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buscar2.png"))); // NOI18N
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -292,9 +305,9 @@ public class Responsables extends javax.swing.JPanel {
                 .addGap(23, 23, 23)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -304,8 +317,8 @@ public class Responsables extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel11)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(14, Short.MAX_VALUE))
@@ -359,20 +372,35 @@ public class Responsables extends javax.swing.JPanel {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         CRUDResponsables objetoResponsable = new CRUDResponsables();
-        objetoResponsable.insertarResponsable(txtNombre);
-        objetoResponsable.mostrarResponsables(tbResponsables);
+        if (!"".equals(txtId.getText())) {
+            ButtonLimpiarActionPerformed(evt);
+        }else{    
+        if (objetoResponsable.datosVacios(txtNombre, txtApellido, txtCedula)==true) {
+        JOptionPane.showMessageDialog(null, "Por favor, ingresar todos los campos");    
+        } else {
+        objetoResponsable.insertarResponsable(txtNombre, txtApellido, txtCedula, jCmbxTipoResponsable);
+        objetoResponsable.mostrarResponsables(tbResponsables, busqueda.getText());
+        }
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        
         CRUDResponsables objetoResponsable = new CRUDResponsables();
         objetoResponsable.deleteEdidicios(txtId);
-        objetoResponsable.mostrarResponsables(tbResponsables);
+        objetoResponsable.mostrarResponsables(tbResponsables, busqueda.getText());
+        
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         CRUDResponsables objetoResponsable = new CRUDResponsables();
-        objetoResponsable.updateResponsables(txtId, txtNombre, txtApellido, jCmbxTipoResponsable);
-        objetoResponsable.mostrarResponsables(tbResponsables);
+        
+        if (objetoResponsable.datosVacios(txtNombre, txtApellido, txtCedula)==true) {
+            JOptionPane.showMessageDialog(null, "Por favor, ingresar todos los campos");
+        } else {
+        objetoResponsable.updateResponsables(txtId, txtNombre, txtApellido, txtCedula, jCmbxTipoResponsable);
+        objetoResponsable.mostrarResponsables(tbResponsables, busqueda.getText());
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void tbResponsablesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbResponsablesMouseClicked
@@ -380,13 +408,15 @@ public class Responsables extends javax.swing.JPanel {
         objResponsables.SelecionarResponsables(tbResponsables, txtId, txtNombre, txtApellido, txtCedula, jCmbxTipoResponsable);
     }//GEN-LAST:event_tbResponsablesMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void ButtonLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonLimpiarActionPerformed
         // TODO add your handling code here:
         
-        
-        
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+        txtId.setText(null);
+        txtNombre.setText(null);
+        txtApellido.setText(null);
+        txtCedula.setText(null);
+
+    }//GEN-LAST:event_ButtonLimpiarActionPerformed
 
     private void txtApellidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidoActionPerformed
         // TODO add your handling code here:
@@ -400,17 +430,39 @@ public class Responsables extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCmbxTipoResponsableActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void busquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_busquedaActionPerformed
+
+    private void busquedaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyPressed
+        // TODO add your handling code here:
+        CRUDResponsables objetoResponsable = new CRUDResponsables();
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+            objetoResponsable.mostrarResponsables(tbResponsables,busqueda.getText());
+            } 
+    }//GEN-LAST:event_busquedaKeyPressed
+
+    private void busquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyReleased
+        // TODO add your handling code here:
+        CRUDResponsables objetoResponsable = new CRUDResponsables();
+        if (busqueda.getText().trim().equals("")) {
+        objetoResponsable.mostrarResponsables(tbResponsables,busqueda.getText());
+          } 
+    }//GEN-LAST:event_busquedaKeyReleased
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        CRUDResponsables objetoResponsable = new CRUDResponsables();
+        objetoResponsable.mostrarResponsables(tbResponsables, busqueda.getText());
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ButtonLimpiar;
+    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JTextField busqueda;
     private javax.swing.JComboBox<String> jCmbxTipoResponsable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -426,7 +478,6 @@ public class Responsables extends javax.swing.JPanel {
     private javax.swing.JPanel jPDatosEdificios;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tbResponsables;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtCedula;

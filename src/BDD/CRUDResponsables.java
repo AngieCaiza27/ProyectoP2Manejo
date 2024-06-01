@@ -3,6 +3,7 @@ package BDD;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -17,7 +18,7 @@ public class CRUDResponsables {
     String nombreResponsable; 
     String apellidoResponsable;
     String cedulaResponsable;
-    String tipoResponsable;
+    int tipoResponsable;
 
     public String getApellidoResponsable() {
         return apellidoResponsable;
@@ -35,11 +36,11 @@ public class CRUDResponsables {
         this.cedulaResponsable = cedulaResponsable;
     }
 
-    public String getTipoResponsable() {
+    public int getTipoResponsable() {
         return tipoResponsable;
     }
 
-    public void setTipoResponsable(String tipoResponsable) {
+    public void setTipoResponsable(int tipoResponsable) {
         this.tipoResponsable = tipoResponsable;
     }
 
@@ -110,35 +111,46 @@ public class CRUDResponsables {
     public CRUDResponsables(){
         this.conexion = new Conexion();
     }
-    
-    public void insertarResponsable(JTextField parametrosNombre ){
-        
-        setNombreResponsable(parametrosNombre.getText());
-        
-        
-        try{
-            String sql = "insert into Responsables (nombre1Responsable, "
+
+    public void insertarResponsable(JTextField paraNombre, JTextField paraApellido,
+            JTextField paraCedula, JComboBox<String> paraTipo) {
+
+        setNombreResponsable(paraNombre.getText());
+        setApellidoResponsable(paraApellido.getText());
+        setCedulaResponsable(paraCedula.getText());
+
+        // Obtener el tipo seleccionado del JComboBox
+        String tipoSeleccionado = (String) paraTipo.getSelectedItem();
+
+        // Obtener el ID del tipo responsable correspondiente al tipo seleccionado
+        int tipoResponsableId = getIdTipoResponsable(tipoSeleccionado);
+        setTipoResponsable(tipoResponsableId);
+
+        try {
+            String sql = "INSERT INTO Responsables (nombre1Responsable, "
                     + "apellido1Responsable, cedulaResponsable, idTipoResponsablePer) "
-                    + "values (?);";
+                    + "VALUES (?,?,?,?);";
+
             this.ps = this.conexion.getConnection().prepareStatement(sql);
-           
+
             this.ps.setString(1, getNombreResponsable());
-            
+            this.ps.setString(2, getApellidoResponsable());
+            this.ps.setString(3, getCedulaResponsable());
+            this.ps.setInt(4, getTipoResponsable());
+
             this.ps.executeUpdate();
-            
+
             JOptionPane.showMessageDialog(null, "Se guardaron los datos");
-            
-                        
-        }catch(Exception e){
-            System.out.println(e);
-            
-            JOptionPane.showMessageDialog(null, "No se guardaron los datos ERROR");
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, "No se guardaron los datos. ERROR");
         }
     }
-    
-    public void mostrarResponsables(JTable parametrosCompletosED ){
-        try{
-            String sql = "select * from responsables;";
+
+    public void mostrarResponsables(JTable parametrosCompletosED, String buscar) {
+        try {
+            String sql = "select * from responsables WHERE nombre1Responsable LIKE '%" + buscar + "%'";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
             
@@ -189,13 +201,13 @@ public class CRUDResponsables {
     
     
     
-    public void SelecionarResponsables(JTable parametrosED , JTextField paraId, 
-            JTextField paraNombre, JTextField paraApellido, JTextField paraCedula,
-            JComboBox paraTipo){
-        try{
-            int fila = parametrosED.getSelectedRow();
-            
-            if (fila >= 0) {
+    public void SelecionarResponsables(JTable parametrosED, JTextField paraId, 
+        JTextField paraNombre, JTextField paraApellido, JTextField paraCedula,
+        JComboBox<String> paraTipo) {
+    try {
+        int fila = parametrosED.getSelectedRow();
+        
+        if (fila >= 0) {
             // Obteniendo los valores de la fila seleccionada y verificando si son null o vacíos
             Object idObj = parametrosED.getValueAt(fila, 0);
             paraId.setText(idObj != null ? idObj.toString() : "");
@@ -211,39 +223,51 @@ public class CRUDResponsables {
 
             Object tipoObj = parametrosED.getValueAt(fila, 4);
             if (tipoObj != null) {
-                paraTipo.setSelectedItem(tipoObj.toString());
+                String tipo = tipoObj.toString();
+                
+                // Busca el índice en el JComboBox y selecciona el item correspondiente
+                for (int i = 0; i < paraTipo.getItemCount(); i++) {
+                    if (paraTipo.getItemAt(i).equals(tipo)) {
+                        paraTipo.setSelectedIndex(i);
+                        break;
+                    }
+                }
             } else {
-                paraTipo.setSelectedItem("");
+                paraTipo.setSelectedIndex(-1); // Si el valor es null, selecciona ningún elemento
             }
+            
         } else {
             JOptionPane.showMessageDialog(null, "Fila no seleccionada");
         }
-                
-        }catch(Exception e){
-            System.out.println(e);
-            //JOptionPane.showMessageDialog(null, "Error de seleccion");
-        }
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+        JOptionPane.showMessageDialog(null, "Error de selección");
     }
+}
+
     
-    public void updateResponsables(JTextField paraId,JTextField paraNombre, JTextField paraApellido, JComboBox paraTipoResponsable){
+    public void updateResponsables(JTextField paraId,JTextField paraNombre, 
+            JTextField paraApellido, JTextField paraCedula, JComboBox paraTipo){
         
         setIdResponsable(Integer.parseInt(paraId.getText()));
         setNombreResponsable(paraNombre.getText());
         setApellidoResponsable(paraApellido.getText());
-        //setTipoResponsable(paraTipoResponsable.get);
+        setCedulaResponsable(paraCedula.getText());
+        String tipoSeleccionado = (String) paraTipo.getSelectedItem();
+        int tipoResponsableId = getIdTipoResponsable(tipoSeleccionado);
+        setTipoResponsable(tipoResponsableId);
         
         try {
     String sql = "UPDATE responsables SET nombre1Responsable = ?, "
-            + "apellido1Responsable = ?, idTipoResponsablePer = ? WHERE idResponsable = ?;";
+            + "apellido1Responsable = ?, cedulaResponsable = ?, "
+            + "idTipoResponsablePer = ? WHERE idResponsable = ?;";
     this.ps = this.conexion.getConnection().prepareStatement(sql);
 
     this.ps.setString(1, getNombreResponsable());
     this.ps.setString(2, getApellidoResponsable());
-    this.ps.setInt(3, 1); // Suponiendo que el tipo de responsable es siempre 1
-
-    // Necesitas agregar el ID del responsable en el cuarto parámetro
-    int idResponsable = getIdResponsable(); // Suponiendo que tienes un método para obtener el ID
-    this.ps.setInt(4, idResponsable);
+    this.ps.setString(3, getCedulaResponsable()); 
+    this.ps.setInt(4, getTipoResponsable()); 
+    this.ps.setInt(5, getIdResponsable());
 
     int rowsUpdated = this.ps.executeUpdate();
 
@@ -276,7 +300,50 @@ public class CRUDResponsables {
         }
     }
     
+    public int getIdTipoResponsable(String tipo) {
+    String sql = "SELECT idTipoResponsables FROM tiporesponsables WHERE nombreTipoResponsable = ?";
+    try (PreparedStatement ps = this.conexion.getConnection().prepareStatement(sql)) {
+        ps.setString(1, tipo);
+        try (ResultSet resultSet = ps.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt("idTipoResponsables");
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println(e.getMessage());
+    }
+    return -1;
+}
+
+
+    public void llenarComboBox(JComboBox<String> comboBox) {
+        
+        try {
+            String sql = "SELECT nombreTipoResponsable FROM tiporesponsables"; // Ajusta la consulta según tus necesidades
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            try (ResultSet resultSet = this.ps.executeQuery(sql)) {
+                while (resultSet.next()) {
+                    String item = resultSet.getString("nombreTipoResponsable");
+                    comboBox.addItem(item);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
     
-    
+    public boolean datosVacios(JTextField paraNombre, 
+            JTextField paraApellido, JTextField paraCedula) {
+        if (paraNombre.getText().equals("")) {
+            return true;
+        }
+        if (paraApellido.getText().equals("")) {
+            return true;
+        }
+        if (paraCedula.getText().equals("")) {
+            return true;
+        }
+        return false;
+    }
     
 }
