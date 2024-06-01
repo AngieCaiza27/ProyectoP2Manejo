@@ -71,12 +71,15 @@ public class Responsables extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbResponsables = new javax.swing.JTable();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
         jPDatosEdificios.setBackground(new java.awt.Color(153, 204, 255));
-        jPDatosEdificios.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Responsables", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPDatosEdificios.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Responsables", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 12))); // NOI18N
 
         jLabel1.setText("ID:");
 
@@ -148,6 +151,12 @@ public class Responsables extends javax.swing.JPanel {
         jLabel8.setText("Cédula :");
 
         jLabel10.setText("Tipo de Responsable :");
+
+        jCmbxTipoResponsable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCmbxTipoResponsableActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPDatosEdificiosLayout = new javax.swing.GroupLayout(jPDatosEdificios);
         jPDatosEdificios.setLayout(jPDatosEdificiosLayout);
@@ -237,8 +246,7 @@ public class Responsables extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista Responsables", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Yu Gothic", 1, 18), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista Responsables", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Yu Gothic", 1, 18))); // NOI18N
 
         tbResponsables.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         tbResponsables.setModel(new javax.swing.table.DefaultTableModel(
@@ -261,21 +269,46 @@ public class Responsables extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tbResponsables);
 
+        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel11.setText("Buscar:");
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buscar2.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel11)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logopequeñoRE.png"))); // NOI18N
@@ -284,27 +317,30 @@ public class Responsables extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 783, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(210, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(28, 28, 28)
                     .addComponent(jPDatosEdificios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(41, Short.MAX_VALUE)))
+                    .addGap(507, 507, 507)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(37, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 546, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(140, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(12, 12, 12)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                            .addGap(0, 0, Short.MAX_VALUE)
                             .addComponent(jLabel7)
                             .addGap(12, 12, 12))
                         .addGroup(layout.createSequentialGroup()
@@ -360,15 +396,25 @@ public class Responsables extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCedulaActionPerformed
 
+    private void jCmbxTipoResponsableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCmbxTipoResponsableActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCmbxTipoResponsableActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jCmbxTipoResponsable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -380,6 +426,7 @@ public class Responsables extends javax.swing.JPanel {
     private javax.swing.JPanel jPDatosEdificios;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tbResponsables;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtCedula;

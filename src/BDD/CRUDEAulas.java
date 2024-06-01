@@ -21,6 +21,34 @@ public class CRUDEAulas {
     
     int idEspacio;
     String nombreEspacio; 
+    int capacidadEspacio;
+    int edificioEspacio;
+    int tipoEspacio;
+
+    public int getCapacidadEspacio() {
+        return capacidadEspacio;
+    }
+
+    public void setCapacidadEspacio(int capacidadEspacio) {
+        this.capacidadEspacio = capacidadEspacio;
+    }
+
+    public int getEdificioEspacio() {
+        return edificioEspacio;
+    }
+
+    public void setEdificioEspacio( int edificioEspacio) {
+        this.edificioEspacio = edificioEspacio;
+    }
+
+    public int getTipoEspacio() {
+        return tipoEspacio;
+    }
+
+    public void setTipospacio(int tipoEspacio) {
+        this.tipoEspacio = tipoEspacio;
+    }
+    
     
     
     
@@ -72,16 +100,21 @@ public class CRUDEAulas {
         this.conexion = new Conexion();
     }
     
-    public void insertarEdificio(JTextField parametrosNombre ){
+    public void insertarAulas( JTextField paraNombre,JTextField paraCapacidad, JTextField paraEdificio, JTextField paraTipo ){
         
-        setNombreEspacio(parametrosNombre.getText());
-        
+        setNombreEspacio(paraNombre.getText());
+        setCapacidadEspacio(Integer.parseInt(paraCapacidad.getText()));
+        setEdificioEspacio(Integer.parseInt(paraEdificio.getText()));
+        setTipospacio(Integer.parseInt(paraTipo.getText()));
         
         try{
-            String sql = "insert into edificios (nombreEdificio) values (?);";
+            String sql = "INSERT INTO espacios (nombreEspacio, capacidad, idEdificioPertenece, idTipoEspacioPertenece) values (?, ?, ?, ?);";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
            
             this.ps.setString(1, getNombreEspacio());
+            this.ps.setInt(2, getCapacidadEspacio());
+            this.ps.setInt(3, getEdificioEspacio());
+            this.ps.setInt(4, getTipoEspacio());
             this.ps.executeUpdate();
             
             JOptionPane.showMessageDialog(null, "Se guardaron los datos");
@@ -93,9 +126,17 @@ public class CRUDEAulas {
             JOptionPane.showMessageDialog(null, "No se guardaron los datos ERROR");
         }
     }
-    public void mostrarEdificios(JTable parametrosCompletosED ){
+    public void mostrarAulas(JTable parametrosCompletosED,String buscar ){
+        
+       
         try{
-            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio from espacios, edificios, tipoespacio where espacios.idEdificioPertenece = edificios.idEdificio and espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio AND (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3)";
+            String sql = "SELECT espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio " +
+             "FROM espacios " +
+             "JOIN edificios ON espacios.idEdificioPertenece = edificios.idEdificio " +
+             "JOIN tipoespacio ON espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio " +
+             "WHERE (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3) " +
+             "AND (espacios.nombreEspacio LIKE '%" + buscar + "%')";
+
 
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
@@ -133,40 +174,76 @@ public class CRUDEAulas {
         }
     }
     
-    
-    
-    public void SelecionarEdificios(JTable parametrosED , JTextField paraId, JTextField paraNombre ){
+    /*public void buscarAulas(String buscar){
         try{
-            int fila = parametrosED.getSelectedRow();
+            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio from espacios, edificios, tipoespacio where espacios.idEdificioPertenece = edificios.idEdificio and espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio AND (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3 )where idEspacio LIKE '%"+buscar+"%', OR nombreEspacio LIKE '%"+buscar+"% ";
+
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.rs = this.ps.executeQuery();
             
-            if(fila >= 0 ){
-                paraId.setText((parametrosED.getValueAt(fila, 0).toString()));
-                paraNombre.setText((parametrosED.getValueAt(fila, 1).toString()));
-                
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Fila no seleccionada");
-            }
-                
+            DefaultTableModel modelo = new DefaultTableModel();
+           
+            
+            
+            
+            
         }catch(Exception e){
             System.out.println(e);
-            JOptionPane.showMessageDialog(null, "Error de seleccion");
+            
+            JOptionPane.showMessageDialog(null, "No se pudo mostrar los datos ERROR");
         }
-    }
+    }*/
     
-    public void updateEdificios(JTextField paraId,JTextField paraNombre ){
+    
+    
+    public void SelecionarAulas(JTable parametrosED, JTextField paraId, JTextField paraNombre,
+                             JTextField paraCapacidad, JTextField paraEdificio, JTextField paraTipo) {
+    try {
+        int fila = parametrosED.getSelectedRow();
+
+        if (fila >= 0) {
+            paraId.setText((parametrosED.getValueAt(fila, 0).toString()));
+            paraNombre.setText((parametrosED.getValueAt(fila, 1).toString()));
+            paraCapacidad.setText((parametrosED.getValueAt(fila, 2).toString()));
+            paraEdificio.setText((parametrosED.getValueAt(fila, 3).toString()));
+            
+
+            // Handle optional 'Descripcion' field (assuming it's the 5th column)
+            String descripcion = (String) parametrosED.getValueAt(fila, 4);
+            if (descripcion != null && !descripcion.isEmpty()) {
+                paraTipo.setText(descripcion);
+            } else {
+                // If 'Descripcion' is empty or null, set it to an empty string
+                paraTipo.setText("");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Fila no seleccionada");
+        }
+    } catch (Exception e) {
+        System.out.println(e);
+        JOptionPane.showMessageDialog(null, "Error de seleccion");
+    }
+}
+
+    
+    public void updateAulas(JTextField paraId,JTextField paraNombre,JTextField paraCapacidad, JTextField paraEdificio, JTextField paraTipo ){
         
         setIdEspacio(Integer.parseInt(paraId.getText()));
         setNombreEspacio(paraNombre.getText());
+        setCapacidadEspacio(Integer.parseInt(paraCapacidad.getText()));
+        setEdificioEspacio(Integer.parseInt(paraEdificio.getText()));
+        setTipospacio(Integer.parseInt(paraTipo.getText()));
         
         try{
-            String sql = "update edificios set edificios.nombreEdificio = ? WHERE Edificios.idEdificio = ?;";
+            String sql = "UPDATE espacios SET nombreEspacio = ?, capacidad = ? ,idEdificioPertenece = ? , idTipoEspacioPertenece= ? WHERE idEspacio = ?;";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             
-            
-            
-            this.ps.setString(1,getNombreEspacio());
-            this.ps.setInt(2,getIdEspacio());
+                       
+            this.ps.setString(1, getNombreEspacio());
+            this.ps.setInt(2, getCapacidadEspacio());
+            this.ps.setInt(3, getEdificioEspacio());
+            this.ps.setInt(4, getTipoEspacio());
+            this.ps.setInt(5, getIdEspacio());
             this.ps.executeUpdate();
             
             JOptionPane.showMessageDialog(null, "Datos modificados");
@@ -178,11 +255,11 @@ public class CRUDEAulas {
         }
     }
     
-    public void deleteEdidicios(JTextField paraId){
+    public void deleteEspacios(JTextField paraId){
         
         setIdEspacio(Integer.parseInt(paraId.getText()));
         try{
-            String sql = "DELETE FROM  edificios WHERE idEdificio = ?";
+            String sql = "DELETE FROM  espacios WHERE idEspacio = ?";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.ps.setInt(1,getIdEspacio());
             this.ps.executeUpdate();
