@@ -86,9 +86,10 @@ public class CRUDEdificios {
         }
     }
     
-    public void mostrarEdificios(JTable parametrosCompletosED ){
+    public void mostrarEdificios(JTable parametrosCompletosED,String buscar ){
         try{
-            String sql = "select * from edificios;";
+            String sql = "select * from edificios WHERE nombreEdificio LIKE '%" + buscar + "%'";
+            
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.rs = this.ps.executeQuery();
             
