@@ -117,10 +117,13 @@ public class CRUDResponsables {
         
         
         try{
-            String sql = "insert into Responsables (nombreResponsable) values (?);";
+            String sql = "insert into Responsables (nombre1Responsable, "
+                    + "apellido1Responsable, cedulaResponsable, idTipoResponsablePer) "
+                    + "values (?);";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
            
             this.ps.setString(1, getNombreResponsable());
+            
             this.ps.executeUpdate();
             
             JOptionPane.showMessageDialog(null, "Se guardaron los datos");
