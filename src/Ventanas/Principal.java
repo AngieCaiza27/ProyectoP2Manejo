@@ -25,6 +25,7 @@ public class Principal extends javax.swing.JFrame {
     private JPanel panelAulas;
     private JPanel panelLaboratorios;
     private JPanel panelResponsables;
+    private JPanel panelHorarios;
 
     /**
      * Creates new form Principal
@@ -296,7 +297,21 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLaboratoriosActionPerformed
 
     private void btnHorariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHorariosActionPerformed
-        // TODO add your handling code here:
+        cardLayout = new CardLayout();
+        jpContent.setLayout(cardLayout);
+
+        panelHorarios = new Horarios(); 
+        
+        JPanel horarios = Horarios.getPanelHorarios();
+        
+         cardLayout.show(jpContent, "Horarios");
+        
+        horarios.setSize(1000, 800);
+        horarios.setLocation(0, 0);
+        jpContent.removeAll();
+        jpContent.add(horarios,BorderLayout.CENTER);
+        jpContent.revalidate();
+        jpContent.repaint();
     }//GEN-LAST:event_btnHorariosActionPerformed
 
     private void btnReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservasActionPerformed
