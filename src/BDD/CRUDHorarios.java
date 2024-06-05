@@ -10,6 +10,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.sql.Connection;
+
 
 public class CRUDHorarios {
     
@@ -95,99 +97,135 @@ public class CRUDHorarios {
     public CRUDHorarios() {
         this.conexion = new Conexion();
     }
-
-    public List<CRUDHorarios> obtenerDatosDeLaBaseDeDatos(String buscar, String carrera) {
-    List<CRUDHorarios> horarios = new ArrayList<>();
-
-    try {
-        String sql = "SELECT horarios.Fecha_HoraInicio, " +
-                     "horarios.Fecha_HoraFin, " +
-                     "horarios.Disponible, " +
-                     "espacios.nombreEspacio, " +
-                     "materias.nombreMateria, " +
-                     "carreras.nombreCarrera, " +  
-                     "peridosacademicos.nombrePeriodo, " +
-                     "responsables.nombre1Responsable, " +
-                     "responsables.apellido1Responsable " +
-                     "FROM horarios " +
-                     "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
-                     "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
-                     "JOIN peridosacademicos ON horarios.idPeriodoPertenece = peridosacademicos.idPeriodo " +
-                     "JOIN responsables ON materias.idResponsablePertenece = responsables.idResponsable " +
-                     "JOIN carreras ON materias.idCarreraPertenece = carreras.idCarrera " +   
-                     "WHERE materias.nombreMateria LIKE ? AND carreras.nombreCarrera = ?"; 
-
-        this.ps = this.conexion.getConnection().prepareStatement(sql);
-        this.ps.setString(1, "%" + buscar + "%");
-        this.ps.setString(2, carrera);
-        this.rs = this.ps.executeQuery();
-
-        while (this.rs.next()) {
-            CRUDHorarios horario = new CRUDHorarios();
-            horario.setFecha_HoraInicio(this.rs.getTimestamp("Fecha_HoraInicio"));
-            horario.setFecha_HoraFin(this.rs.getTimestamp("Fecha_HoraFin"));
-            horario.setDisponible(this.rs.getBoolean("Disponible"));
-            horario.setNombreEspacio(this.rs.getString("nombreEspacio"));
-            horario.setNombreMateria(this.rs.getString("nombreMateria"));
-            horario.setNombrePeriodo(this.rs.getString("nombrePeriodo"));
-            horario.setNombre1Responsable(this.rs.getString("nombre1Responsable"));
-            horario.setApellido1Responsable(this.rs.getString("apellido1Responsable"));
-
-            horarios.add(horario);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos de la base de datos. ERROR: " + e.getMessage());
-    }
-
-    return horarios;
+    public Connection getConnection() {
+    return this.conexion.getConnection(); // Devuelve el objeto de conexión
 }
 
-public void mostrarHorariosEnTabla(JTable tablaHorarios, String buscar, String carrera) {
-    List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(buscar, carrera);
+    
+    
 
-    DefaultTableModel modelo = new DefaultTableModel();
-    TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
-    tablaHorarios.setRowSorter(ordenarTabla);
+    public List<CRUDHorarios> obtenerDatosDeLaBaseDeDatos(String buscar, String carrera, String nivel) {
+        List<CRUDHorarios> horarios = new ArrayList<>();
+        try {
+            String sql = "SELECT horarios.Fecha_HoraInicio, " +
+                         "horarios.Fecha_HoraFin, " +
+                         "horarios.Disponible, " +
+                         "espacios.nombreEspacio, " +
+                         "materias.nombreMateria, " +
+                         "carreras.nombreCarrera, " +  
+                         "peridosacademicos.nombrePeriodo, " +
+                         "responsables.nombre1Responsable, " +
+                         "responsables.apellido1Responsable " + 
+                         "FROM horarios " +
+                         "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
+                         "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
+                         "JOIN peridosacademicos ON horarios.idPeriodoPertenece = peridosacademicos.idPeriodo " +
+                         "JOIN responsables ON materias.idResponsablePertenece = responsables.idResponsable " +
+                         "JOIN carreras ON materias.idCarreraPertenece = carreras.idCarrera " +
+                         "JOIN niveles ON carreras.idNivelPertenece = niveles.idNivel " +
+                         "WHERE materias.nombreMateria LIKE ? " +
+                         "AND carreras.nombreCarrera = ? " +
+                         "AND CONCAT(niveles.nombreNivel, ' - ', niveles.paralelo) = ?";
+            
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.ps.setString(1, "%" + buscar + "%");
+            this.ps.setString(2, carrera);
+            this.ps.setString(3, nivel);
+            this.rs = this.ps.executeQuery();
 
-    // Columnas para los días de la semana
-    modelo.addColumn("Hora");
-    modelo.addColumn("Lunes");
-    modelo.addColumn("Martes");
-    modelo.addColumn("Miércoles");
-    modelo.addColumn("Jueves");
-    modelo.addColumn("Viernes");
-    modelo.addColumn("Sábado");
+            while (this.rs.next()) {
+                CRUDHorarios horario = new CRUDHorarios();
+                horario.setFecha_HoraInicio(this.rs.getTimestamp("Fecha_HoraInicio"));
+                horario.setFecha_HoraFin(this.rs.getTimestamp("Fecha_HoraFin"));
+                horario.setDisponible(this.rs.getBoolean("Disponible"));
+                horario.setNombreEspacio(this.rs.getString("nombreEspacio"));
+                horario.setNombreMateria(this.rs.getString("nombreMateria"));
+                horario.setNombrePeriodo(this.rs.getString("nombrePeriodo"));
+                horario.setNombre1Responsable(this.rs.getString("nombre1Responsable"));
+                horario.setApellido1Responsable(this.rs.getString("apellido1Responsable"));
 
-    // Agregar filas para cada hora del día (de 7 AM a 8 PM)
-    for (int hora = 7; hora <= 20; hora++) {
+                horarios.add(horario);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos de la base de datos. ERROR: " + e.getMessage());
+        
+        }
+
+        return horarios;
+    }
+
+    public void mostrarHorariosEnTabla(JTable tablaHorarios, String buscar, String carrera, String nivel) {
+        List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(buscar, carrera, nivel);
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
+         tablaHorarios.setRowSorter(ordenarTabla);
+
+        // Columnas para los días de la semana
+        modelo.addColumn("Hora");
+        modelo.addColumn("Lunes");
+        modelo.addColumn("Martes");
+        modelo.addColumn("Miércoles");
+        modelo.addColumn("Jueves");
+        modelo.addColumn("Viernes");
+        modelo.addColumn("Sábado");
+
+        // Agregar filas para cada hora del día (de 7 AM a 8 PM)
+        for (int hora = 7; hora <= 20; hora++) {
         Object[] fila = new Object[7]; 
         fila[0] = hora + ":00";
         modelo.addRow(fila);
-    }
-
-    for (CRUDHorarios horario : horarios) {
-        // Calcular la fila y la columna donde se debe insertar el horario
-        int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
-        int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
-        int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7;
-
-        String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
-        String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
-        String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
-
-        for (int i = filaInicio; i <= filaFin; i++) {
-            modelo.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
         }
+
+        for (CRUDHorarios horario : horarios) {
+            // Calcular la fila y la columna donde se debe insertar el horario
+            int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
+            int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
+            int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7;
+
+            String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
+            String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
+            String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
+
+            for (int i = filaInicio; i <= filaFin; i++) {
+                modelo.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
+            }
+        }
+
+        tablaHorarios.setModel(modelo);
     }
-
-    tablaHorarios.setModel(modelo);
-}
-
 
     private int calcularDiaDeLaSemana(Timestamp timestamp) {
         // Calcula el día de la semana (Lunes = 1, Martes = 2, ..., Sábado = 6)
         // Aquí asumimos que los días están almacenados en el objeto Timestamp
         return timestamp.toLocalDateTime().getDayOfWeek().getValue();
     }
+
+    public List<String> obtenerNivelesPorCarrera(String carrera) {
+        List<String> niveles = new ArrayList<>();
+        try {
+            String sql = "SELECT CONCAT(niveles.nombreNivel, ' - ', niveles.paralelo) AS nivelCompleto " +
+                         "FROM niveles " +
+                         "JOIN carreras ON niveles.idNivel = carreras.idNivelPertenece " +
+                         "WHERE carreras.nombreCarrera = ?";
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.ps.setString(1, carrera);
+            this.rs = this.ps.executeQuery();
+
+            while (this.rs.next()) {
+                niveles.add(this.rs.getString("nivelCompleto"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "No se pudieron obtener los niveles de la base de datos. ERROR: " + e.getMessage());
+        } 
+        return niveles;
+    }
+
+    
+
+    
+    
+    
 }
