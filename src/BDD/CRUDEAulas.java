@@ -6,6 +6,7 @@ package BDD;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -272,7 +273,29 @@ public class CRUDEAulas {
         }
     }
     
-    
+    public boolean espacioExistente(JTextField paraNombre) {
+    try {
+        String sql = "SELECT nombreEspacio FROM espacios WHERE nombreEspacio = ?";
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        
+        // Obtener la cédula del JTextField y establecerla en la consulta
+        String nombre = paraNombre.getText();
+        this.ps.setString(1, nombre);
+        
+        // Ejecutar la consulta
+        try (ResultSet resultSet = this.ps.executeQuery()) {
+            // Si hay resultados, la cédula existe
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+        return false; // En caso de error, retornar false (o puedes manejarlo de otra manera)
+    }
+}
     
     
 }

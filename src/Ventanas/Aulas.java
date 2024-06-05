@@ -351,8 +351,13 @@ public class Aulas extends javax.swing.JPanel {
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         // TODO add your handling code here
         CRUDEAulas objetoAulas = new CRUDEAulas();
+        if (objetoAulas.espacioExistente(jtxtNombre1)==false) {
         objetoAulas.insertarAulas(jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
-        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());    
+        } else {
+            JOptionPane.showMessageDialog(null, "El espacio ya se encuentra registrado");
+        }
+
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed

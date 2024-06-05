@@ -12,6 +12,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -315,8 +316,13 @@ public class Edificios extends javax.swing.JPanel {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         CRUDEdificios objetoEdificio = new CRUDEdificios();
+        if (objetoEdificio.edificioExistente(txtNombre)==false) {
         objetoEdificio.insertarEdificio(txtNombre);
-        objetoEdificio.mostrarEdificios(tbEdificios,busqueda.getText());
+        objetoEdificio.mostrarEdificios(tbEdificios,busqueda.getText());    
+        } else {
+                JOptionPane.showMessageDialog(null, "El edificio ya se encuentra registrado");
+            }
+        
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
