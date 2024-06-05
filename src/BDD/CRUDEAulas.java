@@ -134,7 +134,7 @@ public class CRUDEAulas {
              "FROM espacios " +
              "JOIN edificios ON espacios.idEdificioPertenece = edificios.idEdificio " +
              "JOIN tipoespacio ON espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio " +
-             "WHERE (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3) " +
+             "WHERE (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3 OR espacios.idTipoEspacioPertenece = 2) " +
              "AND (espacios.nombreEspacio LIKE '%" + buscar + "%')";
 
 
