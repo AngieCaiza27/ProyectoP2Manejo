@@ -374,12 +374,16 @@ public class Responsables extends javax.swing.JPanel {
         CRUDResponsables objetoResponsable = new CRUDResponsables();
         if (!"".equals(txtId.getText())) {
             ButtonLimpiarActionPerformed(evt);
-        }else{    
+        }else{
         if (objetoResponsable.datosVacios(txtNombre, txtApellido, txtCedula)==true) {
         JOptionPane.showMessageDialog(null, "Por favor, ingresar todos los campos");    
         } else {
+            if (objetoResponsable.cedulaExistente(txtCedula) == false) {
         objetoResponsable.insertarResponsable(txtNombre, txtApellido, txtCedula, jCmbxTipoResponsable);
         objetoResponsable.mostrarResponsables(tbResponsables, busqueda.getText());
+            } else {
+                JOptionPane.showMessageDialog(null, "El responsable ya se encuentra registrado");
+            }
         }
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
