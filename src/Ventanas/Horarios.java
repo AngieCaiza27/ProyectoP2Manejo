@@ -5,6 +5,9 @@
 package Ventanas;
 import java.sql.PreparedStatement;
 import BDD.CRUDHorarios;
+import BDD.CRUDHorarios.Espacio;
+import BDD.CRUDHorarios.Materia;
+import BDD.CRUDHorarios.Responsable;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.JPanel;
@@ -271,26 +274,26 @@ public class Horarios extends javax.swing.JPanel {
             // Verificar si hay suficientes partes para obtener la información necesaria
             if (parts.length >= 3) {
                 String nombreResponsable = parts[0];  // El primer elemento es el nombre del responsable
-                String materia = parts[1];            // El segundo elemento es el nombre de la materia
+                String Materia = parts[1];            // El segundo elemento es el nombre de la materia
                 String espacio = parts[2];            // El tercer elemento es el nombre del espacio
                 
                 // Abrir el diálogo de edición
-                EditDialog dialog = new EditDialog((Frame) SwingUtilities.getWindowAncestor(jTable1), nombreResponsable, materia, espacio);
+                EditDialog dialog = new EditDialog((Frame) SwingUtilities.getWindowAncestor(jTable1));
                 dialog.setVisible(true);
                 
                 // Verificar si se confirmó la edición
                 if (dialog.isConfirmed()) {
                     // Obtener los nuevos valores del diálogo
-                    String nuevoResponsable = dialog.getResponsable();
-                    String nuevaMateria = dialog.getMateria();
-                    String nuevoEspacio = dialog.getEspacio();
+                    Responsable nuevoResponsable = dialog.getResponsable();
+                    Materia nuevaMateria = dialog.getMateria();
+                    Espacio nuevoEspacio = dialog.getEspacio();
                     
                     // Actualizar la celda con los nuevos valores
-                    String newValue = nuevoResponsable + "\n" + nuevaMateria + "\n" + nuevoEspacio;
+                    String newValue = nuevoResponsable.getNombre() + "\n" + nuevaMateria.getNombre() + "\n" + nuevoEspacio.getNombre();
                     jTable1.setValueAt(newValue, row, col);
                     
                     // Actualizar los datos en la base de datos
-                    actualizarBaseDeDatos(jTable1, row, col, nuevoResponsable, nuevaMateria, nuevoEspacio);
+                    actualizarBaseDeDatos(jTable1, row, col, nuevoResponsable.getId(), nuevaMateria.getId(), nuevoEspacio.getId());
                 }
             }
         }
@@ -313,31 +316,64 @@ private void cargarNiveles(String carrera) {
         System.out.println("No se encontraron niveles para la carrera: " + carrera);
     }
 }
-private void actualizarBaseDeDatos(JTable jTable1, int row, int col, String responsable, String materia, String espacio) {
+private void actualizarBaseDeDatos(JTable jTable1, int row, int col, int responsable, int materia, int espacio) {
     // Asumiendo que los nombres de las columnas son los días
     String dia = jTable1.getColumnName(col); 
+    
+    int numDia =0;
+    switch(dia) {
+        case "Lunes": 
+            numDia=2;
+            break;
+        case "Martes": 
+            numDia=3;
+            break;
+        case "Miércoles": 
+            numDia=4;
+            break;    
+        case "Jueves": 
+            numDia=5;
+            break;
+        case "Viernes": 
+            numDia=6;
+            break;
+        case "Sábado": 
+            numDia=7;
+            break;
+          
+    }
     // Asumiendo que la primera columna es la hora
     String hora = jTable1.getValueAt(row, 0).toString(); 
+    String[] parts = hora.split(":");
+    int hours = 0;
+    
+    hours++;
+    String horaFin = String.format("%02d:%02d", hours, 0);
+    
+    
 
     // Crear la consulta SQL para actualizar los datos en la base de datos
     String sql = "UPDATE horarios " +
              "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
              "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
-             "SET materias.IdResponsable = ?, horarios.IdMateriaPertenece = ?, espacios.Espacio = ? " +
-             "WHERE horarios.Fecha_HoraInicio = ? AND horarios.Fecha_HoraFin = ?";
+             "SET materias.IdResponsablePertenece = ?, horarios.IdMateriaPertenece = ?, espacios.idEspacio = ?, " +
+             "horarios.Fecha_HoraInicio = CONCAT(DATE(Fecha_HoraInicio), ' ', ?), " +
+             "horarios.Fecha_HoraFin = CONCAT(DATE(Fecha_HoraFin), ' ', ?) " +
+             "WHERE DAYOFWEEK(Fecha_HoraInicio) = ?;";
 
     
     try (PreparedStatement ps = crudHorarios.getConnection().prepareStatement(sql)) {
-        ps.setString(1, responsable); // Usamos la variable responsable en lugar de profesor
-        ps.setString(2, materia); // Usamos la variable materia
-        ps.setString(3, espacio);
-         ps.setString(4, dia + " " + hora); // Concatenamos el día con la hora
-        ps.setString(5, dia + " " + hora); // Concatenamos el día con la hora
+        ps.setInt(1, responsable); // Usamos la variable responsable en lugar de profesor
+        ps.setInt(2, materia); // Usamos la variable materia
+        ps.setInt(3, espacio);
+        ps.setString(4, hora+":00"); // Concatenamos el día con la hora
+        ps.setString(5, horaFin + ":00"); // Concatenamos la hora de fin, asumiendo que termina al final del minuto
+        ps.setInt(6, numDia); // Día de la semana
         
         // Ejecutar la consulta
-        ps.executeUpdate();
+         ps.executeUpdate();
+     
         
-        // Mostrar mensaje de éxito
         JOptionPane.showMessageDialog(null, "Datos actualizados en la base de datos correctamente.");
         
     } catch (Exception e) {

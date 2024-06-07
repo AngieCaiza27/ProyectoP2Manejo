@@ -11,6 +11,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.sql.Connection;
+import java.sql.SQLException;
+import javax.swing.JComboBox;
 
 
 public class CRUDHorarios {
@@ -173,8 +175,9 @@ public class CRUDHorarios {
 
         // Agregar filas para cada hora del día (de 7 AM a 8 PM)
         for (int hora = 7; hora <= 20; hora++) {
-        Object[] fila = new Object[7]; 
-        fila[0] = hora + ":00";
+        Object[] fila = new Object[7];
+        String ceroInicial=hora<=9 ? "0":"";
+        fila[0] = ceroInicial+hora + ":00";
         modelo.addRow(fila);
         }
 
@@ -222,8 +225,144 @@ public class CRUDHorarios {
         } 
         return niveles;
     }
-
     
+   
+
+       
+    public class Espacio {
+    private int id;
+    private String nombre;
+
+    public Espacio(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public String toString() {
+        return nombre; // Esto es lo que se mostrará en el JComboBox
+    }
+}
+
+public void llenarComboBoxEspacios(JComboBox<CRUDHorarios.Espacio> comboBox) {
+    try {
+        String sql = "SELECT idEspacio, nombreEspacio FROM espacios"; // Ajusta la consulta según tus necesidades
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        try (ResultSet resultSet = this.ps.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("idEspacio");
+                String nombre = resultSet.getString("nombreEspacio");
+                Espacio espacio = new Espacio(id, nombre);
+                comboBox.addItem(espacio);
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+}
+public class Materia {
+    private int id;
+    private String nombre;
+
+    public Materia(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public String toString() {
+        return nombre; // Esto es lo que se mostrará en el JComboBox
+    }
+}
+
+ public void llenarComboBoxMaterias(JComboBox<CRUDHorarios.Materia> comboBox) {
+    try {
+        String sql = "SELECT idMateria,nombreMateria FROM materias"; // Ajusta la consulta según tus necesidades
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        try (ResultSet resultSet = this.ps.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("idMateria");
+                String nombre = resultSet.getString("nombreMateria");
+                Materia materia = new Materia(id, nombre);
+                comboBox.addItem(materia);
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+}
+ 
+ public class Responsable {
+    private int id;
+    private String nombre;
+
+    public Responsable(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public String toString() {
+        return nombre; // Esto es lo que se mostrará en el JComboBox
+    }
+}
+
+ public void llenarComboBoxResponsables(JComboBox<CRUDHorarios.Responsable> comboBox) {
+    try {
+        String sql = "SELECT idResponsable,CONCAT(nombre1Responsable,' ', apellido1Responsable) AS nombreResponsable FROM responsables;"; // Ajusta la consulta según tus necesidades
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        try (ResultSet resultSet = this.ps.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("idResponsable");
+                String nombreResponsable = resultSet.getString("nombreResponsable");
+                Responsable responsable = new Responsable(id, nombreResponsable);
+                comboBox.addItem(responsable);
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+}
+ 
+ 
+
+public void deleteHorario(int idHorario) {
+    try {
+        String sql = "DELETE FROM horarios WHERE idHorario = ?";
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        this.ps.setInt(1, idHorario);
+        this.ps.executeUpdate();
+
+        JOptionPane.showMessageDialog(null, "Datos eliminados");
+    } catch (Exception e) {
+        System.out.println(e);
+        JOptionPane.showMessageDialog(null, "No se han eliminado los datos");
+    }
+}
 
     
     

@@ -1,24 +1,33 @@
 package Ventanas;
 
+import BDD.CRUDHorarios;
+import BDD.CRUDHorarios.Espacio;
+import BDD.CRUDHorarios.Materia;
+import BDD.CRUDHorarios.Responsable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import BDD.CRUDResponsables;
 
 public class EditDialog extends JDialog {
-    private JTextField responsableField;
-    private JTextField materiaField;
-    private JTextField espacioField;
+    private JComboBox<CRUDHorarios.Responsable> responsableBox;
+    private JComboBox<CRUDHorarios.Materia> materiaBox;
+    private JComboBox<CRUDHorarios.Espacio> espacioBox;
     private JButton okButton;
     private JButton cancelButton;
+    private JButton eliminarButton;
     private boolean confirmed = false;
 
-    public EditDialog(Frame parent, String nombreResponsable, String materia, String espacio) {
+    private CRUDHorarios horarios;
+
+    public EditDialog(Frame parent) {
         super(parent, "Editar Horario", true);
-        initComponents(nombreResponsable, materia, espacio);
+        horarios = new CRUDHorarios();
+        initComponents();
     }
 
-    private void initComponents(String nombreResponsable, String materia, String espacio) {
+    private void initComponents() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -29,10 +38,11 @@ public class EditDialog extends JDialog {
         constraints.gridwidth = 1;
         panel.add(responsableLabel, constraints);
 
-        responsableField = new JTextField(nombreResponsable);
+        responsableBox = new JComboBox<CRUDHorarios.Responsable>();
+        horarios.llenarComboBoxResponsables(responsableBox);
         constraints.gridx = 1;
         constraints.gridwidth = 2;
-        panel.add(responsableField, constraints);
+        panel.add(responsableBox, constraints);
 
         JLabel materiaLabel = new JLabel("Materia: ");
         constraints.gridx = 0;
@@ -40,10 +50,11 @@ public class EditDialog extends JDialog {
         constraints.gridwidth = 1;
         panel.add(materiaLabel, constraints);
 
-        materiaField = new JTextField(materia);
+        materiaBox = new JComboBox<CRUDHorarios.Materia>();
+        horarios.llenarComboBoxMaterias(materiaBox);
         constraints.gridx = 1;
         constraints.gridwidth = 2;
-        panel.add(materiaField, constraints);
+        panel.add(materiaBox, constraints);
 
         JLabel espacioLabel = new JLabel("Espacio: ");
         constraints.gridx = 0;
@@ -51,16 +62,27 @@ public class EditDialog extends JDialog {
         constraints.gridwidth = 1;
         panel.add(espacioLabel, constraints);
 
-        espacioField = new JTextField(espacio);
+        espacioBox = new JComboBox<CRUDHorarios.Espacio>();
+        horarios.llenarComboBoxEspacios(espacioBox);
         constraints.gridx = 1;
         constraints.gridwidth = 2;
-        panel.add(espacioField, constraints);
+        panel.add(espacioBox, constraints);
 
         okButton = new JButton("Aceptar");
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 confirmed = true;
                 dispose();
+            }
+        });
+        eliminarButton = new JButton("Eliminar");
+        eliminarButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int response = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres eliminar este registro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+                if (response == JOptionPane.YES_OPTION) {
+//                    horarios.deleteHorario(idResponsable);
+                    dispose();
+                }
             }
         });
 
@@ -71,6 +93,8 @@ public class EditDialog extends JDialog {
                 dispose();
             }
         });
+        
+        
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(okButton);
@@ -86,15 +110,15 @@ public class EditDialog extends JDialog {
         return confirmed;
     }
 
-    public String getResponsable() {
-        return responsableField.getText().trim();
+    public Responsable getResponsable() {
+        return (Responsable) responsableBox.getSelectedItem();
     }
 
-    public String getMateria() {
-        return materiaField.getText().trim();
+    public Materia getMateria() {
+        return (Materia) materiaBox.getSelectedItem();
     }
 
-    public String getEspacio() {
-        return espacioField.getText().trim();
+    public Espacio getEspacio() {
+        return (Espacio) espacioBox.getSelectedItem();
     }
 }
