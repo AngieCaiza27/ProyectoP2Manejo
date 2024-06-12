@@ -20,9 +20,19 @@ public class CRUDReservas {
     private String nombrePeriodo;
     private String nombre1Responsable;
     private String apellido1Responsable;
+    private String motivoReserva;
 
     // Getters y setters...
 
+    public String getMotivoReserva() {
+        return motivoReserva;
+    }
+
+    public void setMotivoReserva(String motivoReserva) {
+        this.motivoReserva = motivoReserva;
+    }
+
+    
     public Timestamp getFechaHoraInicio() {
         return Fecha_HoraInicio;
     }
@@ -99,58 +109,93 @@ public class CRUDReservas {
         return this.conexion.getConnection(); // Devuelve el objeto de conexión
     }
 
-    public List<CRUDReservas> obtenerDatosDeLaBaseDeDatos(String buscar, String carrera, String nivel) {
-        List<CRUDReservas> horarios = new ArrayList<>();
-        try {
-            String sql = "SELECT horarios.Fecha_HoraInicio, " +
-                         "horarios.Fecha_HoraFin, " +
-                         "horarios.Disponible, " +
-                         "espacios.nombreEspacio, " +
-                         "materias.nombreMateria, " +
-                         "carreras.nombreCarrera, " +  
-                         "peridosacademicos.nombrePeriodo, " +
-                         "responsables.nombre1Responsable, " +
-                         "responsables.apellido1Responsable " + 
-                         "FROM horarios " +
-                         "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
-                         "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
-                         "JOIN peridosacademicos ON horarios.idPeriodoPertenece = peridosacademicos.idPeriodo " +
-                         "JOIN responsables ON materias.idResponsablePertenece = responsables.idResponsable " +
-                         "JOIN carreras ON materias.idCarreraPertenece = carreras.idCarrera " +
-                         "JOIN niveles ON carreras.idNivelPertenece = niveles.idNivel " +
-                         "WHERE materias.nombreMateria LIKE ? " +
-                         "AND carreras.nombreCarrera = ? " +
-                         "AND CONCAT(niveles.nombreNivel, ' - ', niveles.paralelo) = ?";
-            
-            this.ps = this.conexion.getConnection().prepareStatement(sql);
-            this.ps.setString(1, "%" + buscar + "%");
-            this.ps.setString(2, carrera);
-            this.ps.setString(3, nivel);
-            this.rs = this.ps.executeQuery();
+    public List<CRUDReservas> obtenerReservasDeLaBaseDeDatos(String buscar, String carrera, String nivel) {
+    List<CRUDReservas> reservas = new ArrayList<>();
+    try {
+        String sql = "SELECT reservas.Fecha_HoraInicio, " +
+                     "reservas.Fecha_HoraFin, " +
+                     "reservas.MotivoReserva, " +
+                     "espacios.nombreEspacio, " +
+                     "materias.nombreMateria, " +
+                     "carreras.nombreCarrera, " +  
+                     "peridosacademicos.nombrePeriodo, " +
+                     "responsables.nombre1Responsable, " +
+                     "responsables.apellido1Responsable " + 
+                     "FROM reservas " +
+                     "JOIN horarios ON reservas.idHorarioReserva = horarios.idHorario " +
+                     "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
+                     "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
+                     "JOIN peridosacademicos ON horarios.idPeriodoPertenece = peridosacademicos.idPeriodo " +
+                     "JOIN responsables ON reservas.idResponsableReserva = responsables.idResponsable " +
+                     "JOIN carreras ON materias.idCarreraPertenece = carreras.idCarrera " +
+                     "JOIN niveles ON carreras.idNivelPertenece = niveles.idNivel " +
+                     "WHERE materias.nombreMateria LIKE ? " +
+                     "AND carreras.nombreCarrera = ? " +
+                     "AND CONCAT(niveles.nombreNivel, ' - ', niveles.paralelo) = ?";
+        
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        this.ps.setString(1, "%" + buscar + "%");
+        this.ps.setString(2, carrera);
+        this.ps.setString(3, nivel);
+        this.rs = this.ps.executeQuery();
 
-            while (this.rs.next()) {
-                CRUDReservas horario = new CRUDReservas();
-                horario.setFecha_HoraInicio(this.rs.getTimestamp("Fecha_HoraInicio"));
-                horario.setFecha_HoraFin(this.rs.getTimestamp("Fecha_HoraFin"));
-                horario.setDisponible(this.rs.getBoolean("Disponible"));
-                horario.setNombreEspacio(this.rs.getString("nombreEspacio"));
-                horario.setNombreMateria(this.rs.getString("nombreMateria"));
-                horario.setNombrePeriodo(this.rs.getString("nombrePeriodo"));
-                horario.setNombre1Responsable(this.rs.getString("nombre1Responsable"));
-                horario.setApellido1Responsable(this.rs.getString("apellido1Responsable"));
+        while (this.rs.next()) {
+            CRUDReservas reserva = new CRUDReservas();
+            reserva.setFecha_HoraInicio(this.rs.getTimestamp("Fecha_HoraInicio"));
+            reserva.setFecha_HoraFin(this.rs.getTimestamp("Fecha_HoraFin"));
+            reserva.setMotivoReserva(this.rs.getString("MotivoReserva"));
+            reserva.setNombreEspacio(this.rs.getString("nombreEspacio"));
+            reserva.setNombreMateria(this.rs.getString("nombreMateria"));
+            reserva.setNombrePeriodo(this.rs.getString("nombrePeriodo"));
+            reserva.setNombre1Responsable(this.rs.getString("nombre1Responsable"));
+            reserva.setApellido1Responsable(this.rs.getString("apellido1Responsable"));
 
-                horarios.add(horario);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos de la base de datos. ERROR: " + e.getMessage());
+            reservas.add(reserva);
         }
-
-        return horarios;
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos de la base de datos. ERROR: " + e.getMessage());
     }
 
+    return reservas;
+}
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public List<CRUDReservas> obtenerReservasDeLaBaseDeDatos(String responsable, boolean disponible) {
+    List<CRUDReservas> horarios = new ArrayList<>();
+    try {
+        String sql = "SELECT horarios.Fecha_HoraInicio, horarios.Fecha_HoraFin, horarios.Disponible, responsables.nombre1Responsable, responsables.apellido1Responsable " +
+                     "FROM horarios " +
+                     "JOIN responsables ON horarios.idResponsableImparte = responsables.idResponsable " +
+                     "WHERE responsables.nombre1Responsable LIKE ? " +
+                     "AND horarios.Disponible = ? ";
+
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        this.ps.setString(1, "%" + responsable + "%");
+        this.ps.setBoolean(2, disponible);
+        this.rs = this.ps.executeQuery();
+
+        while (this.rs.next()) {
+            CRUDReservas horario = new CRUDReservas();
+            horario.setFecha_HoraInicio(this.rs.getTimestamp("Fecha_HoraInicio"));
+            horario.setFecha_HoraFin(this.rs.getTimestamp("Fecha_HoraFin"));
+            horario.setDisponible(this.rs.getBoolean("Disponible"));
+            horario.setNombre1Responsable(this.rs.getString("nombre1Responsable"));
+            horario.setApellido1Responsable(this.rs.getString("apellido1Responsable"));
+
+            horarios.add(horario);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos de la base de datos. ERROR: " + e.getMessage());
+    }
+
+    return horarios;
+}
+
+
     public void mostrarReservasEnTabla(JTable tablaHorarios, String buscar, String carrera, String nivel) {
-        List<CRUDReservas> horarios = obtenerDatosDeLaBaseDeDatos(buscar, carrera, nivel);
+        List<CRUDReservas> horarios = obtenerReservasDeLaBaseDeDatos(buscar, carrera, nivel);
 
         DefaultTableModel modelo = new DefaultTableModel();
         TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
