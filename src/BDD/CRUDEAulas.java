@@ -7,6 +7,7 @@ package BDD;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -296,6 +297,38 @@ public class CRUDEAulas {
         return false; // En caso de error, retornar false (o puedes manejarlo de otra manera)
     }
 }
+    
+    public void llenarComboBoxEdificios(JComboBox<String> comboBox) {
+        
+        try {
+            String sql = "SELECT nombreTipoResponsable FROM tiporesponsables"; // Ajusta la consulta según tus necesidades
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            try (ResultSet resultSet = this.ps.executeQuery(sql)) {
+                while (resultSet.next()) {
+                    String item = resultSet.getString("nombreTipoResponsable");
+                    comboBox.addItem(item);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+    
+    public void llenarComboBoxTipos(JComboBox<String> comboBox) {
+        
+        try {
+            String sql = "SELECT nombreTipoResponsable FROM tiporesponsables"; // Ajusta la consulta según tus necesidades
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            try (ResultSet resultSet = this.ps.executeQuery(sql)) {
+                while (resultSet.next()) {
+                    String item = resultSet.getString("nombreTipoResponsable");
+                    comboBox.addItem(item);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
     
     
 }

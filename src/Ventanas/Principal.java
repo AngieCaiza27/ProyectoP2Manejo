@@ -22,7 +22,7 @@ public class Principal extends javax.swing.JFrame {
     
     private CardLayout cardLayout;
     private JPanel panelEdificios;
-    private JPanel panelAulas;
+    private JPanel panelReservas;
     private JPanel panelLaboratorios;
     private JPanel panelResponsables;
     private JPanel panelHorarios;
@@ -273,6 +273,21 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservasActionPerformed
         // TODO add your handling code here:
+        cardLayout = new CardLayout();
+        jpContent.setLayout(cardLayout);
+
+        panelReservas = new Reserva(); 
+        
+        JPanel reservas = Reserva.getPanelReservas();
+         cardLayout.show(jpContent, "Reservas");
+        
+        reservas.setSize(1000, 800);
+        reservas.setLocation(0, 0);
+        jpContent.removeAll();
+        jpContent.add(reservas,BorderLayout.CENTER);
+        jpContent.revalidate();
+        jpContent.repaint();
+        
     }//GEN-LAST:event_btnReservasActionPerformed
 
     private void btnResponsablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResponsablesActionPerformed
@@ -301,7 +316,7 @@ public class Principal extends javax.swing.JFrame {
         cardLayout = new CardLayout();
         jpContent.setLayout(cardLayout);
 
-        panelAulas = new Aulas(); 
+        panelReservas = new Aulas(); 
         
         JPanel aulas = Aulas.getPanelAulas();
          cardLayout.show(jpContent, "Aulas");

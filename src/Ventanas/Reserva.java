@@ -4,7 +4,7 @@
  */
 package Ventanas;
 import java.sql.PreparedStatement;
-import BDD.CRUDHorarios;
+import BDD.CRUDReservas;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.JPanel;
@@ -18,14 +18,14 @@ import java.sql.Connection;
  *
  * @author Hola
  */
-public class Horarios extends javax.swing.JPanel {
+public class Reserva extends javax.swing.JPanel {
 
     private  static JPanel instance = null;
-    private CRUDHorarios crudHorarios;
+    private CRUDReservas crudReservas;
     
-    public Horarios() {
+    public Reserva() {
         initComponents();
-        crudHorarios = new CRUDHorarios();
+        crudReservas = new CRUDReservas();
         actualizarTabla("", (String) jComboCarreras.getSelectedItem(), (String) jComboNiveles.getSelectedItem());
         btnBuscar.addActionListener(e -> actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(), (String) jComboNiveles.getSelectedItem()));
         jComboCarreras.addActionListener(e -> {
@@ -38,9 +38,9 @@ public class Horarios extends javax.swing.JPanel {
         
     }
     
-    public static JPanel getPanelHorarios (){
+    public static JPanel getPanelReservas (){
         if (instance == null){
-            instance = new Horarios();
+            instance = new Reserva();
         }
         
         return instance;
@@ -188,15 +188,15 @@ public class Horarios extends javax.swing.JPanel {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jComboCarreras, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(78, 78, 78)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboNiveles, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(84, 84, 84)
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
@@ -213,14 +213,15 @@ public class Horarios extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jComboCarreras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(jLabel5)
-                        .addComponent(jComboNiveles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboCarreras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jComboNiveles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -303,11 +304,11 @@ public class Horarios extends javax.swing.JPanel {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void actualizarTabla(String buscar,String carrera,String nivel) {
-       crudHorarios.mostrarHorariosEnTabla(jTable1, buscar, carrera,nivel); // Llama al método para mostrar los horarios en la tabla.
+       crudReservas.mostrarReservasEnTabla(jTable1, buscar, carrera,nivel); // Llama al método para mostrar los horarios en la tabla.
     }
 
 private void cargarNiveles(String carrera) {
-    List<String> niveles = crudHorarios.obtenerNivelesPorCarrera(carrera);
+    List<String> niveles = crudReservas.obtenerNivelesPorCarrera(carrera);
     if (niveles != null) {
         jComboNiveles.removeAllItems();
         for (String nivel : niveles) {
@@ -331,7 +332,7 @@ private void actualizarBaseDeDatos(JTable jTable1, int row, int col, String resp
              "WHERE horarios.Fecha_HoraInicio = ? AND horarios.Fecha_HoraFin = ?";
 
     
-    try (PreparedStatement ps = crudHorarios.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement ps = crudReservas.getConnection().prepareStatement(sql)) {
         ps.setString(1, responsable); // Usamos la variable responsable en lugar de profesor
         ps.setString(2, materia); // Usamos la variable materia
         ps.setString(3, espacio);
