@@ -4,13 +4,10 @@ import java.sql.*;
 
 public class Conexion {
     
-    private Connection connection;
+    private static Connection connection;
     
-    public Conexion(){
-        this.connect();
-    }
-    
-    private void connect(){
+  
+    private static void connect(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
          
@@ -21,7 +18,10 @@ public class Conexion {
         }
     }
     
-    public Connection getConnection(){
-        return this.connection;
+    public static Connection getConnection(){
+        if (connection == null){
+            connect();
+        }
+        return connection;
     }
 }

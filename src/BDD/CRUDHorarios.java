@@ -92,15 +92,13 @@ public class CRUDHorarios {
         this.apellido1Responsable = apellido1Responsable;
     }
 
-    private Conexion conexion;
+
     private PreparedStatement ps;
     private ResultSet rs;
 
-    public CRUDHorarios() {
-        this.conexion = new Conexion();
-    }
+
     public Connection getConnection() {
-    return this.conexion.getConnection(); // Devuelve el objeto de conexión
+    return Conexion.getConnection(); // Devuelve el objeto de conexión
 }
 
     
@@ -129,7 +127,7 @@ public class CRUDHorarios {
                          "AND carreras.nombreCarrera = ? " +
                          "AND CONCAT(niveles.nombreNivel, ' - ', niveles.paralelo) = ?";
             
-            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.ps = getConnection().prepareStatement(sql);
             this.ps.setString(1, "%" + buscar + "%");
             this.ps.setString(2, carrera);
             this.ps.setString(3, nivel);
@@ -212,7 +210,7 @@ public class CRUDHorarios {
                          "FROM niveles " +
                          "JOIN carreras ON niveles.idNivel = carreras.idNivelPertenece " +
                          "WHERE carreras.nombreCarrera = ?";
-            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.ps = getConnection().prepareStatement(sql);
             this.ps.setString(1, carrera);
             this.rs = this.ps.executeQuery();
 
@@ -255,7 +253,7 @@ public class CRUDHorarios {
 public void llenarComboBoxEspacios(JComboBox<CRUDHorarios.Espacio> comboBox) {
     try {
         String sql = "SELECT idEspacio, nombreEspacio FROM espacios"; // Ajusta la consulta según tus necesidades
-        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        this.ps = getConnection().prepareStatement(sql);
         try (ResultSet resultSet = this.ps.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("idEspacio");
@@ -294,7 +292,7 @@ public class Materia {
  public void llenarComboBoxMaterias(JComboBox<CRUDHorarios.Materia> comboBox) {
     try {
         String sql = "SELECT idMateria,nombreMateria FROM materias"; // Ajusta la consulta según tus necesidades
-        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        this.ps = getConnection().prepareStatement(sql);
         try (ResultSet resultSet = this.ps.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("idMateria");
@@ -334,7 +332,7 @@ public class Materia {
  public void llenarComboBoxResponsables(JComboBox<CRUDHorarios.Responsable> comboBox) {
     try {
         String sql = "SELECT idResponsable,CONCAT(nombre1Responsable,' ', apellido1Responsable) AS nombreResponsable FROM responsables;"; // Ajusta la consulta según tus necesidades
-        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        this.ps = getConnection().prepareStatement(sql);
         try (ResultSet resultSet = this.ps.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("idResponsable");
@@ -353,7 +351,7 @@ public class Materia {
 public void deleteHorario(int idHorario) {
     try {
         String sql = "DELETE FROM horarios WHERE idHorario = ?";
-        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        this.ps = getConnection().prepareStatement(sql);
         this.ps.setInt(1, idHorario);
         this.ps.executeUpdate();
 
