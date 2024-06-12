@@ -272,22 +272,20 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHorariosActionPerformed
 
     private void btnReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservasActionPerformed
-        // TODO add your handling code here:
-        cardLayout = new CardLayout();
-        jpContent.setLayout(cardLayout);
+        
+       cardLayout = new CardLayout();
+    jpContent.setLayout(cardLayout);
 
-        panelReservas = new Reserva(); 
-        
-        JPanel reservas = Reserva.getPanelReservas();
-         cardLayout.show(jpContent, "Reservas");
-        
-        reservas.setSize(1000, 800);
-        reservas.setLocation(0, 0);
-        jpContent.removeAll();
-        jpContent.add(reservas,BorderLayout.CENTER);
-        jpContent.revalidate();
-        jpContent.repaint();
-        
+    ReservaEspacioPanel panelReserva = new ReservaEspacioPanel(); // Crear instancia del panel de reserva
+
+    cardLayout.show(jpContent, "ReservaEspacio"); // Mostrar el panel de reserva
+
+    jpContent.removeAll(); // Eliminar cualquier componente previamente agregado
+    jpContent.add(panelReserva, BorderLayout.CENTER); // Agregar el panel de reserva al contenedor
+    jpContent.revalidate(); // Validar el contenedor
+    jpContent.repaint(); // Repintar el contenedor
+    
+    
     }//GEN-LAST:event_btnReservasActionPerformed
 
     private void btnResponsablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResponsablesActionPerformed
