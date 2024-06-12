@@ -328,6 +328,7 @@ public class Materia {
         return nombre; // Esto es lo que se mostrará en el JComboBox
     }
 }
+ 
 
  public void llenarComboBoxResponsables(JComboBox<CRUDHorarios.Responsable> comboBox) {
     try {
@@ -346,11 +347,40 @@ public class Materia {
     }
 }
  
+ public class Carreras{
+    private int id;
+    private int nivel;
+    private String nombre;
+
+    public Carreras(int id,int nivel, String nombre) {
+        this.id = id;
+        this.nivel= nivel; 
+        this.nombre = nombre;
+    }
+
+    public int getId() {
+        return id;
+    }
+    
+    public int getNivel(){
+        return nivel;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public String toString() {
+        return nombre; // Esto es lo que se mostrará en el JComboBox
+    }
+}
+ 
  
 
 public void deleteHorario(int idHorario) {
     try {
-        String sql = "DELETE FROM horarios WHERE idHorario = ?";
+        String sql = "DELETE FROM ";
         this.ps = getConnection().prepareStatement(sql);
         this.ps.setInt(1, idHorario);
         this.ps.executeUpdate();

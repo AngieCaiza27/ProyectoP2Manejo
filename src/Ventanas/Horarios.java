@@ -13,6 +13,8 @@ import java.awt.*;
 import javax.swing.JPanel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.sql.Connection;
 
@@ -304,16 +306,17 @@ public class Horarios extends javax.swing.JPanel {
                 // Verificar si se confirmó la edición
                 if (dialog.isConfirmed()) {
                     // Obtener los nuevos valores del diálogo
-                    Responsable nuevoResponsable = dialog.getResponsable();
+
                     Materia nuevaMateria = dialog.getMateria();
                     Espacio nuevoEspacio = dialog.getEspacio();
                     
                     // Actualizar la celda con los nuevos valores
-                    String newValue = nuevoResponsable.getNombre() + "\n" + nuevaMateria.getNombre() + "\n" + nuevoEspacio.getNombre();
+                    String newValue =  nuevaMateria.getNombre() + "\n" + nuevoEspacio.getNombre();
                     jTable1.setValueAt(newValue, row, col);
                     
+                    
                     // Actualizar los datos en la base de datos
-                    actualizarBaseDeDatos(jTable1, row, col, nuevoResponsable.getId(), nuevaMateria.getId(), nuevoEspacio.getId());
+                    actualizarBaseDeDatos(jTable1, row, col, nuevaMateria.getId(), nuevoEspacio.getId());
                 }
             }
         }
@@ -336,7 +339,7 @@ private void cargarNiveles(String carrera) {
         System.out.println("No se encontraron niveles para la carrera: " + carrera);
     }
 }
-private void actualizarBaseDeDatos(JTable jTable1, int row, int col, int responsable, int materia, int espacio) {
+private void actualizarBaseDeDatos(JTable jTable1, int row, int col,  int materia, int espacio) {
     // Asumiendo que los nombres de las columnas son los días
     String dia = jTable1.getColumnName(col); 
     
@@ -373,7 +376,7 @@ private void actualizarBaseDeDatos(JTable jTable1, int row, int col, int respons
     
 
     // Crear la consulta SQL para actualizar los datos en la base de datos
-    String sql = "UPDATE horarios " +
+    String sql = " UPDATE horarios " +
              "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
              "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
              "SET materias.IdResponsablePertenece = ?, horarios.IdMateriaPertenece = ?, espacios.idEspacio = ?, " +
@@ -383,12 +386,12 @@ private void actualizarBaseDeDatos(JTable jTable1, int row, int col, int respons
 
     
     try (PreparedStatement ps = crudHorarios.getConnection().prepareStatement(sql)) {
-        ps.setInt(1, responsable); // Usamos la variable responsable en lugar de profesor
-        ps.setInt(2, materia); // Usamos la variable materia
-        ps.setInt(3, espacio);
-        ps.setString(4, hora+":00"); // Concatenamos el día con la hora
-        ps.setString(5, horaFin + ":00"); // Concatenamos la hora de fin, asumiendo que termina al final del minuto
-        ps.setInt(6, numDia); // Día de la semana
+         // Usamos la variable responsable en lugar de profesor
+        ps.setInt(1, materia); // Usamos la variable materia
+        ps.setInt(2, espacio);
+        ps.setString(3, hora+":00"); // Concatenamos el día con la hora
+        ps.setString(4, horaFin + ":00"); // Concatenamos la hora de fin, asumiendo que termina al final del minuto
+        ps.setInt(5, numDia); // Día de la semana
         
         // Ejecutar la consulta
          ps.executeUpdate();
