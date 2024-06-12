@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package Ventanas;
 import java.sql.PreparedStatement;
 import BDD.CRUDReservas;
@@ -47,9 +43,7 @@ public class Reserva extends javax.swing.JPanel {
                      
         
     }
-
     
-     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
