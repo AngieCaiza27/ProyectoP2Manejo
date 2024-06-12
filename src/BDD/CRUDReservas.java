@@ -5,13 +5,10 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.*;
 import java.sql.Connection;
-
 
 public class CRUDReservas {
     
@@ -97,12 +94,10 @@ public class CRUDReservas {
     public CRUDReservas() {
         this.conexion = new Conexion();
     }
+    
     public Connection getConnection() {
-    return this.conexion.getConnection(); // Devuelve el objeto de conexión
-}
-
-    
-    
+        return this.conexion.getConnection(); // Devuelve el objeto de conexión
+    }
 
     public List<CRUDReservas> obtenerDatosDeLaBaseDeDatos(String buscar, String carrera, String nivel) {
         List<CRUDReservas> horarios = new ArrayList<>();
@@ -149,7 +144,6 @@ public class CRUDReservas {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos de la base de datos. ERROR: " + e.getMessage());
-        
         }
 
         return horarios;
@@ -160,7 +154,7 @@ public class CRUDReservas {
 
         DefaultTableModel modelo = new DefaultTableModel();
         TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
-         tablaHorarios.setRowSorter(ordenarTabla);
+        tablaHorarios.setRowSorter(ordenarTabla);
 
         // Columnas para los días de la semana
         modelo.addColumn("Hora");
@@ -173,9 +167,9 @@ public class CRUDReservas {
 
         // Agregar filas para cada hora del día (de 7 AM a 8 PM)
         for (int hora = 7; hora <= 20; hora++) {
-        Object[] fila = new Object[7]; 
-        fila[0] = hora + ":00";
-        modelo.addRow(fila);
+            Object[] fila = new Object[7]; 
+            fila[0] = hora + ":00";
+            modelo.addRow(fila);
         }
 
         for (CRUDReservas horario : horarios) {
@@ -194,6 +188,26 @@ public class CRUDReservas {
         }
 
         tablaHorarios.setModel(modelo);
+
+        // Establecer el renderizador personalizado para colorear las celdas y agregar borde negro
+        TableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (value != null && !value.toString().trim().isEmpty()) {
+                    cell.setBackground(Color.RED);
+                } else {
+                    cell.setBackground(Color.GREEN);
+                }
+                ((JComponent) cell).setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+                return cell;
+            }
+        };
+
+        // Aplicar el renderizador a todas las columnas excepto la de las horas
+        for (int i = 1; i < modelo.getColumnCount(); i++) {
+            tablaHorarios.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
     }
 
     private int calcularDiaDeLaSemana(Timestamp timestamp) {
@@ -222,10 +236,4 @@ public class CRUDReservas {
         } 
         return niveles;
     }
-
-    
-
-    
-    
-    
 }
