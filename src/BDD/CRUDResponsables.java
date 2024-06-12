@@ -331,6 +331,31 @@ public class CRUDResponsables {
             System.out.println(e);
         }
     }
+
+public boolean cedulaExistente(JTextField paraCedula) {
+    try {
+        String sql = "SELECT cedulaResponsable FROM responsables WHERE cedulaResponsable = ?";
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        
+        // Obtener la cédula del JTextField y establecerla en la consulta
+        String cedula = paraCedula.getText();
+        this.ps.setString(1, cedula);
+        
+        // Ejecutar la consulta
+        try (ResultSet resultSet = this.ps.executeQuery()) {
+            // Si hay resultados, la cédula existe
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+        return false; // En caso de error, retornar false (o puedes manejarlo de otra manera)
+    }
+}
+
     
     public boolean datosVacios(JTextField paraNombre, 
             JTextField paraApellido, JTextField paraCedula) {

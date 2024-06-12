@@ -5,11 +5,16 @@
 package Ventanas;
 import java.sql.PreparedStatement;
 import BDD.CRUDHorarios;
+import BDD.CRUDHorarios.Espacio;
+import BDD.CRUDHorarios.Materia;
+import BDD.CRUDHorarios.Responsable;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.JPanel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.sql.Connection;
 
@@ -73,7 +78,7 @@ public class Horarios extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(153, 204, 255));
 
         jLabel1.setBackground(new java.awt.Color(0, 153, 153));
         jLabel1.setFont(new java.awt.Font("Consolas", 1, 36)); // NOI18N
@@ -88,13 +93,13 @@ public class Horarios extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(69, Short.MAX_VALUE)
+                .addGap(238, 238, 238)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(27, 27, 27)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addGap(133, 133, 133))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -102,8 +107,8 @@ public class Horarios extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addContainerGap())
         );
 
@@ -126,13 +131,33 @@ public class Horarios extends javax.swing.JPanel {
                 "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado"
             }
         ));
-        jTable1.setRowHeight(60);
+        jTable1.setRowHeight(90);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(200);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(200);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(200);
+            jTable1.getColumnModel().getColumn(1).setMinWidth(200);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(200);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(200);
+            jTable1.getColumnModel().getColumn(2).setMinWidth(200);
+            jTable1.getColumnModel().getColumn(2).setPreferredWidth(200);
+            jTable1.getColumnModel().getColumn(2).setMaxWidth(200);
+            jTable1.getColumnModel().getColumn(3).setMinWidth(200);
+            jTable1.getColumnModel().getColumn(3).setPreferredWidth(200);
+            jTable1.getColumnModel().getColumn(3).setMaxWidth(200);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(200);
+            jTable1.getColumnModel().getColumn(4).setPreferredWidth(200);
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(200);
+            jTable1.getColumnModel().getColumn(5).setMinWidth(200);
+            jTable1.getColumnModel().getColumn(5).setPreferredWidth(200);
+            jTable1.getColumnModel().getColumn(5).setMaxWidth(200);
+        }
 
         buscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -155,6 +180,7 @@ public class Horarios extends javax.swing.JPanel {
             }
         });
 
+        jComboCarreras.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
         jComboCarreras.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Software", "Tecnologías De La Información", "Ingeniería Industrial", "Telecomunicaciones", "Robótica y Automatización" }));
         jComboCarreras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,10 +188,13 @@ public class Horarios extends javax.swing.JPanel {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
         jLabel4.setText("Carreras : ");
 
+        jLabel5.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
         jLabel5.setText("Niveles:");
 
+        jComboNiveles.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
         jComboNiveles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboNivelesActionPerformed(evt);
@@ -177,28 +206,27 @@ public class Horarios extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(56, 56, 56)
+                .addGap(40, 40, 40)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboCarreras, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(78, 78, 78)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jComboCarreras, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(121, 121, 121)
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboNiveles, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboNiveles, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63))
+                .addGap(102, 102, 102))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 762, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,19 +236,18 @@ public class Horarios extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboCarreras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
+                            .addComponent(jComboCarreras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
-                            .addComponent(jComboNiveles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                            .addComponent(jComboNiveles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(171, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -271,26 +298,27 @@ public class Horarios extends javax.swing.JPanel {
             // Verificar si hay suficientes partes para obtener la información necesaria
             if (parts.length >= 3) {
                 String nombreResponsable = parts[0];  // El primer elemento es el nombre del responsable
-                String materia = parts[1];            // El segundo elemento es el nombre de la materia
+                String Materia = parts[1];            // El segundo elemento es el nombre de la materia
                 String espacio = parts[2];            // El tercer elemento es el nombre del espacio
                 
                 // Abrir el diálogo de edición
-                EditDialog dialog = new EditDialog((Frame) SwingUtilities.getWindowAncestor(jTable1), nombreResponsable, materia, espacio);
+                EditDialog dialog = new EditDialog((Frame) SwingUtilities.getWindowAncestor(jTable1));
                 dialog.setVisible(true);
                 
                 // Verificar si se confirmó la edición
                 if (dialog.isConfirmed()) {
                     // Obtener los nuevos valores del diálogo
-                    String nuevoResponsable = dialog.getResponsable();
-                    String nuevaMateria = dialog.getMateria();
-                    String nuevoEspacio = dialog.getEspacio();
+
+                    Materia nuevaMateria = dialog.getMateria();
+                    Espacio nuevoEspacio = dialog.getEspacio();
                     
                     // Actualizar la celda con los nuevos valores
-                    String newValue = nuevoResponsable + "\n" + nuevaMateria + "\n" + nuevoEspacio;
+                    String newValue =  nuevaMateria.getNombre() + "\n" + nuevoEspacio.getNombre();
                     jTable1.setValueAt(newValue, row, col);
                     
+                    
                     // Actualizar los datos en la base de datos
-                    actualizarBaseDeDatos(jTable1, row, col, nuevoResponsable, nuevaMateria, nuevoEspacio);
+                    actualizarBaseDeDatos(jTable1, row, col, nuevaMateria.getId(), nuevoEspacio.getId());
                 }
             }
         }
@@ -313,31 +341,64 @@ private void cargarNiveles(String carrera) {
         System.out.println("No se encontraron niveles para la carrera: " + carrera);
     }
 }
-private void actualizarBaseDeDatos(JTable jTable1, int row, int col, String responsable, String materia, String espacio) {
+private void actualizarBaseDeDatos(JTable jTable1, int row, int col,  int materia, int espacio) {
     // Asumiendo que los nombres de las columnas son los días
     String dia = jTable1.getColumnName(col); 
+    
+    int numDia =0;
+    switch(dia) {
+        case "Lunes": 
+            numDia=2;
+            break;
+        case "Martes": 
+            numDia=3;
+            break;
+        case "Miércoles": 
+            numDia=4;
+            break;    
+        case "Jueves": 
+            numDia=5;
+            break;
+        case "Viernes": 
+            numDia=6;
+            break;
+        case "Sábado": 
+            numDia=7;
+            break;
+          
+    }
     // Asumiendo que la primera columna es la hora
     String hora = jTable1.getValueAt(row, 0).toString(); 
+    String[] parts = hora.split(":");
+    int hours = 0;
+    
+    hours++;
+    String horaFin = String.format("%02d:%02d", hours, 0);
+    
+    
 
     // Crear la consulta SQL para actualizar los datos en la base de datos
-    String sql = "UPDATE horarios " +
+    String sql = " UPDATE horarios " +
              "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
              "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
-             "SET materias.IdResponsable = ?, horarios.IdMateriaPertenece = ?, espacios.Espacio = ? " +
-             "WHERE horarios.Fecha_HoraInicio = ? AND horarios.Fecha_HoraFin = ?";
+             "SET materias.IdResponsablePertenece = ?, horarios.IdMateriaPertenece = ?, espacios.idEspacio = ?, " +
+             "horarios.Fecha_HoraInicio = CONCAT(DATE(Fecha_HoraInicio), ' ', ?), " +
+             "horarios.Fecha_HoraFin = CONCAT(DATE(Fecha_HoraFin), ' ', ?) " +
+             "WHERE DAYOFWEEK(Fecha_HoraInicio) = ?;";
 
     
     try (PreparedStatement ps = crudHorarios.getConnection().prepareStatement(sql)) {
-        ps.setString(1, responsable); // Usamos la variable responsable en lugar de profesor
-        ps.setString(2, materia); // Usamos la variable materia
-        ps.setString(3, espacio);
-         ps.setString(4, dia + " " + hora); // Concatenamos el día con la hora
-        ps.setString(5, dia + " " + hora); // Concatenamos el día con la hora
+         // Usamos la variable responsable en lugar de profesor
+        ps.setInt(1, materia); // Usamos la variable materia
+        ps.setInt(2, espacio);
+        ps.setString(3, hora+":00"); // Concatenamos el día con la hora
+        ps.setString(4, horaFin + ":00"); // Concatenamos la hora de fin, asumiendo que termina al final del minuto
+        ps.setInt(5, numDia); // Día de la semana
         
         // Ejecutar la consulta
-        ps.executeUpdate();
+         ps.executeUpdate();
+     
         
-        // Mostrar mensaje de éxito
         JOptionPane.showMessageDialog(null, "Datos actualizados en la base de datos correctamente.");
         
     } catch (Exception e) {
