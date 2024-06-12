@@ -9,13 +9,12 @@ package Ventanas;
  * @author Kevin
  */
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ReservaEspacioPanel extends JPanel {
 
@@ -25,19 +24,23 @@ public class ReservaEspacioPanel extends JPanel {
 
     private JComboBox<Integer> espacioComboBox;
     private JComboBox<Integer> responsableComboBox;
+    private JTable tablaHorario;
+    private DefaultTableModel modeloTabla;
 
     public ReservaEspacioPanel() {
-        setLayout(new GridLayout(4, 2, 10, 10));
+        setLayout(new BorderLayout());
+
+        JPanel formularioPanel = new JPanel(new GridLayout(3, 2, 10, 10));
 
         espacioComboBox = new JComboBox<>();
         responsableComboBox = new JComboBox<>();
 
         cargarDatosComboBox();
 
-        add(new JLabel("Seleccione el espacio a reservar:"));
-        add(espacioComboBox);
-        add(new JLabel("Seleccione el responsable de la reserva:"));
-        add(responsableComboBox);
+        formularioPanel.add(new JLabel("Seleccione el espacio a reservar:"));
+        formularioPanel.add(espacioComboBox);
+        formularioPanel.add(new JLabel("Seleccione el responsable de la reserva:"));
+        formularioPanel.add(responsableComboBox);
 
         JButton reservarButton = new JButton("Reservar");
         reservarButton.addActionListener(new ActionListener() {
@@ -46,9 +49,28 @@ public class ReservaEspacioPanel extends JPanel {
                 int idEspacio = (int) espacioComboBox.getSelectedItem();
                 int idResponsable = (int) responsableComboBox.getSelectedItem();
                 realizarReserva(idEspacio, idResponsable);
+                actualizarTabla();
             }
         });
-        add(reservarButton);
+        formularioPanel.add(reservarButton);
+
+        add(formularioPanel, BorderLayout.NORTH);
+
+        modeloTabla = new DefaultTableModel(new Object[]{"Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tablaHorario = new JTable(modeloTabla);
+        tablaHorario.setRowHeight(40);
+        tablaHorario.getTableHeader().setReorderingAllowed(false);
+        tablaHorario.getTableHeader().setResizingAllowed(false);
+
+        JScrollPane scrollPane = new JScrollPane(tablaHorario);
+        add(scrollPane, BorderLayout.CENTER);
+
+        actualizarTabla();
     }
 
     private void cargarDatosComboBox() {
@@ -92,10 +114,51 @@ public class ReservaEspacioPanel extends JPanel {
         }
     }
 
+    private void actualizarTabla() {
+        modeloTabla.setRowCount(0);
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String query = "SELECT Fecha_HoraInicio, Disponible FROM horarios";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Object[] fila = new Object[6];
+                    Timestamp horaInicio = resultSet.getTimestamp("Fecha_HoraInicio");
+                    fila[0] = horaInicio.toLocalDateTime().toLocalTime().toString();
+                    for (int i = 1; i < fila.length; i++) {
+                        fila[i] = resultSet.getBoolean("Disponible") ? "Disponible" : "Reservado";
+                    }
+                    modeloTabla.addRow(fila);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setBackground(Color.GREEN);
+        tablaHorario.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                String estado = table.getValueAt(row, column).toString();
+                if ("Reservado".equals(estado)) {
+                    c.setBackground(Color.RED);
+                } else {
+                    c.setBackground(Color.GREEN);
+                }
+                return c;
+            }
+        });
+        for (int i = 0; i < tablaHorario.getColumnCount(); i++) {
+            tablaHorario.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
+    }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Reserva de Espacio");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 200);
+        frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
         ReservaEspacioPanel panel = new ReservaEspacioPanel();
