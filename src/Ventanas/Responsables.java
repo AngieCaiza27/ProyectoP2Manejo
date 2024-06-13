@@ -32,9 +32,9 @@ public class Responsables extends javax.swing.JPanel {
         
         
     }
-    public static JPanel getPanelResponsables(){
+    public static JPanel getPanelReservas(){
         if (instance == null){
-            instance = new Responsables();
+            instance = new Reservas();
         }
         
         return instance;
