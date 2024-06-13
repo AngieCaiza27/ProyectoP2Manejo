@@ -322,8 +322,7 @@ public class Reservas extends javax.swing.JPanel {
                     actualizarBaseDeDatos(jTable1, row, col, nuevaMateria.getId(), nuevoEspacio.getId());
                 }
             }
-        }else{
-        
+        }else {
     try (Connection connection = crudHorarios.getConnection()) {
         String responsablesQuery = "SELECT idResponsable, nombre1Responsable, apellido1Responsable FROM responsables";
         try (PreparedStatement statement = connection.prepareStatement(responsablesQuery)) {
@@ -339,8 +338,9 @@ public class Reservas extends javax.swing.JPanel {
             // Mostrar un JOptionPane con el JComboBox para seleccionar al responsable
             int option = JOptionPane.showOptionDialog(this, responsablesComboBox, "Seleccionar Responsable", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
             if (option == JOptionPane.OK_OPTION) {
-                // Obtener el ID del responsable seleccionado
-                int idResponsable = resultSet.getInt("idResponsable");
+                // Obtener el ID del responsable seleccionado directamente del JComboBox
+                int indexResponsableSeleccionado = responsablesComboBox.getSelectedIndex();
+                int idResponsable = indexResponsableSeleccionado + 1; // Sumar 1 porque los IDs en la base de datos generalmente comienzan en 1
 
                 // Actualizar los datos en la base de datos
                 actualizarBaseDeDatos(jTable1, row, col, idResponsable);
@@ -350,9 +350,8 @@ public class Reservas extends javax.swing.JPanel {
         ex.printStackTrace();
         JOptionPane.showMessageDialog(this, "Error al cargar los responsables.");
     }
+}
 
-
-        }
     }
     
     }//GEN-LAST:event_jTable1MouseClicked
