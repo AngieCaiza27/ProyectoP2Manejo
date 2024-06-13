@@ -17,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.sql.Connection;
+import java.sql.ResultSet;
 
 
 /**
@@ -321,6 +322,36 @@ public class Reservas extends javax.swing.JPanel {
                     actualizarBaseDeDatos(jTable1, row, col, nuevaMateria.getId(), nuevoEspacio.getId());
                 }
             }
+        }else{
+        
+    try (Connection connection = crudHorarios.getConnection()) {
+        String responsablesQuery = "SELECT idResponsable, nombre1Responsable, apellido1Responsable FROM responsables";
+        try (PreparedStatement statement = connection.prepareStatement(responsablesQuery)) {
+            ResultSet resultSet = statement.executeQuery();
+
+            // Crear un JComboBox para mostrar los responsables disponibles
+            JComboBox<String> responsablesComboBox = new JComboBox<>();
+            while (resultSet.next()) {
+                String nombreCompleto = resultSet.getString("nombre1Responsable") + " " + resultSet.getString("apellido1Responsable");
+                responsablesComboBox.addItem(nombreCompleto);
+            }
+
+            // Mostrar un JOptionPane con el JComboBox para seleccionar al responsable
+            int option = JOptionPane.showOptionDialog(this, responsablesComboBox, "Seleccionar Responsable", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (option == JOptionPane.OK_OPTION) {
+                // Obtener el ID del responsable seleccionado
+                int idResponsable = resultSet.getInt("idResponsable");
+
+                // Actualizar los datos en la base de datos
+                actualizarBaseDeDatos(jTable1, row, col, idResponsable);
+            }
+        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al cargar los responsables.");
+    }
+
+
         }
     }
     
@@ -407,6 +438,61 @@ private void actualizarBaseDeDatos(JTable jTable1, int row, int col,  int materi
     }
 }
 
+private void actualizarBaseDeDatos(JTable jTable1, int row, int col, int idResponsable) {
+    // Asumiendo que la primera columna es la hora
+    String horaInicio = jTable1.getValueAt(row, 0).toString(); 
+    String[] parts = horaInicio.split(":");
+    int hours = Integer.parseInt(parts[0]);
+    int minutes = Integer.parseInt(parts[1]);
+    
+    // Calcular la hora de finalización sumando una hora a la hora de inicio
+    hours++;
+    String horaFin = String.format("%02d:%02d:00", hours, minutes);
+
+    // Obtener el día de la semana basado en el nombre de la columna
+    String dia = jTable1.getColumnName(col);
+    int numDia = 0;
+    switch (dia) {
+        case "Lunes": numDia = 2; break;
+        case "Martes": numDia = 3; break;
+        case "Miércoles": numDia = 4; break;
+        case "Jueves": numDia = 5; break;
+        case "Viernes": numDia = 6; break;
+        case "Sábado": numDia = 7; break;
+    }
+
+    try (Connection connection = crudHorarios.getConnection()) {
+        // Crear la consulta SQL para actualizar los datos en la base de datos
+        String sql = "UPDATE horarios " +
+                     "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
+                     "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
+                     "SET materias.idResponsablePertenece = ?, " +
+                     "horarios.Fecha_HoraInicio = CONCAT(DATE(Fecha_HoraInicio), ' ', ?), " +
+                     "horarios.Fecha_HoraFin = CONCAT(DATE(Fecha_HoraInicio), ' ', ?) " +
+                     "WHERE DAYOFWEEK(Fecha_HoraInicio) = ? " +
+                     "AND TIME(Fecha_HoraInicio) = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idResponsable);
+            ps.setString(2, horaInicio + ":00"); // Concatenamos el día con la hora de inicio
+            ps.setString(3, horaFin); // Concatenamos el día con la hora de fin
+            ps.setInt(4, numDia); // Día de la semana
+            ps.setString(5, horaInicio); // Hora de inicio
+           
+            // Ejecutar la consulta
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Datos actualizados en la base de datos correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontró el horario correspondiente para actualizar.");
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error al actualizar los datos en la base de datos. ERROR: " + e.getMessage());
+    }
+}
 
 
 
