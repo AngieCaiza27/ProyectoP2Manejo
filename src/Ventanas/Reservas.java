@@ -426,22 +426,31 @@ private void actualizarBaseDeDatos(JTable jTable1, int row, int col,  int materi
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 public class MultiLineCellRenderer extends DefaultTableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JTextArea textArea = new JTextArea();
-            textArea.setText(value != null ? value.toString() : "");
-            textArea.setWrapStyleWord(true);
-            textArea.setLineWrap(true);
-            if (isSelected) {
-                textArea.setBackground(table.getSelectionBackground());
-                textArea.setForeground(table.getSelectionForeground());
-            } else {
-                textArea.setBackground(table.getBackground());
-                textArea.setForeground(table.getForeground());
-            }
-            return textArea;
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        JTextArea textArea = new JTextArea();
+        textArea.setText(value != null ? value.toString() : "");
+        textArea.setWrapStyleWord(true);
+        textArea.setLineWrap(true);
+
+        // Establecer color de fondo según el contenido de la celda
+        if (value != null && !value.toString().isEmpty()) {
+            textArea.setBackground(Color.RED);
+        } else {
+            textArea.setBackground(Color.GREEN);
         }
+
+        if (isSelected) {
+            textArea.setBackground(table.getSelectionBackground());
+            textArea.setForeground(table.getSelectionForeground());
+        } else {
+            textArea.setForeground(table.getForeground());
+        }
+        
+        return textArea;
     }
+}
+
 
 
 }
