@@ -11,7 +11,12 @@ import java.util.List;
 import javax.swing.JPanel;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -137,6 +142,109 @@ public class Reservas extends javax.swing.JPanel {
         return edificios;
     }
 
+    public List<CRUDHorarios> obtenerDatosDeLaBaseDeDatos(String nombreEspacio) {
+    List<CRUDHorarios> horarios = new ArrayList<>();
+    try {
+        String sql = "SELECT horarios.Fecha_HoraInicio, "
+                   + "horarios.Fecha_HoraFin, "
+                   + "horarios.Disponible, "
+                   + "espacios.nombreEspacio, "
+                   + "materias.nombreMateria, "
+                   + "carreras.nombreCarrera, "
+                   + "peridosacademicos.nombrePeriodo, "
+                   + "responsables.nombre1Responsable, "
+                   + "responsables.apellido1Responsable "
+                   + "FROM horarios "
+                   + "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio "
+                   + "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria "
+                   + "JOIN peridosacademicos ON horarios.idPeriodoPertenece = peridosacademicos.idPeriodo "
+                   + "JOIN responsables ON materias.idResponsablePertenece = responsables.idResponsable "
+                   + "JOIN carreras ON materias.idCarreraPertenece = carreras.idCarrera "
+                   + "JOIN niveles ON carreras.idNivelPertenece = niveles.idNivel "
+                   + "WHERE espacios.nombreEspacio = ?";
+
+        ResultSet rs;
+        PreparedStatement ps;
+
+        ps = crudReservas.getConnection().prepareStatement(sql);
+        ps.setString(1, nombreEspacio);
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+            CRUDHorarios horario = new CRUDHorarios();
+            horario.setFecha_HoraInicio(rs.getTimestamp("Fecha_HoraInicio"));
+            horario.setFecha_HoraFin(rs.getTimestamp("Fecha_HoraFin"));
+            horario.setDisponible(rs.getBoolean("Disponible"));
+            horario.setNombreEspacio(rs.getString("nombreEspacio"));
+            horario.setNombreMateria(rs.getString("nombreMateria"));
+            //horario.setNombreCarrera(rs.getString("nombreCarrera"));
+            horario.setNombrePeriodo(rs.getString("nombrePeriodo"));
+            horario.setNombre1Responsable(rs.getString("nombre1Responsable"));
+            horario.setApellido1Responsable(rs.getString("apellido1Responsable"));
+
+            horarios.add(horario);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos de la base de datos. ERROR: " + e.getMessage());
+    }
+
+    return horarios;
+}
+
+    
+    private int calcularDiaDeLaSemana(Timestamp timestamp) {
+        // Calcula el día de la semana (Lunes = 1, Martes = 2, ..., Sábado = 6)
+        // Aquí asumimos que los días están almacenados en el objeto Timestamp
+        return timestamp.toLocalDateTime().getDayOfWeek().getValue();
+    }
+
+    public void actualizarTabla(String nombreEspacio) {
+        List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(nombreEspacio);
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
+         this.jTableReservas.setRowSorter(ordenarTabla);
+
+        // Columnas para los días de la semana
+        modelo.addColumn("Hora");
+        modelo.addColumn("Lunes");
+        modelo.addColumn("Martes");
+        modelo.addColumn("Miércoles");
+        modelo.addColumn("Jueves");
+        modelo.addColumn("Viernes");
+        modelo.addColumn("Sábado");
+
+        // Agregar filas para cada hora del día (de 7 AM a 8 PM)
+        for (int hora = 7; hora <= 20; hora++) {
+        Object[] fila = new Object[7];
+        String ceroInicial=hora<=9 ? "0":"";
+        fila[0] = ceroInicial+hora + ":00";
+        modelo.addRow(fila);
+        }
+        
+        
+
+        for (CRUDHorarios horario : horarios) {
+            // Calcular la fila y la columna donde se debe insertar el horario
+            int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
+            int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
+            int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7;
+
+            String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
+            String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
+            String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
+
+            for (int i = filaInicio; i <= filaFin; i++) {
+                modelo.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
+            }
+        }
+
+        this.jTableReservas.setModel(modelo);
+    }
+
+
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -148,7 +256,7 @@ public class Reservas extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableReservas = new javax.swing.JTable();
         jComboEdificios = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -192,7 +300,7 @@ public class Reservas extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableReservas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -211,15 +319,16 @@ public class Reservas extends javax.swing.JPanel {
                 "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado"
             }
         ));
-        jTable1.setRowHeight(90);
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jTableReservas.setRowHeight(90);
+        jTableReservas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                jTableReservasMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTableReservas);
 
         jComboEdificios.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
+        jComboEdificios.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Edificio 1", "Edificio 2", "Ciencias Aplicadas", "Talleres Tecnológicos" }));
         jComboEdificios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboEdificiosActionPerformed(evt);
@@ -248,6 +357,11 @@ public class Reservas extends javax.swing.JPanel {
         jLabel6.setText("Espacio:");
 
         jComboEspacio.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
+        jComboEspacio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboEspacioMouseClicked(evt);
+            }
+        });
         jComboEspacio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboEspacioActionPerformed(evt);
@@ -326,10 +440,10 @@ public class Reservas extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void jTableReservasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableReservasMouseClicked
 
 
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_jTableReservasMouseClicked
 
     private void jComboEdificiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEdificiosActionPerformed
 
@@ -349,6 +463,11 @@ public class Reservas extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jComboTipoEspacioMouseClicked
 
+    private void jComboEspacioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboEspacioMouseClicked
+        // TODO add your handling code here:
+        actualizarTabla(jComboEspacio.getSelectedItem().toString());
+    }//GEN-LAST:event_jComboEspacioMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> jComboEdificios;
@@ -363,6 +482,6 @@ public class Reservas extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableReservas;
     // End of variables declaration//GEN-END:variables
 }
