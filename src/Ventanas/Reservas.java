@@ -26,6 +26,8 @@ public class Reservas extends javax.swing.JPanel {
     public Reservas() {
         initComponents();
         crudReservas = new CRUDEReservas();
+        llenarTiposEspacios();
+        llenarEspacios();
     }
     
     
@@ -38,7 +40,22 @@ public class Reservas extends javax.swing.JPanel {
                      
         
     }
+    public void llenarTiposEspacios(){
+    jComboTipoEspacio.removeAllItems();
+        List<String> tipos = obtenerTiposPorEdificio(this.jComboEdificios.getSelectedItem().toString());
+        for (String tipo : tipos) {
+            jComboTipoEspacio.addItem(tipo);
+        }
+    }
     
+    public void llenarEspacios(){
+    jComboEspacio.removeAllItems();
+        List<String> espacios = obtenerEspacios(this.jComboEdificios.getSelectedItem().toString(),
+                this.jComboTipoEspacio.getSelectedItem().toString());
+        for (String espacio : espacios) {
+            jComboEspacio.addItem(espacio);
+        }
+    }
     
     public List<String> obtenerTiposPorEdificio(String edificio) {
         List<String> tipos = new ArrayList<>();
@@ -64,6 +81,32 @@ public class Reservas extends javax.swing.JPanel {
         } 
         
         return tipos;
+    }
+    
+    public List<String> obtenerEspacios(String edificio, String tipo) {
+        List<String> espacios = new ArrayList<>();
+        String sql = "SELECT e.idEspacio, e.nombreEspacio, e.capacidad, "
+                + "te.nombreTipoEspacio, ed.nombreEdificio "
+                + "FROM espacios e "
+                + "JOIN tipoespacio te ON e.idTipoEspacioPertenece = te.idTipoEspacio "
+                + "JOIN edificios ed ON e.idEdificioPertenece = ed.idEdificio "
+                + "WHERE te.nombreTipoEspacio = ? "
+                + "AND ed.nombreEdificio = ? ";
+        ResultSet rs;
+        try ( PreparedStatement ps = crudReservas.getConnection().prepareStatement(sql)){
+            ps.setString(1, tipo);
+            ps.setString(2, edificio);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                espacios.add(rs.getString("nombreEspacio"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No se pudieron obtener los espacios. ERROR: ");
+            System.out.println(e.getMessage());
+            
+        } 
+        
+        return espacios;
     }
 
     
@@ -261,12 +304,12 @@ public class Reservas extends javax.swing.JPanel {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jComboEdificiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEdificiosActionPerformed
-        
-        
+
+        llenarTiposEspacios();
     }//GEN-LAST:event_jComboEdificiosActionPerformed
 
     private void jComboTipoEspacioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboTipoEspacioActionPerformed
-        // TODO add your handling code here:
+        llenarEspacios();
     }//GEN-LAST:event_jComboTipoEspacioActionPerformed
 
     private void jComboEspacioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEspacioActionPerformed
@@ -274,11 +317,7 @@ public class Reservas extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboEspacioActionPerformed
 
     private void jComboTipoEspacioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboTipoEspacioMouseClicked
-        jComboTipoEspacio.removeAllItems();
-        List<String> tipos = obtenerTiposPorEdificio(this.jComboEdificios.getSelectedItem().toString());
-        for (String tipo : tipos) {
-            jComboTipoEspacio.addItem(tipo);
-        }
+        
 
     }//GEN-LAST:event_jComboTipoEspacioMouseClicked
 
