@@ -22,23 +22,24 @@ public class Reservas extends javax.swing.JPanel {
     private  static JPanel instance = null;
     private CRUDEReservas crudReservas;
     private CRUDHorarios crudHorarios;
-    
+
     public Reservas() {
         initComponents();
         crudReservas = new CRUDEReservas();
-        llenarTiposEspacios();
-        llenarEspacios();
+        llenarEdificios();
+        //llenarTiposEspacios();
+        //llenarEspacios();
     }
-    
-    
+
+
     public static JPanel getPanelReservas(){
         if (instance == null){
             instance = new Reservas();
         }
-        
+
         return instance;
-                     
-        
+
+
     }
     public void llenarTiposEspacios(){
     jComboTipoEspacio.removeAllItems();
@@ -47,7 +48,7 @@ public class Reservas extends javax.swing.JPanel {
             jComboTipoEspacio.addItem(tipo);
         }
     }
-    
+
     public void llenarEspacios(){
     jComboEspacio.removeAllItems();
         List<String> espacios = obtenerEspacios(this.jComboEdificios.getSelectedItem().toString(),
@@ -57,6 +58,14 @@ public class Reservas extends javax.swing.JPanel {
         }
     }
     
+    public void llenarEdificios(){
+    jComboEspacio.removeAllItems();
+        List<String> edificios = obtenerEdificios();
+        for (String edificio : edificios) {
+            jComboEdificios.addItem(edificio);
+        }
+    }
+
     public List<String> obtenerTiposPorEdificio(String edificio) {
         List<String> tipos = new ArrayList<>();
         String sql = "SELECT DISTINCT te.nombreTipoEspacio " +
@@ -64,10 +73,10 @@ public class Reservas extends javax.swing.JPanel {
                      "JOIN tipoespacio te ON e.idTipoEspacioPertenece = te.idTipoEspacio " +
                      "JOIN edificios ed ON e.idEdificioPertenece = ed.idEdificio " +
                      "WHERE ed.nombreEdificio = ?";
-        
+
         ResultSet rs;
 
-        
+
         try ( PreparedStatement ps = crudReservas.getConnection().prepareStatement(sql)){
             ps.setString(1, edificio);
             rs = ps.executeQuery();
@@ -77,12 +86,12 @@ public class Reservas extends javax.swing.JPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "No se pudieron obtener los tipos de espacios del edificio. ERROR: ");
             System.out.println(e.getMessage());
-            
-        } 
-        
+
+        }
+
         return tipos;
     }
-    
+
     public List<String> obtenerEspacios(String edificio, String tipo) {
         List<String> espacios = new ArrayList<>();
         String sql = "SELECT e.idEspacio, e.nombreEspacio, e.capacidad, "
@@ -103,13 +112,32 @@ public class Reservas extends javax.swing.JPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "No se pudieron obtener los espacios. ERROR: ");
             System.out.println(e.getMessage());
-            
-        } 
-        
+
+        }
+
         return espacios;
     }
 
-    
+    public List<String> obtenerEdificios() {
+        List<String> edificios = new ArrayList<>();
+        String sql = "SELECT nombreEdificio FROM edificios";
+        ResultSet rs;
+        try (PreparedStatement ps = crudReservas.getConnection().prepareStatement(sql)) {
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                edificios.add(rs.getString("nombreEdificio"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No se pudieron obtener los espacios. ERROR: ");
+            System.out.println(e.getMessage());
+
+        }
+
+        return edificios;
+    }
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -192,7 +220,6 @@ public class Reservas extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTable1);
 
         jComboEdificios.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
-        jComboEdificios.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Edificio 1", "Edificio 2", "Ciencias Aplicadas", "Talleres Tecnológicos" }));
         jComboEdificios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboEdificiosActionPerformed(evt);
@@ -300,8 +327,8 @@ public class Reservas extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        
-        
+
+
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jComboEdificiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEdificiosActionPerformed
@@ -318,7 +345,7 @@ public class Reservas extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboEspacioActionPerformed
 
     private void jComboTipoEspacioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboTipoEspacioMouseClicked
-        
+
 
     }//GEN-LAST:event_jComboTipoEspacioMouseClicked
 
