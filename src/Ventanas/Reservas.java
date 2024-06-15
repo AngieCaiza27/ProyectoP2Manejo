@@ -18,6 +18,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import javax.swing.table.DefaultTableCellRenderer;
 /**
  *
  * @author Kevin
@@ -226,7 +230,7 @@ public class Reservas extends javax.swing.JPanel {
     // Marcar descanso de 13:00 a 14:00
     int filaDescanso = 13 - 7;  // 13:00 - 7:00 = 6
     for (int columna = 1; columna <= 6; columna++) {
-        modelo.setValueAt("DESCANSO", filaDescanso, columna);
+        modelo.setValueAt("Descanso", filaDescanso, columna);
     }
 
     for (CRUDHorarios horario : horarios) {
@@ -248,7 +252,49 @@ public class Reservas extends javax.swing.JPanel {
     }
 
     this.jTableReservas.setModel(modelo);
+
+    // Aplicar el renderer personalizado a cada columna
+    CustomTableCellRenderer renderer = new CustomTableCellRenderer();
+    for (int i = 0; i < jTableReservas.getColumnCount(); i++) {
+        jTableReservas.getColumnModel().getColumn(i).setCellRenderer(renderer);
+    }
 }
+
+
+    
+
+public class CustomTableCellRenderer extends DefaultTableCellRenderer {
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+        if (column == 0) {
+            // Si es la primera columna (Hora), no cambiar el color de fondo
+            cell.setBackground(Color.LIGHT_GRAY);  // Color predeterminado, puedes cambiarlo si tu tabla tiene otro color de fondo predeterminado
+        } else {
+            if (value != null && value.toString().equals("Descanso")) {
+                cell.setBackground(Color.YELLOW);
+            } else if (value != null && !value.toString().isEmpty()) {
+                cell.setBackground(Color.RED);
+            } else {
+                cell.setBackground(Color.GREEN);
+            }
+        }
+
+        return cell;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Dibujar bordes negros alrededor de la celda
+        g.setColor(Color.BLACK);
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+    }
+}
+
 
 
 
