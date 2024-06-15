@@ -41,25 +41,25 @@ public class Reservas extends javax.swing.JPanel {
 
 
     }
-    public void llenarTiposEspacios(){
-    jComboTipoEspacio.removeAllItems();
+    public void llenarTiposEspacios() {
+        jComboTipoEspacio.removeAllItems();
         List<String> tipos = obtenerTiposPorEdificio(this.jComboEdificios.getSelectedItem().toString());
         for (String tipo : tipos) {
             jComboTipoEspacio.addItem(tipo);
         }
     }
 
-    public void llenarEspacios(){
-    jComboEspacio.removeAllItems();
+    public void llenarEspacios() {
+        jComboEspacio.removeAllItems();
         List<String> espacios = obtenerEspacios(this.jComboEdificios.getSelectedItem().toString(),
                 this.jComboTipoEspacio.getSelectedItem().toString());
         for (String espacio : espacios) {
             jComboEspacio.addItem(espacio);
         }
     }
-    
-    public void llenarEdificios(){
-    jComboEspacio.removeAllItems();
+
+    public void llenarEdificios() {
+        jComboEspacio.removeAllItems();
         List<String> edificios = obtenerEdificios();
         for (String edificio : edificios) {
             jComboEdificios.addItem(edificio);
