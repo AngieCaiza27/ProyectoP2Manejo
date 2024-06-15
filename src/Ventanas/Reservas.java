@@ -219,7 +219,7 @@ public class Reservas extends javax.swing.JPanel {
         for (int hora = 7; hora <= 20; hora++) {
         Object[] fila = new Object[7];
         String ceroInicial=hora<=9 ? "0":"";
-        fila[0] = ceroInicial+hora + ":00";
+        fila[0] = ceroInicial+hora + ":00 - "+(hora+1)+":00";
         modelo.addRow(fila);
         }
         
@@ -328,7 +328,6 @@ public class Reservas extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTableReservas);
 
         jComboEdificios.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
-        jComboEdificios.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Edificio 1", "Edificio 2", "Ciencias Aplicadas", "Talleres Tecnológicos" }));
         jComboEdificios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboEdificiosActionPerformed(evt);
