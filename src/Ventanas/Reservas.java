@@ -200,48 +200,56 @@ public class Reservas extends javax.swing.JPanel {
     }
 
     public void actualizarTabla(String nombreEspacio) {
-        List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(nombreEspacio);
+    List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(nombreEspacio);
 
-        DefaultTableModel modelo = new DefaultTableModel();
-        TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
-         this.jTableReservas.setRowSorter(ordenarTabla);
+    DefaultTableModel modelo = new DefaultTableModel();
+    TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
+    this.jTableReservas.setRowSorter(ordenarTabla);
 
-        // Columnas para los días de la semana
-        modelo.addColumn("Hora");
-        modelo.addColumn("Lunes");
-        modelo.addColumn("Martes");
-        modelo.addColumn("Miércoles");
-        modelo.addColumn("Jueves");
-        modelo.addColumn("Viernes");
-        modelo.addColumn("Sábado");
+    // Columnas para los días de la semana
+    modelo.addColumn("Hora");
+    modelo.addColumn("Lunes");
+    modelo.addColumn("Martes");
+    modelo.addColumn("Miércoles");
+    modelo.addColumn("Jueves");
+    modelo.addColumn("Viernes");
+    modelo.addColumn("Sábado");
 
-        // Agregar filas para cada hora del día (de 7 AM a 8 PM)
-        for (int hora = 7; hora <= 20; hora++) {
+    // Agregar filas para cada hora del día (de 7 AM a 8 PM)
+    for (int hora = 7; hora <= 20; hora++) {
         Object[] fila = new Object[7];
-        String ceroInicial=hora<=9 ? "0":"";
-        fila[0] = ceroInicial+hora + ":00 - "+(hora+1)+":00";
+        String ceroInicial = hora <= 9 ? "0" : "";
+        fila[0] = ceroInicial + hora + ":00 - " + (hora + 1) + ":00";
         modelo.addRow(fila);
-        }
-        
-        
+    }
 
-        for (CRUDHorarios horario : horarios) {
-            // Calcular la fila y la columna donde se debe insertar el horario
-            int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
-            int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
-            int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7;
+    // Marcar descanso de 13:00 a 14:00
+    int filaDescanso = 13 - 7;  // 13:00 - 7:00 = 6
+    for (int columna = 1; columna <= 6; columna++) {
+        modelo.setValueAt("DESCANSO", filaDescanso, columna);
+    }
 
-            String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
-            String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
-            String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
+    for (CRUDHorarios horario : horarios) {
+        // Calcular la fila y la columna donde se debe insertar el horario
+        int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
+        int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
+        int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7;
 
-            for (int i = filaInicio; i <= filaFin; i++) {
+        String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
+        String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
+        String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
+
+        for (int i = filaInicio; i <= filaFin; i++) {
+            // Asegurarse de no sobrescribir el descanso
+            if (i != filaDescanso) {
                 modelo.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
             }
         }
-
-        this.jTableReservas.setModel(modelo);
     }
+
+    this.jTableReservas.setModel(modelo);
+}
+
 
 
 
