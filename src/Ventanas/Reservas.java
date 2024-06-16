@@ -220,7 +220,7 @@ public class Reservas extends javax.swing.JPanel {
     modelo.addColumn("Sábado");
 
     // Agregar filas para cada hora del día (de 7 AM a 8 PM)
-    for (int hora = 7; hora <= 20; hora++) {
+    for (int hora = 7; hora <= 19; hora++) {
         Object[] fila = new Object[7];
         String ceroInicial = hora <= 9 ? "0" : "";
         fila[0] = ceroInicial + hora + ":00 - " + (hora + 1) + ":00";
@@ -237,7 +237,13 @@ public class Reservas extends javax.swing.JPanel {
         // Calcular la fila y la columna donde se debe insertar el horario
         int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
         int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
-        int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7;
+        int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7 - 1;  // Ajustar filaFin para no ocupar una hora extra
+
+        // Validar si filaInicio o filaFin están fuera de los límites de la tabla
+        if (filaInicio < 0 || filaInicio > 13 || filaFin < 0 || filaFin > 13) {
+            System.err.println("Horario fuera de los límites: " + horario);
+            continue;
+        }
 
         String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
         String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
@@ -259,6 +265,8 @@ public class Reservas extends javax.swing.JPanel {
         jTableReservas.getColumnModel().getColumn(i).setCellRenderer(renderer);
     }
 }
+
+
 
 
     
