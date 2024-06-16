@@ -605,27 +605,26 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
     private void jComboEdificiosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboEdificiosMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jComboEdificiosMouseClicked
 
     private void jComboEdificiosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboEdificiosMouseReleased
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jComboEdificiosMouseReleased
 
     private void jComboEdificiosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboEdificiosItemStateChanged
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jComboEdificiosItemStateChanged
 
     private void jComboEdificiosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboEdificiosMousePressed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jComboEdificiosMousePressed
 
     private void jComboEdificiosPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jComboEdificiosPropertyChange
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_jComboEdificiosPropertyChange
 
 
