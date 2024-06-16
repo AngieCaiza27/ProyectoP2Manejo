@@ -230,7 +230,7 @@ public class Reservas extends javax.swing.JPanel {
     // Marcar descanso de 13:00 a 14:00
     int filaDescanso = 13 - 7;  // 13:00 - 7:00 = 6
     for (int columna = 1; columna <= 6; columna++) {
-        modelo.setValueAt("Descanso", filaDescanso, columna);
+        modelo.setValueAt("DESCANSO", filaDescanso, columna);
     }
 
     for (CRUDHorarios horario : horarios) {
@@ -273,7 +273,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             // Si es la primera columna (Hora), no cambiar el color de fondo
             cell.setBackground(Color.LIGHT_GRAY);  // Color predeterminado, puedes cambiarlo si tu tabla tiene otro color de fondo predeterminado
         } else {
-            if (value != null && value.toString().equals("Descanso")) {
+            if (value != null && value.toString().equals("DESCANSO")) {
                 cell.setBackground(Color.YELLOW);
             } else if (value != null && !value.toString().isEmpty()) {
                 cell.setBackground(Color.RED);
@@ -447,8 +447,8 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                                 .addComponent(jComboEspacio, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 104, Short.MAX_VALUE)))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 152, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
