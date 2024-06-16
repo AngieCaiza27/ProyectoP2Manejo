@@ -6,12 +6,16 @@ package Ventanas;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 
 /**
@@ -387,6 +391,24 @@ public class Principal extends javax.swing.JFrame {
 
 
 
+public class CustomTableCellRenderer extends DefaultTableCellRenderer {
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+        if (value != null && value.toString().equals("Descanso")) {
+            cell.setBackground(Color.YELLOW);
+        } else if (value != null && !value.toString().isEmpty()) {
+            cell.setBackground(Color.RED);
+        } else {
+            cell.setBackground(Color.GREEN);
+        }
+
+        return cell;
+    }
+}
+
 
 
 
@@ -409,5 +431,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jpContent;
     // End of variables declaration//GEN-END:variables
 }
+
+
 
 

@@ -75,24 +75,35 @@ public class Reservas extends javax.swing.JPanel {
 
     }
     public void llenarTiposEspacios() {
+    // Verificar que el elemento seleccionado no sea null
+    Object selectedItem = jComboEdificios.getSelectedItem();
+    if (selectedItem != null) {
         jComboTipoEspacio.removeAllItems();
-        List<String> tipos = obtenerTiposPorEdificio(this.jComboEdificios.getSelectedItem().toString());
+        // Usar el valor seleccionado para obtener los tipos
+        List<String> tipos = obtenerTiposPorEdificio(selectedItem.toString());
         for (String tipo : tipos) {
             jComboTipoEspacio.addItem(tipo);
         }
     }
+}
 
     public void llenarEspacios() {
+    // Verificar que los elementos seleccionados no sean null
+    Object selectedEdificio = jComboEdificios.getSelectedItem();
+    Object selectedTipoEspacio = jComboTipoEspacio.getSelectedItem();
+    
+    if (selectedEdificio != null && selectedTipoEspacio != null) {
         jComboEspacio.removeAllItems();
-        List<String> espacios = obtenerEspacios(this.jComboEdificios.getSelectedItem().toString(),
-                this.jComboTipoEspacio.getSelectedItem().toString());
+        List<String> espacios = obtenerEspacios(selectedEdificio.toString(), selectedTipoEspacio.toString());
         for (String espacio : espacios) {
             jComboEspacio.addItem(espacio);
         }
     }
+}
+
 
     public void llenarEdificios() {
-        jComboEspacio.removeAllItems();
+        //jComboEspacio.removeAllItems();
         List<String> edificios = obtenerEdificios();
         for (String edificio : edificios) {
             jComboEdificios.addItem(edificio);
@@ -416,9 +427,30 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         jScrollPane1.setViewportView(jTableReservas);
 
         jComboEdificios.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
+        jComboEdificios.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboEdificiosItemStateChanged(evt);
+            }
+        });
+        jComboEdificios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboEdificiosMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jComboEdificiosMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jComboEdificiosMouseReleased(evt);
+            }
+        });
         jComboEdificios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboEdificiosActionPerformed(evt);
+            }
+        });
+        jComboEdificios.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jComboEdificiosPropertyChange(evt);
             }
         });
 
@@ -542,8 +574,11 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }//GEN-LAST:event_jTableReservasMouseClicked
 
     private void jComboEdificiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEdificiosActionPerformed
-
+        
+        if (jComboEdificios.getSelectedItem() != null) {
         llenarTiposEspacios();
+    }    
+        
     }//GEN-LAST:event_jComboEdificiosActionPerformed
 
     private void jComboTipoEspacioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboTipoEspacioActionPerformed
@@ -567,6 +602,31 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         actualizarTabla(jComboEspacio.getSelectedItem().toString());
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void jComboEdificiosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboEdificiosMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboEdificiosMouseClicked
+
+    private void jComboEdificiosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboEdificiosMouseReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboEdificiosMouseReleased
+
+    private void jComboEdificiosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboEdificiosItemStateChanged
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboEdificiosItemStateChanged
+
+    private void jComboEdificiosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboEdificiosMousePressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboEdificiosMousePressed
+
+    private void jComboEdificiosPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jComboEdificiosPropertyChange
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboEdificiosPropertyChange
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
