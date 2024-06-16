@@ -183,7 +183,7 @@ public class CRUDHorarios {
             // Calcular la fila y la columna donde se debe insertar el horario
             int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
             int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
-            int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7;
+            int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7 - 1;
 
             String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
             String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
