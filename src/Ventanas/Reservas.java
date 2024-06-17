@@ -575,6 +575,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
     private void jTableReservasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableReservasMouseClicked
 
+        
 
     }//GEN-LAST:event_jTableReservasMouseClicked
 
