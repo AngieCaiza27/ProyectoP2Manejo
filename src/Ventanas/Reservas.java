@@ -22,6 +22,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableCellRenderer;
 /**
  *
@@ -268,75 +270,78 @@ public class Reservas extends javax.swing.JPanel {
         modelo.setValueAt("DESCANSO", filaDescanso, columna);
     }
 
-    for (CRUDHorarios horario : horarios) {
-        // Calcular la fila y la columna donde se debe insertar el horario
-        int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
-        int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
-        int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7 - 1;  // Ajustar filaFin para no ocupar una hora extra
+        for (CRUDHorarios horario : horarios) {
+            // Calcular la fila y la columna donde se debe insertar el horario
+            int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
+            int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
+            int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7 - 1;  // Ajustar filaFin para no ocupar una hora extra
 
-        // Validar si filaInicio o filaFin están fuera de los límites de la tabla
-        if (filaInicio < 0 || filaInicio > 13 || filaFin < 0 || filaFin > 13) {
-            System.err.println("Horario fuera de los límites: " + horario);
-            continue;
-        }
+            // Validar si filaInicio o filaFin están fuera de los límites de la tabla
+            if (filaInicio < 0 || filaInicio > 13 || filaFin < 0 || filaFin > 13) {
+                System.err.println("Horario fuera de los límites: " + horario);
+                continue;
+            }
 
-        String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
-        String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
-        String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
+            String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
+            String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
+            String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
 
-        for (int i = filaInicio; i <= filaFin; i++) {
-            // Asegurarse de no sobrescribir el descanso
-            if (i != filaDescanso) {
-                modelo.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
+            for (int i = filaInicio; i <= filaFin; i++) {
+                // Asegurarse de no sobrescribir el descanso
+                if (i != filaDescanso) {
+                    modelo.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
+                }
             }
         }
+
+        this.jTableReservas.setModel(modelo);
+
+// Aplicar el renderer personalizado a cada columna
+        CustomTableCellRenderer renderer = new CustomTableCellRenderer();
+        for (int i = 0; i < jTableReservas.getColumnCount(); i++) {
+            jTableReservas.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
+
     }
 
-    this.jTableReservas.setModel(modelo);
 
-    // Aplicar el renderer personalizado a cada columna
-    CustomTableCellRenderer renderer = new CustomTableCellRenderer();
-    for (int i = 0; i < jTableReservas.getColumnCount(); i++) {
-        jTableReservas.getColumnModel().getColumn(i).setCellRenderer(renderer);
-    }
-}
-
-
-
-
-    
 
 public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        JTextArea textArea = new JTextArea();
+        textArea.setWrapStyleWord(true);
+        textArea.setLineWrap(true);
+        textArea.setText(value != null ? value.toString() : "");
 
-        if (column == 0) {
-            // Si es la primera columna (Hora), no cambiar el color de fondo
-            cell.setBackground(Color.LIGHT_GRAY);  // Color predeterminado, puedes cambiarlo si tu tabla tiene otro color de fondo predeterminado
+        if (isSelected) {
+            textArea.setBackground(table.getSelectionBackground());
+            textArea.setForeground(table.getSelectionForeground());
         } else {
-            if (value != null && value.toString().equals("DESCANSO")) {
-                cell.setBackground(Color.YELLOW);
-            } else if (value != null && !value.toString().isEmpty()) {
-                cell.setBackground(Color.RED);
+            if (column == 0) {
+                textArea.setBackground(Color.LIGHT_GRAY);
             } else {
-                cell.setBackground(Color.GREEN);
+                if (value != null && value.toString().equals("DESCANSO")) {
+                    textArea.setBackground(Color.YELLOW);
+                } else if (value != null && !value.toString().isEmpty()) {
+                    textArea.setBackground(Color.RED);
+                } else {
+                    textArea.setBackground(Color.GREEN);
+                }
             }
+            textArea.setForeground(table.getForeground());
         }
 
-        return cell;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        textArea.setOpaque(true);
 
         // Dibujar bordes negros alrededor de la celda
-        g.setColor(Color.BLACK);
-        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        textArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        return textArea;
     }
 }
+
 
 
 
