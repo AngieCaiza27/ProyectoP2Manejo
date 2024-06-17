@@ -363,7 +363,8 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
  
 
 
-private void mostrarDialogoDeReservas() {
+private String[] mostrarDialogoDeReservas() {
+    String[] nombreYMotivo = new String[2];
         try {
             List<String> tiposResponsables = databaseHandler.getTiposResponsables();
             JComboBox<String> tipoComboBox = new JComboBox<>(tiposResponsables.toArray(new String[0]));
@@ -432,12 +433,16 @@ private void mostrarDialogoDeReservas() {
                 System.out.println("Tipo seleccionado: " + selectedTipo);
                 System.out.println("Responsable seleccionado: " + selectedResponsable);
                 System.out.println("Motivo: " + motivo);
+                nombreYMotivo[0] = selectedResponsable;
+                nombreYMotivo[1] = motivo;
+                return nombreYMotivo;
             } else {
                 System.out.println("Diálogo cancelado");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return nombreYMotivo;
     }
 
 
@@ -677,7 +682,15 @@ private void mostrarDialogoDeReservas() {
 
             // Verificar si el valor de la celda no es nulo y es una cadena de texto
             if (value == null || "RESERVA".equals(value.toString())) {
-                mostrarDialogoDeReservas();
+                String[] datos = new String[2];
+                datos = mostrarDialogoDeReservas();
+                String nombre, motivo;
+                nombre = datos[0];
+                motivo = datos[1];
+                JOptionPane.showMessageDialog(null, datos[0]);
+                JOptionPane.showMessageDialog(null, datos[1]);
+                JOptionPane.showMessageDialog(null, nombre);
+                JOptionPane.showMessageDialog(null, motivo);
             }
         }
 
