@@ -6,7 +6,7 @@ package Ventanas;
 
 import BDD.CRUDEReservas;
 import BDD.CRUDHorarios;
-import Test.DatabaseHandler;
+import DatabaseHandler.DatabaseHandler;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -340,6 +340,8 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             } else {
                 if (value != null && value.toString().equals("DESCANSO")) {
                     textArea.setBackground(Color.YELLOW);
+                }else if (value != null && value.toString().contains("RESERVA")){
+                    textArea.setBackground(Color.CYAN);
                 } else if (value != null && !value.toString().isEmpty()) {
                     textArea.setBackground(Color.RED);
                 } else {
