@@ -6,6 +6,7 @@ package Ventanas;
 
 import BDD.CRUDEReservas;
 import BDD.CRUDHorarios;
+import Test.DatabaseHandler;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -20,10 +21,21 @@ import javax.swing.table.TableRowSorter;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.util.Date;
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 /**
  *
@@ -34,9 +46,11 @@ public class Reservas extends javax.swing.JPanel {
     private  static JPanel instance = null;
     private CRUDEReservas crudReservas;
     private CRUDHorarios crudHorarios;
+    private DatabaseHandler databaseHandler;
 
     public Reservas() {
         initComponents();
+        databaseHandler = new DatabaseHandler();
         crudReservas = new CRUDEReservas();
         llenarEdificios();
         limitarCalendario();
@@ -111,6 +125,8 @@ public class Reservas extends javax.swing.JPanel {
             jComboEdificios.addItem(edificio);
         }
     }
+    
+    
 
     public List<String> obtenerTiposPorEdificio(String edificio) {
         List<String> tipos = new ArrayList<>();
@@ -342,10 +358,85 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }
 }
 
+ 
 
 
+private void mostrarDialogoDeReservas() {
+        try {
+            List<String> tiposResponsables = databaseHandler.getTiposResponsables();
+            JComboBox<String> tipoComboBox = new JComboBox<>(tiposResponsables.toArray(new String[0]));
+            JComboBox<String> responsablesComboBox = new JComboBox<>();
+            JTextArea motivoArea = new JTextArea(5, 20);
 
+            tipoComboBox.addActionListener(ev -> {
+                try {
+                    String selectedTipo = (String) tipoComboBox.getSelectedItem();
+                    List<String> responsables = databaseHandler.getResponsablesPorTipo(selectedTipo);
+                    responsablesComboBox.removeAllItems();
+                    for (String responsable : responsables) {
+                        responsablesComboBox.addItem(responsable);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
 
+            JPanel panel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 5, 5, 5);
+
+            // Tipo de Responsable
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridwidth = 1;
+            gbc.anchor = GridBagConstraints.EAST;
+            panel.add(new JLabel("Tipo de Responsable:"), gbc);
+
+            gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            panel.add(tipoComboBox, gbc);
+
+            // Responsable
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.EAST;
+            panel.add(new JLabel("Responsable:"), gbc);
+
+            gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            panel.add(responsablesComboBox, gbc);
+
+            // Motivo
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.NORTHEAST;
+            panel.add(new JLabel("Motivo:"), gbc);
+
+            gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.weightx = 1.0;
+            gbc.weighty = 1.0;
+            JScrollPane scrollPane = new JScrollPane(motivoArea);
+            panel.add(scrollPane, gbc);
+
+            int result = JOptionPane.showConfirmDialog(null, panel, "Seleccione Responsable y Motivo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                String selectedTipo = (String) tipoComboBox.getSelectedItem();
+                String selectedResponsable = (String) responsablesComboBox.getSelectedItem();
+                String motivo = motivoArea.getText();
+                System.out.println("Tipo seleccionado: " + selectedTipo);
+                System.out.println("Responsable seleccionado: " + selectedResponsable);
+                System.out.println("Motivo: " + motivo);
+            } else {
+                System.out.println("Diálogo cancelado");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
 
     @SuppressWarnings("unchecked")
@@ -574,8 +665,20 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTableReservasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableReservasMouseClicked
+        int row = jTableReservas.rowAtPoint(evt.getPoint());
+        int col = jTableReservas.columnAtPoint(evt.getPoint());
 
-        
+        // Verificar si el clic se realizó en una celda válida
+        if (row >= 0 && col >= 0) {
+            // Obtener el valor de la celda
+            Object value = jTableReservas.getValueAt(row, col);
+
+            // Verificar si el valor de la celda no es nulo y es una cadena de texto
+            if (value == null || "RESERVA".equals(value.toString())) {
+                mostrarDialogoDeReservas();
+            }
+        }
+
 
     }//GEN-LAST:event_jTableReservasMouseClicked
 
