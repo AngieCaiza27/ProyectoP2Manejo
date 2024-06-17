@@ -51,24 +51,42 @@ public class Test2 {
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 5, 5, 5);
-            gbc.fill = GridBagConstraints.HORIZONTAL;
+
+            // Tipo de Responsable
             gbc.gridx = 0;
             gbc.gridy = 0;
+            gbc.gridwidth = 1;
+            gbc.anchor = GridBagConstraints.EAST;
             panel.add(new JLabel("Tipo de Responsable:"), gbc);
+
             gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
             panel.add(tipoComboBox, gbc);
+
+            // Responsable
             gbc.gridx = 0;
             gbc.gridy = 1;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.EAST;
             panel.add(new JLabel("Responsable:"), gbc);
+
             gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
             panel.add(responsablesComboBox, gbc);
+
+            // Motivo
             gbc.gridx = 0;
             gbc.gridy = 2;
-            gbc.gridwidth = 2;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.NORTHEAST;
             panel.add(new JLabel("Motivo:"), gbc);
-            gbc.gridy = 3;
+
+            gbc.gridx = 1;
             gbc.fill = GridBagConstraints.BOTH;
-            panel.add(new JScrollPane(motivoArea), gbc);
+            gbc.weightx = 1.0;
+            gbc.weighty = 1.0;
+            JScrollPane scrollPane = new JScrollPane(motivoArea);
+            panel.add(scrollPane, gbc);
 
             int result = JOptionPane.showConfirmDialog(null, panel, "Seleccione Responsable y Motivo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
