@@ -277,7 +277,7 @@ public class Principal extends javax.swing.JFrame {
 
         panelReservas = new Reservas(); 
         
-        JPanel reservas = Responsables.getPanelReservas();
+        JPanel reservas = Reservas.getPanelReservas();
          cardLayout.show(jpContent, "Responsables");
         
         reservas.setSize(1000, 800);
