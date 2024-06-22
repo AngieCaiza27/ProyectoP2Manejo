@@ -60,9 +60,12 @@ public class Reservas extends javax.swing.JPanel {
     
     public void limitarCalendario() {
         Date fechaActual = new Date();        
-        this.Calendario.setMinSelectableDate(fechaActual);
-        this.Calendario.setMaxSelectableDate(obtenerFinPeriodo());
+        this.calendario.setMinSelectableDate(fechaActual);
+        this.calendario.setMaxSelectableDate(obtenerFinPeriodo());
+        this.calendario.setDate(fechaActual);
     }
+    
+    
     
     public Date obtenerFinPeriodo() {
         Date fechaFin = new Date();
@@ -446,6 +449,8 @@ private String[] mostrarDialogoDeReservas() {
     }
 
 
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -463,7 +468,7 @@ private String[] mostrarDialogoDeReservas() {
         jComboTipoEspacio = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jComboEspacio = new javax.swing.JComboBox<>();
-        Calendario = new com.toedter.calendar.JDateChooser();
+        calendario = new com.toedter.calendar.JDateChooser();
         btnBuscar = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -621,7 +626,7 @@ private String[] mostrarDialogoDeReservas() {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jComboEspacio, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 152, Short.MAX_VALUE)))
@@ -642,7 +647,7 @@ private String[] mostrarDialogoDeReservas() {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
                         .addComponent(jComboEdificios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(Calendario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -724,7 +729,13 @@ private String[] mostrarDialogoDeReservas() {
     }//GEN-LAST:event_jComboEspacioMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        actualizarTabla(jComboEspacio.getSelectedItem().toString());
+        if (jComboEdificios.getSelectedItem()!=null && jComboTipoEspacio.getSelectedItem()!= null 
+                && jComboEspacio.getSelectedItem()!=null) {
+            JOptionPane.showMessageDialog(null, this.calendario.getDate());
+        actualizarTabla(jComboEspacio.getSelectedItem().toString());    
+        }else {
+        JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void jComboEdificiosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboEdificiosMouseClicked
@@ -753,8 +764,8 @@ private String[] mostrarDialogoDeReservas() {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.toedter.calendar.JDateChooser Calendario;
     private javax.swing.JButton btnBuscar;
+    private com.toedter.calendar.JDateChooser calendario;
     private javax.swing.JComboBox<String> jComboEdificios;
     private javax.swing.JComboBox<String> jComboEspacio;
     private javax.swing.JComboBox<String> jComboTipoEspacio;
