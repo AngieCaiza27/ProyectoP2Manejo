@@ -935,7 +935,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             // Verificar si el valor de la celda no es nulo y es una cadena de texto
             if (value == null) {
                 
-                if (esCeldaReservable(col, col)) {
+                
                     
                     crearReserva(row, col);
 
@@ -951,9 +951,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                     } else {
                         JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se puede reservar en esta fecha, porque la hora ya pasó");
-                }
+                
             } else if (value.toString().contains("RESERVA")) {
                 //String nombre = value.toString().
                 //JOptionPane.showMessageDialog(null, value);
