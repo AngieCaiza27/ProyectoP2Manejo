@@ -639,6 +639,36 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 }
     
     
+//    public boolean celdaReservable(int fila, int columna){
+//        Date fechaActual = new Date();
+//        String fechaReserva = obtenerFechaExactaInicio(fila, columna);
+//        if (fechaActual.getHours()<fechaActual) {
+//            return true;
+//        }
+//        return false;
+//    }
+    
+    public boolean esCeldaReservable(int fila, int columna) {
+    Date fechaActual = new Date();
+    String fechaReservaStr = obtenerFechaExactaInicio(fila, columna);
+    
+    // Parsear la fechaReservaStr a Date
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    try {
+        Date fechaReserva = dateFormat.parse(fechaReservaStr);
+        
+        // Comparar las fechas
+        if (fechaReserva.after(fechaActual)) {
+            return true; // La fecha de reserva está en el futuro
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error al parsear la fecha de reserva. ERROR: " + e.getMessage());
+    }
+    
+    return false; // La fecha de reserva ya pasó
+}
+    
 
 
 
@@ -904,21 +934,26 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
             // Verificar si el valor de la celda no es nulo y es una cadena de texto
             if (value == null) {
-                crearReserva(row, col);
+                
+                if (esCeldaReservable(col, col)) {
+                    
+                    crearReserva(row, col);
 
-                if (jComboEdificios.getSelectedItem() != null && jComboTipoEspacio.getSelectedItem() != null
-                        && jComboEspacio.getSelectedItem() != null) {
+                    if (jComboEdificios.getSelectedItem() != null && jComboTipoEspacio.getSelectedItem() != null
+                            && jComboEspacio.getSelectedItem() != null) {
 
-                    String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
-                    //JOptionPane.showMessageDialog(null, "inicio: " + horaIniFin[0] + "fin: " + horaIniFin[1]);
+                        String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
+                        //JOptionPane.showMessageDialog(null, "inicio: " + horaIniFin[0] + "fin: " + horaIniFin[1]);
 
-                    //JOptionPane.showMessageDialog(null, this.calendario.getDate());
-                    actualizarTabla(jComboEspacio.getSelectedItem().toString(), horarioIniFin[0], horarioIniFin[1]);
+                        //JOptionPane.showMessageDialog(null, this.calendario.getDate());
+                        actualizarTabla(jComboEspacio.getSelectedItem().toString(), horarioIniFin[0], horarioIniFin[1]);
 
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
+                    JOptionPane.showMessageDialog(null, "No se puede reservar en esta fecha, porque la hora ya pasó");
                 }
-
             } else if (value.toString().contains("RESERVA")) {
                 //String nombre = value.toString().
                 //JOptionPane.showMessageDialog(null, value);
