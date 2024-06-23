@@ -678,10 +678,6 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                 String nombre, motivo;
                 nombre = datos[0];
                 motivo = datos[1];
-                JOptionPane.showMessageDialog(null, datos[0]);
-                JOptionPane.showMessageDialog(null, datos[1]);
-                JOptionPane.showMessageDialog(null, nombre);
-                JOptionPane.showMessageDialog(null, motivo);
          
             } else if (value.toString().contains("RESERVA")) {
                 int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar esta reserva?");
