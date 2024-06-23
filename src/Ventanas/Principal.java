@@ -31,6 +31,8 @@ public class Principal extends javax.swing.JFrame {
     private JPanel panelResponsables;
     private JPanel panelHorarios;
     private JPanel panelReservas;
+    private JPanel panelMaterias;
+
 
     /**
      * Creates new form Principal
@@ -43,7 +45,8 @@ public class Principal extends javax.swing.JFrame {
         btnHorarios.setIcon(setIcono("/images/horarios.png",btnHorarios));
         btnReservas.setIcon(setIcono("/images/reservas.png",btnReservas));
         btnResponsables.setIcon(setIcono("/images/Responsable.png",btnResponsables));
-        
+        btnMaterias.setIcon(setIcono("/images/lib.png", btnEspacios));
+
         
        
     }
@@ -72,6 +75,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         btnResponsables = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
+        btnMaterias = new javax.swing.JButton();
+        materias = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -162,6 +167,15 @@ public class Principal extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Consolas", 0, 16)); // NOI18N
         jLabel6.setText("Responsables");
 
+        btnMaterias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMateriasActionPerformed(evt);
+            }
+        });
+
+        materias.setFont(new java.awt.Font("Consolas", 0, 16)); // NOI18N
+        materias.setText("Materias");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -173,7 +187,8 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(btnEspacios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnHorarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnReservas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnEdificios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnEdificios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnMaterias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
@@ -181,40 +196,51 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(materias, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(46, 46, 46)
                 .addComponent(jpContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(106, 106, 106)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnResponsables, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(8, 8, 8)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
-                        .addComponent(btnEdificios, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(73, 73, 73))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(81, 81, 81)))
+                        .addGap(66, 66, 66)
+                        .addComponent(btnResponsables, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addComponent(jLabel6)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(71, 71, 71)
+                        .addComponent(btnEdificios, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(67, 67, 67)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEspacios, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
+                        .addGap(8, 8, 8)
                         .addComponent(jLabel2)))
-                .addGap(78, 78, 78)
+                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(btnMaterias, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(materias)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(67, 67, 67)
                         .addComponent(btnHorarios, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(97, 97, 97))
+                        .addGap(67, 67, 67))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
-                        .addGap(105, 105, 105)))
+                        .addGap(75, 75, 75)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnReservas, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -277,8 +303,8 @@ public class Principal extends javax.swing.JFrame {
 
         panelReservas = new Reservas(); 
         
-        JPanel reservas = Responsables.getPanelReservas();
-         cardLayout.show(jpContent, "Responsables");
+        JPanel reservas = Reservas.getPanelReservas();
+         cardLayout.show(jpContent, "Reservas");
         
         reservas.setSize(1000, 800);
         reservas.setLocation(0, 0);
@@ -295,7 +321,7 @@ public class Principal extends javax.swing.JFrame {
 
         panelResponsables = new Responsables(); 
         
-        JPanel responsables = Responsables.getPanelReservas();
+        JPanel responsables = Responsables.getPanelResponsables();
          cardLayout.show(jpContent, "Responsables");
         
         responsables.setSize(1000, 800);
@@ -326,6 +352,23 @@ public class Principal extends javax.swing.JFrame {
         jpContent.revalidate();
         jpContent.repaint();
     }//GEN-LAST:event_btnEspaciosActionPerformed
+
+    private void btnMateriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMateriasActionPerformed
+       cardLayout = new CardLayout();
+        jpContent.setLayout(cardLayout);
+
+        panelMaterias = new Materias(); 
+        
+        JPanel materias = Materias.getPanelMaterias();
+         cardLayout.show(jpContent, "Materias");
+        
+        materias.setSize(1000, 800);
+        materias.setLocation(0, 0);
+        jpContent.removeAll();
+        jpContent.add(materias,BorderLayout.CENTER);
+        jpContent.revalidate();
+        jpContent.repaint();
+    }//GEN-LAST:event_btnMateriasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -418,6 +461,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     private javax.swing.JButton btnEdificios;
     private javax.swing.JButton btnEspacios;
     private javax.swing.JButton btnHorarios;
+    private javax.swing.JButton btnMaterias;
     private javax.swing.JButton btnReservas;
     private javax.swing.JButton btnResponsables;
     private javax.swing.JLabel jLabel1;
@@ -429,6 +473,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jpContent;
+    private javax.swing.JLabel materias;
     // End of variables declaration//GEN-END:variables
 }
 
