@@ -62,9 +62,12 @@ public class Reservas extends javax.swing.JPanel {
         crudReservas = new CRUDEReservas();
         llenarEdificios();
         limitarCalendario();
+        this.jTableReservas.setVisible(false);
         //llenarTiposEspacios();
         //llenarEspacios();
     }
+    
+    
     
     public void limitarCalendario() {
         Date fechaActual = new Date();        
@@ -484,8 +487,11 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         String id, motivo;
         id = datos[0];
         motivo = datos[1];
-        
+        if (id != null && motivo != null) {
         JOptionPane.showMessageDialog(null, obtenerFechaExactaInicio(fila, columna)+" --- "+obtenerFechaExactaFin(fila, columna));
+        JOptionPane.showMessageDialog(null, id + " " + motivo);
+        }
+        
 //        String[] horarioIniFin = obtenerFechaExactaCelda(columna);
 //        
 ////        private String[] obtenerFechaCelda(int columna) {
@@ -811,6 +817,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }//GEN-LAST:event_jComboEspacioMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        this.jTableReservas.setVisible(true);
         if (jComboEdificios.getSelectedItem() != null && jComboTipoEspacio.getSelectedItem() != null
                 && jComboEspacio.getSelectedItem() != null) {
 
