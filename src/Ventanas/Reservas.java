@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -276,6 +277,8 @@ public static String[] getWeekBoundaries(Date date) {
 
         return new String[]{startOfWeekString, endOfWeekString};
     }
+
+
     
     
 
@@ -364,6 +367,61 @@ public static String[] getWeekBoundaries(Date date) {
         jTableReservas.getColumnModel().getColumn(i).setCellRenderer(renderer);
     }
 }
+    
+    private String obtenerHoraInicio(int fila) {
+        String fechaCelda;
+        int horaInicio = fila + 7;
+        fechaCelda = String.valueOf(horaInicio + ":00:00");
+        return fechaCelda;
+    }
+    
+    private String obtenerHoraFin(int fila) {
+        String fechaCelda;
+        int horaInicio = fila + 8;
+        fechaCelda = String.valueOf(horaInicio + ":00:00");
+        return fechaCelda;
+    }
+    
+    private String[] obtenerFechaCelda(int columna) {
+        String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
+        return horarioIniFin;
+    }
+    
+    private String obtenerFecha(int columna) {
+        Date nuevaFecha = calendario.getDate();
+        nuevaFecha.setDate(nuevaFecha.getDate()+columna);
+        JOptionPane.showConfirmDialog(null, nuevaFecha);
+        String fechaCelda = obtenerFechaDeCelda(nuevaFecha);
+        return fechaCelda;
+    }
+    public static String obtenerFechaDeCelda(Date date) {
+        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), java.time.ZoneId.systemDefault());
+        LocalDate inicio = localDate.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String startOfWeekString = inicio.atStartOfDay().format(formatter);
+
+        return startOfWeekString;
+    }
+//    private String obtenerFechaHoraInicio(int fila, int columna) {
+//        int horaInicio = fila + 7;
+//        // Asegúrate de que el nombre de la columna corresponde a una fecha adecuada
+//        String diaSemana = jTableReservas.getColumnName(columna);
+//        // Aquí debes mapear el día de la semana a una fecha específica. Ejemplo:
+//        String fecha = "2024-06-27"; // Reemplaza esto con la lógica adecuada
+//        LocalDateTime fechaHoraInicio = LocalDateTime.parse(fecha + "T" + String.format("%02d", horaInicio) + ":00:00", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+//        return fechaHoraInicio.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//    }
+//
+//    private String obtenerFechaHoraFin(int fila, int columna) {
+//        int horaFin = fila + 8;
+//        // Asegúrate de que el nombre de la columna corresponde a una fecha adecuada
+//        String diaSemana = jTableReservas.getColumnName(columna);
+//        // Aquí debes mapear el día de la semana a una fecha específica. Ejemplo:
+//        String fecha = "2024-06-27"; // Reemplaza esto con la lógica adecuada
+//        LocalDateTime fechaHoraFin = LocalDateTime.parse(fecha + "T" + String.format("%02d", horaFin) + ":00:00", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+//        return fechaHoraFin.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//    }
 
 
 
@@ -405,13 +463,22 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }
 }
 
-    public void crearReserva() {
+    public void crearReserva(int fila, int columna) {
         String[] datos = new String[2];
         datos = mostrarDialogoDeReservas();
         String id, motivo;
         id = datos[0];
         motivo = datos[1];
-
+        String[] horarioIniFin = obtenerFechaCelda(columna);
+        
+//        private String[] obtenerFechaCelda(int columna) {
+//        String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
+//        return horarioIniFin;
+//    }
+        
+//                JOptionPane.showMessageDialog(null, obtenerHoraInicio(fila)+" Y "+obtenerHoraFin(fila));
+                JOptionPane.showMessageDialog(null, columna +" col "+ horarioIniFin[0]+ "Y" +horarioIniFin[1]);
+                JOptionPane.showMessageDialog(null, obtenerFecha(columna));
     }
     
 
@@ -685,7 +752,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             // Verificar si el valor de la celda no es nulo y es una cadena de texto
             if (value == null) {
                 
-                crearReserva();
+                crearReserva(row, col);
          
             } else if (value.toString().contains("RESERVA")) {
                 int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar esta reserva?");
@@ -730,11 +797,11 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         if (jComboEdificios.getSelectedItem() != null && jComboTipoEspacio.getSelectedItem() != null
                 && jComboEspacio.getSelectedItem() != null) {
 
-            String[] horaIniFin = getWeekBoundaries(this.calendario.getDate());
+            String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
             //JOptionPane.showMessageDialog(null, "inicio: " + horaIniFin[0] + "fin: " + horaIniFin[1]);
 
             //JOptionPane.showMessageDialog(null, this.calendario.getDate());
-            actualizarTabla(jComboEspacio.getSelectedItem().toString(), horaIniFin[0], horaIniFin[1]);
+            actualizarTabla(jComboEspacio.getSelectedItem().toString(), horarioIniFin[0], horarioIniFin[1]);
 
         } else {
             JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
