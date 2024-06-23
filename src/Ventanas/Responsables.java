@@ -5,7 +5,6 @@
 package Ventanas;
 
 import BDD.CRUDResponsables;
-import BDD.CRUDResponsables;
 import BDD.Conexion;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -32,7 +31,7 @@ public class Responsables extends javax.swing.JPanel {
         
         
     }
-    public static JPanel getPanelReservas(){
+    public static JPanel getPanelResponsables(){
         if (instance == null){
             instance = new Responsables();
         }
