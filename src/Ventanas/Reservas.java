@@ -381,7 +381,9 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }
 }
 
- 
+    public void eliminarReserva() {
+        
+    }
 
 
 
@@ -646,7 +648,8 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             Object value = jTableReservas.getValueAt(row, col);
 
             // Verificar si el valor de la celda no es nulo y es una cadena de texto
-            if (value == null || "RESERVA".equals(value.toString())) {
+            if (value == null) {
+                
                 String[] datos = new String[2];
                 datos = mostrarDialogoDeReservas();
                 String nombre, motivo;
@@ -656,6 +659,14 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                 JOptionPane.showMessageDialog(null, datos[1]);
                 JOptionPane.showMessageDialog(null, nombre);
                 JOptionPane.showMessageDialog(null, motivo);
+         
+            } else if (value.toString().contains("RESERVA")) {
+                int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar esta reserva?");
+                
+//                if (respuesta == JOptionPane.YES_OPTION) {
+//                    
+//                    eliminarReserva(S);
+//                }
             }
         }
 
