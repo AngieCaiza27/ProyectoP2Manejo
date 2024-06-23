@@ -29,6 +29,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -47,6 +50,7 @@ public class Reservas extends javax.swing.JPanel {
     private CRUDEReservas crudReservas;
     private CRUDHorarios crudHorarios;
     private DatabaseHandler databaseHandler;
+    
 
     public Reservas() {
         initComponents();
@@ -202,32 +206,32 @@ public class Reservas extends javax.swing.JPanel {
         return edificios;
     }
 
-    public List<CRUDHorarios> obtenerDatosDeLaBaseDeDatos(String nombreEspacio) {
+    public List<CRUDHorarios> obtenerDatosDeLaBaseDeDatos(String nombreEspacio, String fechaInicio, String fechaFin) {
     List<CRUDHorarios> horarios = new ArrayList<>();
     try {
-        String sql = "SELECT horarios.Fecha_HoraInicio, "
-                   + "horarios.Fecha_HoraFin, "
-                   + "horarios.Disponible, "
-                   + "espacios.nombreEspacio, "
-                   + "materias.nombreMateria, "
-                   + "carreras.nombreCarrera, "
-                   + "peridosacademicos.nombrePeriodo, "
-                   + "responsables.nombre1Responsable, "
-                   + "responsables.apellido1Responsable "
-                   + "FROM horarios "
-                   + "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio "
-                   + "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria "
-                   + "JOIN peridosacademicos ON horarios.idPeriodoPertenece = peridosacademicos.idPeriodo "
-                   + "JOIN responsables ON materias.idResponsablePertenece = responsables.idResponsable "
-                   + "JOIN carreras ON materias.idCarreraPertenece = carreras.idCarrera "
-                   + "JOIN niveles ON carreras.idNivelPertenece = niveles.idNivel "
-                   + "WHERE espacios.nombreEspacio = ?";
+        String sql = "SELECT h.Fecha_HoraInicio, "
+                   + "h.Fecha_HoraFin, "
+                   + "h.Disponible, "
+                   + "h.idEspacioImparte, "
+                   + "h.idMateriaPertenece, "
+                   + "h.idPeriodoPertenece, "
+                   + "e.nombreEspacio, "
+                   + "m.nombreMateria, "
+                   + "r.nombre1Responsable, "
+                   + "r.apellido1Responsable "
+                   + "FROM horarios h "
+                   + "JOIN espacios e ON h.idEspacioImparte = e.idEspacio "
+                   + "JOIN materias m ON h.idMateriaPertenece = m.idMateria "
+                   + "JOIN responsables r ON m.idResponsablePertenece = r.idResponsable "
+                   + "WHERE e.nombreEspacio = ? AND h.Fecha_HoraInicio >= ? AND h.Fecha_HoraFin <= ?";
 
         ResultSet rs;
         PreparedStatement ps;
 
         ps = crudReservas.getConnection().prepareStatement(sql);
         ps.setString(1, nombreEspacio);
+        ps.setString(2, fechaInicio);
+        ps.setString(3, fechaFin);
         rs = ps.executeQuery();
 
         while (rs.next()) {
@@ -235,10 +239,11 @@ public class Reservas extends javax.swing.JPanel {
             horario.setFecha_HoraInicio(rs.getTimestamp("Fecha_HoraInicio"));
             horario.setFecha_HoraFin(rs.getTimestamp("Fecha_HoraFin"));
             horario.setDisponible(rs.getBoolean("Disponible"));
+            horario.setIdEspacio(rs.getInt("idEspacioImparte"));
+            horario.setIdMateria(rs.getInt("idMateriaPertenece"));
+            horario.setIdPeriodoPertenece(rs.getInt("idPeriodoPertenece"));
             horario.setNombreEspacio(rs.getString("nombreEspacio"));
             horario.setNombreMateria(rs.getString("nombreMateria"));
-            //horario.setNombreCarrera(rs.getString("nombreCarrera"));
-            horario.setNombrePeriodo(rs.getString("nombrePeriodo"));
             horario.setNombre1Responsable(rs.getString("nombre1Responsable"));
             horario.setApellido1Responsable(rs.getString("apellido1Responsable"));
 
@@ -251,6 +256,19 @@ public class Reservas extends javax.swing.JPanel {
 
     return horarios;
 }
+public static String[] getWeekBoundaries(Date date) {
+        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), java.time.ZoneId.systemDefault());
+        LocalDate startOfWeek = localDate.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        LocalDate endOfWeek = startOfWeek.plus(6, ChronoUnit.DAYS);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String startOfWeekString = startOfWeek.atStartOfDay().format(formatter);
+        String endOfWeekString = endOfWeek.atStartOfDay().format(formatter);
+
+        return new String[]{startOfWeekString, endOfWeekString};
+    }
+    
+    
 
     
     private int calcularDiaDeLaSemana(Timestamp timestamp) {
@@ -259,8 +277,8 @@ public class Reservas extends javax.swing.JPanel {
         return timestamp.toLocalDateTime().getDayOfWeek().getValue();
     }
 
-    public void actualizarTabla(String nombreEspacio) {
-    List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(nombreEspacio);
+    public void actualizarTabla(String nombreEspacio, String fechaInicio, String fechaFin) {
+    List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(nombreEspacio, fechaInicio, fechaFin);
 
     DefaultTableModel tablaHorario = new DefaultTableModel();
     TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(tablaHorario);
@@ -674,9 +692,12 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         if (jComboEdificios.getSelectedItem() != null && jComboTipoEspacio.getSelectedItem() != null
                 && jComboEspacio.getSelectedItem() != null) {
 
-            JOptionPane.showMessageDialog(null, this.calendario.getDate());
-            actualizarTabla(jComboEspacio.getSelectedItem().toString());
-            
+            String[] horaIniFin = getWeekBoundaries(this.calendario.getDate());
+            //JOptionPane.showMessageDialog(null, "inicio: " + horaIniFin[0] + "fin: " + horaIniFin[1]);
+
+            //JOptionPane.showMessageDialog(null, this.calendario.getDate());
+            actualizarTabla(jComboEspacio.getSelectedItem().toString(), horaIniFin[0], horaIniFin[1]);
+
         } else {
             JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
         }

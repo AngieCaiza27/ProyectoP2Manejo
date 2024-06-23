@@ -25,8 +25,55 @@ public class CRUDHorarios {
     private String nombrePeriodo;
     private String nombre1Responsable;
     private String apellido1Responsable;
+    
+    
+    private int idEspacio;
+    private int idMateria;
+    private int idPeriodoPertenece;
 
     // Getters y setters...
+
+    public int getIdEspacio() {
+        return idEspacio;
+    }
+
+    public void setIdEspacio(int idEspacio) {
+        this.idEspacio = idEspacio;
+    }
+
+    public int getIdMateria() {
+        return idMateria;
+    }
+
+    public void setIdMateria(int idMateria) {
+        this.idMateria = idMateria;
+    }
+
+    public int getIdPeriodoPertenece() {
+        return idPeriodoPertenece;
+    }
+
+    public void setIdPeriodoPertenece(int idPeriodoPertenece) {
+        this.idPeriodoPertenece = idPeriodoPertenece;
+    }
+
+    public PreparedStatement getPs() {
+        return ps;
+    }
+
+    public void setPs(PreparedStatement ps) {
+        this.ps = ps;
+    }
+
+    public ResultSet getRs() {
+        return rs;
+    }
+
+    public void setRs(ResultSet rs) {
+        this.rs = rs;
+    }
+    
+    
 
     public Timestamp getFechaHoraInicio() {
         return Fecha_HoraInicio;
