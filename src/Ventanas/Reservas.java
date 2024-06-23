@@ -851,6 +851,22 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             String selectedTipo = (String) tipoComboBox.getSelectedItem();
             String selectedResponsable = (String) responsablesComboBox.getSelectedItem();
             String motivo = motivoArea.getText();
+
+            if (selectedTipo == null || selectedTipo.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debe seleccionar un tipo de responsable.", "Error", JOptionPane.ERROR_MESSAGE);
+                return mostrarDialogoDeReservas(); // Volver a mostrar el diálogo
+            }
+
+            if (selectedResponsable == null || selectedResponsable.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debe seleccionar un responsable.", "Error", JOptionPane.ERROR_MESSAGE);
+                return mostrarDialogoDeReservas(); // Volver a mostrar el diálogo
+            }
+
+            if (motivo == null || motivo.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar un motivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                return mostrarDialogoDeReservas(); // Volver a mostrar el diálogo
+            }
+
             System.out.println("Tipo seleccionado: " + selectedTipo);
             System.out.println("Responsable seleccionado: " + selectedResponsable);
             System.out.println("Motivo: " + motivo);
@@ -865,6 +881,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }
     return idYMotivo;
 }
+
 
     
 }
