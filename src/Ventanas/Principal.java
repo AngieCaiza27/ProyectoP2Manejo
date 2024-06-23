@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  * @author Hola
  */
 public class Principal extends javax.swing.JFrame {
-    
+    String rol;
     private CardLayout cardLayout;
     private JPanel panelEdificios;
     private JPanel panelAulas;
@@ -49,6 +49,9 @@ public class Principal extends javax.swing.JFrame {
 
         
        
+    }
+    public void asignarRol(String rolPersonal){
+        this.rol=rolPersonal;
     }
     
 
