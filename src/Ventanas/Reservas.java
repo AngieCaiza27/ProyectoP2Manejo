@@ -520,10 +520,9 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }
     
     public boolean insertarHorarioYReserva(String fechaHoraInicio, String fechaHoraFin, String motivoReserva, int idResponsableReserva) {
-    String sqlInsertHorario = "INSERT INTO horarios (Fecha_HoraInicio, Fecha_HoraFin) VALUES (?, ?)";
+    String sqlInsertHorario = "INSERT INTO horarios (Fecha_HoraInicio, Fecha_HoraFin, idEspacioImparte) VALUES (?, ?, ?)";
     String sqlGetLastHorarioId = "SELECT LAST_INSERT_ID()";
     String sqlInsertReserva = "INSERT INTO reservas (Fecha_HoraInicio, Fecha_HoraFin, MotivoReserva, idResponsableReserva, idHorarioReserva) VALUES (?, ?, ?, ?, ?)";
-    
     ResultSet rs;
     PreparedStatement ps;
     boolean success = false;
@@ -542,6 +541,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         ps = conn.prepareStatement(sqlInsertHorario);
         ps.setTimestamp(1, timestampInicio);
         ps.setTimestamp(2, timestampFin);
+        ps.setInt(3, idEspacio);
         ps.executeUpdate();
         
         // Obtener el ID del último horario insertado
@@ -565,7 +565,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         // Confirmar la transacción
         conn.commit();
         success = true;
-    }  catch (Exception e) {
+    } catch (Exception e) {
         e.printStackTrace();
         JOptionPane.showMessageDialog(null, "No se pudieron insertar los datos. ERROR: " + e.getMessage());
         try {
@@ -584,6 +584,61 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     
     return success;
 }
+    
+    public boolean eliminarHorarioYReserva(String fechaHoraInicio, String fechaHoraFin, int idEspacio) {
+    String sqlDeleteReserva = "DELETE FROM reservas WHERE idHorarioReserva = (SELECT idHorario FROM horarios WHERE Fecha_HoraInicio = ? AND Fecha_HoraFin = ? AND idEspacioImparte = ?)";
+    String sqlDeleteHorario = "DELETE FROM horarios WHERE Fecha_HoraInicio = ? AND Fecha_HoraFin = ? AND idEspacioImparte = ?";
+    PreparedStatement ps;
+    boolean success = false;
+
+    try {
+        // Convertir Strings a Timestamps
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestampInicio = new Timestamp(dateFormat.parse(fechaHoraInicio).getTime());
+        Timestamp timestampFin = new Timestamp(dateFormat.parse(fechaHoraFin).getTime());
+
+        // Iniciar la transacción
+        Connection conn = crudReservas.getConnection();
+        conn.setAutoCommit(false);
+        
+        // Eliminar la reserva
+        ps = conn.prepareStatement(sqlDeleteReserva);
+        ps.setTimestamp(1, timestampInicio);
+        ps.setTimestamp(2, timestampFin);
+        ps.setInt(3, idEspacio);
+        ps.executeUpdate();
+
+        // Eliminar el horario
+        ps = conn.prepareStatement(sqlDeleteHorario);
+        ps.setTimestamp(1, timestampInicio);
+        ps.setTimestamp(2, timestampFin);
+        ps.setInt(3, idEspacio);
+        ps.executeUpdate();
+
+        // Confirmar la transacción
+        conn.commit();
+        success = true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "No se pudieron eliminar los datos. ERROR: " + e.getMessage());
+        try {
+            // Revertir la transacción en caso de error
+            crudReservas.getConnection().rollback();
+        } catch (Exception rollbackEx) {
+            rollbackEx.printStackTrace();
+        }
+    } finally {
+        try {
+            crudReservas.getConnection().setAutoCommit(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    return success;
+}
+    
+    
 
 
 
@@ -849,20 +904,39 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
             // Verificar si el valor de la celda no es nulo y es una cadena de texto
             if (value == null) {
-                JOptionPane.showMessageDialog(null, this.idEspacio);
                 crearReserva(row, col);
-         
+
+                if (jComboEdificios.getSelectedItem() != null && jComboTipoEspacio.getSelectedItem() != null
+                        && jComboEspacio.getSelectedItem() != null) {
+
+                    String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
+                    //JOptionPane.showMessageDialog(null, "inicio: " + horaIniFin[0] + "fin: " + horaIniFin[1]);
+
+                    //JOptionPane.showMessageDialog(null, this.calendario.getDate());
+                    actualizarTabla(jComboEspacio.getSelectedItem().toString(), horarioIniFin[0], horarioIniFin[1]);
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
+                }
+
             } else if (value.toString().contains("RESERVA")) {
+                //String nombre = value.toString().
+                //JOptionPane.showMessageDialog(null, value);
+                //JOptionPane.showMessageDialog(null, obtenerFechaExactaInicio(row, col) + "---" + obtenerFechaExactaFin(row, col));
                 int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar esta reserva?");
-                
-//                if (respuesta == JOptionPane.YES_OPTION) {
-//                    
-//                    eliminarReserva(S);
-//                }
+
+                if (respuesta == JOptionPane.YES_OPTION) {
+
+                    eliminarHorarioYReserva(obtenerFechaExactaInicio(row, col), obtenerFechaExactaFin(row, col), idEspacio);
+                    //JOptionPane.showMessageDialog(null, obtenerFechaExactaInicio(row, col)+" --- "+obtenerFechaExactaFin(row, col)+" --- "+idEspacio);
+                    
+                    String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
+                    actualizarTabla(jComboEspacio.getSelectedItem().toString(), horarioIniFin[0], horarioIniFin[1]);
+                    JOptionPane.showMessageDialog(null, "Se elimió correctamente");
+
+                }
             }
         }
-
-
     }//GEN-LAST:event_jTableReservasMouseClicked
 
     private void jComboEdificiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEdificiosActionPerformed
