@@ -262,31 +262,31 @@ public class Reservas extends javax.swing.JPanel {
     public void actualizarTabla(String nombreEspacio) {
     List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(nombreEspacio);
 
-    DefaultTableModel modelo = new DefaultTableModel();
-    TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
+    DefaultTableModel tablaHorario = new DefaultTableModel();
+    TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(tablaHorario);
     this.jTableReservas.setRowSorter(ordenarTabla);
 
     // Columnas para los días de la semana
-    modelo.addColumn("Hora");
-    modelo.addColumn("Lunes");
-    modelo.addColumn("Martes");
-    modelo.addColumn("Miércoles");
-    modelo.addColumn("Jueves");
-    modelo.addColumn("Viernes");
-    modelo.addColumn("Sábado");
+    tablaHorario.addColumn("Hora");
+    tablaHorario.addColumn("Lunes");
+    tablaHorario.addColumn("Martes");
+    tablaHorario.addColumn("Miércoles");
+    tablaHorario.addColumn("Jueves");
+    tablaHorario.addColumn("Viernes");
+    tablaHorario.addColumn("Sábado");
 
     // Agregar filas para cada hora del día (de 7 AM a 8 PM)
     for (int hora = 7; hora <= 19; hora++) {
         Object[] fila = new Object[7];
         String ceroInicial = hora <= 9 ? "0" : "";
         fila[0] = ceroInicial + hora + ":00 - " + (hora + 1) + ":00";
-        modelo.addRow(fila);
+        tablaHorario.addRow(fila);
     }
 
     // Marcar descanso de 13:00 a 14:00
     int filaDescanso = 13 - 7;  // 13:00 - 7:00 = 6
     for (int columna = 1; columna <= 6; columna++) {
-        modelo.setValueAt("DESCANSO", filaDescanso, columna);
+        tablaHorario.setValueAt("DESCANSO", filaDescanso, columna);
     }
 
         for (CRUDHorarios horario : horarios) {
@@ -308,12 +308,12 @@ public class Reservas extends javax.swing.JPanel {
             for (int i = filaInicio; i <= filaFin; i++) {
                 // Asegurarse de no sobrescribir el descanso
                 if (i != filaDescanso) {
-                    modelo.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
+                    tablaHorario.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
                 }
             }
         }
 
-        this.jTableReservas.setModel(modelo);
+        this.jTableReservas.setModel(tablaHorario);
 
 // Aplicar el renderer personalizado a cada columna
         CustomTableCellRenderer renderer = new CustomTableCellRenderer();
@@ -366,90 +366,32 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
  
 
 
-private String[] mostrarDialogoDeReservas() {
-    String[] nombreYMotivo = new String[2];
-        try {
-            List<String> tiposResponsables = databaseHandler.getTiposResponsables();
-            JComboBox<String> tipoComboBox = new JComboBox<>(tiposResponsables.toArray(new String[0]));
-            JComboBox<String> responsablesComboBox = new JComboBox<>();
-            JTextArea motivoArea = new JTextArea(5, 20);
-
-            tipoComboBox.addActionListener(ev -> {
-                try {
-                    String selectedTipo = (String) tipoComboBox.getSelectedItem();
-                    List<String> responsables = databaseHandler.getResponsablesPorTipo(selectedTipo);
-                    responsablesComboBox.removeAllItems();
-                    for (String responsable : responsables) {
-                        responsablesComboBox.addItem(responsable);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
-
-            JPanel panel = new JPanel(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5, 5, 5, 5);
-
-            // Tipo de Responsable
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.gridwidth = 1;
-            gbc.anchor = GridBagConstraints.EAST;
-            panel.add(new JLabel("Tipo de Responsable:"), gbc);
-
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            panel.add(tipoComboBox, gbc);
-
-            // Responsable
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.anchor = GridBagConstraints.EAST;
-            panel.add(new JLabel("Responsable:"), gbc);
-
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            panel.add(responsablesComboBox, gbc);
-
-            // Motivo
-            gbc.gridx = 0;
-            gbc.gridy = 2;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.anchor = GridBagConstraints.NORTHEAST;
-            panel.add(new JLabel("Motivo:"), gbc);
-
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.BOTH;
-            gbc.weightx = 1.0;
-            gbc.weighty = 1.0;
-            JScrollPane scrollPane = new JScrollPane(motivoArea);
-            panel.add(scrollPane, gbc);
-
-            int result = JOptionPane.showConfirmDialog(null, panel, "Seleccione Responsable y Motivo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-            if (result == JOptionPane.OK_OPTION) {
-                String selectedTipo = (String) tipoComboBox.getSelectedItem();
-                String selectedResponsable = (String) responsablesComboBox.getSelectedItem();
-                String motivo = motivoArea.getText();
-                System.out.println("Tipo seleccionado: " + selectedTipo);
-                System.out.println("Responsable seleccionado: " + selectedResponsable);
-                System.out.println("Motivo: " + motivo);
-                nombreYMotivo[0] = selectedResponsable;
-                nombreYMotivo[1] = motivo;
-                return nombreYMotivo;
-            } else {
-                System.out.println("Diálogo cancelado");
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return nombreYMotivo;
-    }
 
 
-
+//    private void guardarReserva(){
+//VALUES ('2024-06-22 19:00:00', '2024-06-22 20:00:00', 'Reunión de profesores', 1, 2);
+//
+//try {
+//            String sql = "INSERT INTO reservas (Fecha_HoraInicio, "
+//                    + "Fecha_HoraFin, MotivoReserva, idResponsableReserva, idHorarioReserva) "
+//                    + "VALUES (?,?,?,?,?);";
+//
+//            this.ps = this.conexion.getConnection().prepareStatement(sql);
+//
+//            this.ps.setString(1, getNombreResponsable());
+//            this.ps.setString(2, getApellidoResponsable());
+//            this.ps.setString(3, getCedulaResponsable());
+//            this.ps.setInt(4, getTipoResponsable());
+//
+//            this.ps.executeUpdate();
+//
+//            JOptionPane.showMessageDialog(null, "Se guardaron los datos");
+//
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            JOptionPane.showMessageDialog(null, "No se guardaron los datos. ERROR");
+//        }
+//    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -729,12 +671,14 @@ private String[] mostrarDialogoDeReservas() {
     }//GEN-LAST:event_jComboEspacioMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        if (jComboEdificios.getSelectedItem()!=null && jComboTipoEspacio.getSelectedItem()!= null 
-                && jComboEspacio.getSelectedItem()!=null) {
+        if (jComboEdificios.getSelectedItem() != null && jComboTipoEspacio.getSelectedItem() != null
+                && jComboEspacio.getSelectedItem() != null) {
+
             JOptionPane.showMessageDialog(null, this.calendario.getDate());
-        actualizarTabla(jComboEspacio.getSelectedItem().toString());    
-        }else {
-        JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
+            actualizarTabla(jComboEspacio.getSelectedItem().toString());
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
@@ -780,4 +724,87 @@ private String[] mostrarDialogoDeReservas() {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableReservas;
     // End of variables declaration//GEN-END:variables
+
+    private String[] mostrarDialogoDeReservas() {
+    String[] nombreYMotivo = new String[2];
+        try {
+            List<String> tiposResponsables = databaseHandler.getTiposResponsables();
+            JComboBox<String> tipoComboBox = new JComboBox<>(tiposResponsables.toArray(new String[0]));
+            JComboBox<String> responsablesComboBox = new JComboBox<>();
+            JTextArea motivoArea = new JTextArea(5, 20);
+
+            tipoComboBox.addActionListener(ev -> {
+                try {
+                    String selectedTipo = (String) tipoComboBox.getSelectedItem();
+                    List<String> responsables = databaseHandler.getResponsablesPorTipo(selectedTipo);
+                    responsablesComboBox.removeAllItems();
+                    for (String responsable : responsables) {
+                        responsablesComboBox.addItem(responsable);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            JPanel panel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 5, 5, 5);
+
+            // Tipo de Responsable
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridwidth = 1;
+            gbc.anchor = GridBagConstraints.EAST;
+            panel.add(new JLabel("Tipo de Responsable:"), gbc);
+
+            gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            panel.add(tipoComboBox, gbc);
+
+            // Responsable
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.EAST;
+            panel.add(new JLabel("Responsable:"), gbc);
+
+            gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            panel.add(responsablesComboBox, gbc);
+
+            // Motivo
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.NORTHEAST;
+            panel.add(new JLabel("Motivo:"), gbc);
+
+            gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.weightx = 1.0;
+            gbc.weighty = 1.0;
+            JScrollPane scrollPane = new JScrollPane(motivoArea);
+            panel.add(scrollPane, gbc);
+
+            int result = JOptionPane.showConfirmDialog(null, panel, "Seleccione Responsable y Motivo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                String selectedTipo = (String) tipoComboBox.getSelectedItem();
+                String selectedResponsable = (String) responsablesComboBox.getSelectedItem();
+                String motivo = motivoArea.getText();
+                System.out.println("Tipo seleccionado: " + selectedTipo);
+                System.out.println("Responsable seleccionado: " + selectedResponsable);
+                System.out.println("Motivo: " + motivo);
+                nombreYMotivo[0] = selectedResponsable;
+                nombreYMotivo[1] = motivo;
+                return nombreYMotivo;
+            } else {
+                System.out.println("Diálogo cancelado");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return nombreYMotivo;
+    }
+    
 }
