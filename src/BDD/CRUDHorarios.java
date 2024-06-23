@@ -30,6 +30,27 @@ public class CRUDHorarios {
     private int idEspacio;
     private int idMateria;
     private int idPeriodoPertenece;
+    private int idResponsableReserva;
+    private String motivoReserva;
+
+    public int getIdResponsableReserva() {
+        return idResponsableReserva;
+    }
+
+    public void setIdResponsableReserva(int idResponsableReserva) {
+        this.idResponsableReserva = idResponsableReserva;
+    }
+
+    public String getMotivoReserva() {
+        return motivoReserva;
+    }
+
+    public void setMotivoReserva(String motivoReserva) {
+        this.motivoReserva = motivoReserva;
+    }
+    
+    
+    
 
     // Getters y setters...
 
@@ -219,12 +240,12 @@ public class CRUDHorarios {
         modelo.addColumn("Sábado");
 
         // Agregar filas para cada hora del día (de 7 AM a 8 PM)
-        for (int hora = 7; hora <= 20; hora++) {
+        for (int hora = 7; hora <= 19; hora++) {
         Object[] fila = new Object[7];
-        String ceroInicial=hora<=9 ? "0":"";
-        fila[0] = ceroInicial+hora + ":00";
+        String ceroInicial = hora <= 9 ? "0" : "";
+        fila[0] = ceroInicial + hora + ":00 - " + (hora + 1) + ":00";
         modelo.addRow(fila);
-        }
+    }
 
         for (CRUDHorarios horario : horarios) {
             // Calcular la fila y la columna donde se debe insertar el horario

@@ -217,12 +217,16 @@ public class Reservas extends javax.swing.JPanel {
                    + "h.idPeriodoPertenece, "
                    + "e.nombreEspacio, "
                    + "m.nombreMateria, "
-                   + "r.nombre1Responsable, "
-                   + "r.apellido1Responsable "
+                   + "COALESCE(res_r.nombre1Responsable, r.nombre1Responsable) AS nombre1Responsable, "
+                   + "COALESCE(res_r.apellido1Responsable, r.apellido1Responsable) AS apellido1Responsable, "
+                   + "res.idResponsableReserva, "
+                   + "res.MotivoReserva "
                    + "FROM horarios h "
                    + "JOIN espacios e ON h.idEspacioImparte = e.idEspacio "
-                   + "JOIN materias m ON h.idMateriaPertenece = m.idMateria "
-                   + "JOIN responsables r ON m.idResponsablePertenece = r.idResponsable "
+                   + "LEFT JOIN materias m ON h.idMateriaPertenece = m.idMateria "
+                   + "LEFT JOIN reservas res ON h.idHorario = res.idHorarioReserva "
+                   + "LEFT JOIN responsables r ON m.idResponsablePertenece = r.idResponsable "
+                   + "LEFT JOIN responsables res_r ON res.idResponsableReserva = res_r.idResponsable "
                    + "WHERE e.nombreEspacio = ? AND h.Fecha_HoraInicio >= ? AND h.Fecha_HoraFin <= ?";
 
         ResultSet rs;
@@ -246,6 +250,8 @@ public class Reservas extends javax.swing.JPanel {
             horario.setNombreMateria(rs.getString("nombreMateria"));
             horario.setNombre1Responsable(rs.getString("nombre1Responsable"));
             horario.setApellido1Responsable(rs.getString("apellido1Responsable"));
+            horario.setIdResponsableReserva(rs.getInt("idResponsableReserva"));
+            horario.setMotivoReserva(rs.getString("MotivoReserva"));
 
             horarios.add(horario);
         }
@@ -256,6 +262,8 @@ public class Reservas extends javax.swing.JPanel {
 
     return horarios;
 }
+
+
 public static String[] getWeekBoundaries(Date date) {
         LocalDate localDate = LocalDate.ofInstant(date.toInstant(), java.time.ZoneId.systemDefault());
         LocalDate startOfWeek = localDate.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
@@ -307,39 +315,46 @@ public static String[] getWeekBoundaries(Date date) {
         tablaHorario.setValueAt("DESCANSO", filaDescanso, columna);
     }
 
-        for (CRUDHorarios horario : horarios) {
-            // Calcular la fila y la columna donde se debe insertar el horario
-            int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
-            int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
-            int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7 - 1;  // Ajustar filaFin para no ocupar una hora extra
+    for (CRUDHorarios horario : horarios) {
+        // Calcular la fila y la columna donde se debe insertar el horario
+        int columna = calcularDiaDeLaSemana(horario.getFechaHoraInicio());
+        int filaInicio = horario.getFechaHoraInicio().toLocalDateTime().getHour() - 7;
+        int filaFin = horario.getFechaHoraFin().toLocalDateTime().getHour() - 7 - 1;  // Ajustar filaFin para no ocupar una hora extra
 
-            // Validar si filaInicio o filaFin están fuera de los límites de la tabla
-            if (filaInicio < 0 || filaInicio > 13 || filaFin < 0 || filaFin > 13) {
-                System.err.println("Horario fuera de los límites: " + horario);
-                continue;
-            }
+        // Validar si filaInicio o filaFin están fuera de los límites de la tabla
+        if (filaInicio < 0 || filaInicio > 13 || filaFin < 0 || filaFin > 13) {
+            System.err.println("Horario fuera de los límites: " + horario);
+            continue;
+        }
 
-            String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
-            String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
-            String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
+        String nombreResponsable = horario.getNombre1Responsable() != null ? horario.getNombre1Responsable() : "";
+        String apellidoResponsable = horario.getApellido1Responsable() != null ? horario.getApellido1Responsable() : "";
+        String nombreCompletoResponsable = nombreResponsable + " " + apellidoResponsable;
 
-            for (int i = filaInicio; i <= filaFin; i++) {
-                // Asegurarse de no sobrescribir el descanso
-                if (i != filaDescanso) {
-                    tablaHorario.setValueAt(nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio(), i, columna);
+        // Información de la reserva
+        String idResponsableReserva = horario.getIdResponsableReserva() > 0 ? String.valueOf(horario.getIdResponsableReserva()) : "N/A";
+        String motivoReserva = horario.getMotivoReserva() != null ? horario.getMotivoReserva() : "N/A";
+
+        for (int i = filaInicio; i <= filaFin; i++) {
+            // Asegurarse de no sobrescribir el descanso
+            if (i != filaDescanso) {
+                String contenidoCelda = nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio();
+                if (!idResponsableReserva.equals("N/A")) {
+                    contenidoCelda += "\nResponsable Reserva: " + idResponsableReserva + "\nMotivo Reserva: " + motivoReserva;
                 }
+                tablaHorario.setValueAt(contenidoCelda, i, columna);
             }
         }
-
-        this.jTableReservas.setModel(tablaHorario);
-
-// Aplicar el renderer personalizado a cada columna
-        CustomTableCellRenderer renderer = new CustomTableCellRenderer();
-        for (int i = 0; i < jTableReservas.getColumnCount(); i++) {
-            jTableReservas.getColumnModel().getColumn(i).setCellRenderer(renderer);
-        }
-
     }
+
+    this.jTableReservas.setModel(tablaHorario);
+
+    // Aplicar el renderer personalizado a cada columna
+    CustomTableCellRenderer renderer = new CustomTableCellRenderer();
+    for (int i = 0; i < jTableReservas.getColumnCount(); i++) {
+        jTableReservas.getColumnModel().getColumn(i).setCellRenderer(renderer);
+    }
+}
 
 
 
