@@ -4,7 +4,7 @@
  */
 package Ventanas;
 
-import BDD.CRUDEAulas;
+import BDD.CRUDMaterias;
 import static com.mysql.cj.protocol.x.XProtocolDecoder.instance;
 import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
@@ -19,6 +19,11 @@ public class Materias extends javax.swing.JPanel {
     public Materias() {
         initComponents();
         jtxtID.setEditable(false);
+        
+        CRUDMaterias objMaterias = new CRUDMaterias();
+        objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
+        objMaterias.llenarComboBoxCarreras(comboCarreras);
+        objMaterias.llenarComboBoxResponsables(comboResponsable);
     }
 
     public static JPanel getPanelMaterias(){
@@ -54,7 +59,7 @@ public class Materias extends javax.swing.JPanel {
         busqueda = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jtblListaAulas = new javax.swing.JTable();
+        jtblListaMaterias = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -244,8 +249,8 @@ public class Materias extends javax.swing.JPanel {
             }
         });
 
-        jtblListaAulas.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
-        jtblListaAulas.setModel(new javax.swing.table.DefaultTableModel(
+        jtblListaMaterias.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
+        jtblListaMaterias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -256,16 +261,22 @@ public class Materias extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jtblListaAulas.setAutoscrolls(false);
-        jtblListaAulas.setMaximumSize(new java.awt.Dimension(0, 0));
-        jtblListaAulas.setMinimumSize(new java.awt.Dimension(0, 0));
-        jtblListaAulas.setRowHeight(25);
-        jtblListaAulas.addMouseListener(new java.awt.event.MouseAdapter() {
+        jtblListaMaterias.setAutoscrolls(false);
+        jtblListaMaterias.setMaximumSize(new java.awt.Dimension(0, 0));
+        jtblListaMaterias.setMinimumSize(new java.awt.Dimension(0, 0));
+        jtblListaMaterias.setRowHeight(25);
+        jtblListaMaterias.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtblListaAulasMouseClicked(evt);
+                jtblListaMateriasMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jtblListaAulas);
+        jScrollPane1.setViewportView(jtblListaMaterias);
+        if (jtblListaMaterias.getColumnModel().getColumnCount() > 0) {
+            jtblListaMaterias.getColumnModel().getColumn(0).setMinWidth(50);
+            jtblListaMaterias.getColumnModel().getColumn(0).setMaxWidth(50);
+            jtblListaMaterias.getColumnModel().getColumn(2).setMinWidth(600);
+            jtblListaMaterias.getColumnModel().getColumn(2).setMaxWidth(600);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -281,14 +292,14 @@ public class Materias extends javax.swing.JPanel {
                         .addGap(27, 27, 27)
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(66, 66, 66))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 802, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39))))
+                        .addContainerGap(27, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,10 +335,8 @@ public class Materias extends javax.swing.JPanel {
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
-        // TODO add your handling code here:
-        CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.deleteEspacios(jtxtID);
-        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+
+       
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -340,31 +349,22 @@ public class Materias extends javax.swing.JPanel {
     }//GEN-LAST:event_busquedaActionPerformed
 
     private void busquedaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyPressed
-        CRUDEAulas objetoAulas = new CRUDEAulas();
-        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
-
-        }
-
+        
     }//GEN-LAST:event_busquedaKeyPressed
 
     private void busquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyReleased
-        CRUDEAulas objetoAulas = new CRUDEAulas();
-        if (busqueda.getText().trim().equals("")) {
-            objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
-
-        }
+        
     }//GEN-LAST:event_busquedaKeyReleased
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+        
 
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void jtblListaAulasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaAulasMouseClicked
-      
-    }//GEN-LAST:event_jtblListaAulasMouseClicked
+    private void jtblListaMateriasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaMateriasMouseClicked
+      CRUDMaterias objMaterias = new CRUDMaterias();
+      objMaterias.SelecionarMaterias(jtblListaMaterias, jtxtID, jtxtNombre1, comboCarreras, comboResponsable);
+    }//GEN-LAST:event_jtblListaMateriasMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -388,7 +388,7 @@ public class Materias extends javax.swing.JPanel {
     private javax.swing.JButton jbtnEliminar;
     private javax.swing.JButton jbtnGuardar;
     private javax.swing.JButton jbtnModificar;
-    private javax.swing.JTable jtblListaAulas;
+    private javax.swing.JTable jtblListaMaterias;
     private javax.swing.JTextField jtxtID;
     private javax.swing.JTextField jtxtNombre1;
     // End of variables declaration//GEN-END:variables
