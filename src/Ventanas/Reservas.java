@@ -29,6 +29,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -488,8 +489,14 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         id = datos[0];
         motivo = datos[1];
         if (id != null && motivo != null) {
-        JOptionPane.showMessageDialog(null, obtenerFechaExactaInicio(fila, columna)+" --- "+obtenerFechaExactaFin(fila, columna));
-        JOptionPane.showMessageDialog(null, id + " " + motivo);
+//        JOptionPane.showMessageDialog(null, obtenerFechaExactaInicio(fila, columna)+" --- "+obtenerFechaExactaFin(fila, columna));
+//        JOptionPane.showMessageDialog(null, id + " " + motivo);
+        boolean exito = insertarHorarioYReserva(obtenerFechaExactaInicio(fila, columna), obtenerFechaExactaFin(fila, columna), motivo, Integer.parseInt(id));
+            if (exito) {
+                JOptionPane.showMessageDialog(null, "Reserva creada exitosamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Algo salió mal");
+            }
         }
         
 //        String[] horarioIniFin = obtenerFechaExactaCelda(columna);
@@ -509,6 +516,72 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     String[] datosDeCelda = new String[2];
     return datosDeCelda;
     }
+    
+    public boolean insertarHorarioYReserva(String fechaHoraInicio, String fechaHoraFin, String motivoReserva, int idResponsableReserva) {
+    String sqlInsertHorario = "INSERT INTO horarios (Fecha_HoraInicio, Fecha_HoraFin) VALUES (?, ?)";
+    String sqlGetLastHorarioId = "SELECT LAST_INSERT_ID()";
+    String sqlInsertReserva = "INSERT INTO reservas (Fecha_HoraInicio, Fecha_HoraFin, MotivoReserva, idResponsableReserva, idHorarioReserva) VALUES (?, ?, ?, ?, ?)";
+    
+    ResultSet rs;
+    PreparedStatement ps;
+    boolean success = false;
+
+    try {
+        // Convertir Strings a Timestamps
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestampInicio = new Timestamp(dateFormat.parse(fechaHoraInicio).getTime());
+        Timestamp timestampFin = new Timestamp(dateFormat.parse(fechaHoraFin).getTime());
+
+        // Iniciar la transacción
+        Connection conn = crudReservas.getConnection();
+        conn.setAutoCommit(false);
+        
+        // Insertar nuevo horario
+        ps = conn.prepareStatement(sqlInsertHorario);
+        ps.setTimestamp(1, timestampInicio);
+        ps.setTimestamp(2, timestampFin);
+        ps.executeUpdate();
+        
+        // Obtener el ID del último horario insertado
+        ps = conn.prepareStatement(sqlGetLastHorarioId);
+        rs = ps.executeQuery();
+        
+        int lastHorarioId = 0;
+        if (rs.next()) {
+            lastHorarioId = rs.getInt(1);
+        }
+        
+        // Insertar nueva reserva vinculada al horario recién creado
+        ps = conn.prepareStatement(sqlInsertReserva);
+        ps.setTimestamp(1, timestampInicio);
+        ps.setTimestamp(2, timestampFin);
+        ps.setString(3, motivoReserva);
+        ps.setInt(4, idResponsableReserva);
+        ps.setInt(5, lastHorarioId);
+        ps.executeUpdate();
+        
+        // Confirmar la transacción
+        conn.commit();
+        success = true;
+    }  catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "No se pudieron insertar los datos. ERROR: " + e.getMessage());
+        try {
+            // Revertir la transacción en caso de error
+            crudReservas.getConnection().rollback();
+        } catch (Exception rollbackEx) {
+            rollbackEx.printStackTrace();
+        }
+    } finally {
+        try {
+            crudReservas.getConnection().setAutoCommit(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    return success;
+}
 
 
 
