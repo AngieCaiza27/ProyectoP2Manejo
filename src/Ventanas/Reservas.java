@@ -337,10 +337,18 @@ public static String[] getWeekBoundaries(Date date) {
 
         for (int i = filaInicio; i <= filaFin; i++) {
             // Asegurarse de no sobrescribir el descanso
-            if (i != filaDescanso) {
+            if (i != filaDescanso && horario.getNombreMateria()!=null) {
+                
                 String contenidoCelda = nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio();
                 if (!idResponsableReserva.equals("N/A")) {
-                    contenidoCelda += "\nResponsable Reserva: " + idResponsableReserva + "\nMotivo Reserva: " + motivoReserva;
+                    contenidoCelda += "\n" + idResponsableReserva + "\n" + motivoReserva;
+                }
+                tablaHorario.setValueAt(contenidoCelda, i, columna);
+            }
+            if (i != filaDescanso && horario.getNombreMateria()==null) {
+                String contenidoCelda = "RESERVA \n"+nombreCompletoResponsable + "\n" + horario.getNombreEspacio();
+                if (!idResponsableReserva.equals("N/A")) {
+                    contenidoCelda += "\n" + motivoReserva;
                 }
                 tablaHorario.setValueAt(contenidoCelda, i, columna);
             }
