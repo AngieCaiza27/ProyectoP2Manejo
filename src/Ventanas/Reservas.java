@@ -29,8 +29,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -388,21 +390,29 @@ public static String[] getWeekBoundaries(Date date) {
     }
     
     private String obtenerFecha(int columna) {
-        Date nuevaFecha = calendario.getDate();
-        nuevaFecha.setDate(nuevaFecha.getDate()+columna);
+        System.out.println(getStartOfWeek(calendario.getDate()));
+        Date nuevaFecha = getStartOfWeek(calendario.getDate());
+        nuevaFecha.setDate(nuevaFecha.getDate()+columna-1);
         JOptionPane.showConfirmDialog(null, nuevaFecha);
-        String fechaCelda = obtenerFechaDeCelda(nuevaFecha);
+        String fechaCelda = darFormatoFecha(nuevaFecha);
         return fechaCelda;
     }
-    public static String obtenerFechaDeCelda(Date date) {
-        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), java.time.ZoneId.systemDefault());
-        LocalDate inicio = localDate.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
-
+    public static String darFormatoFecha(Date date) {
+        Instant instant = date.toInstant();
+        LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String startOfWeekString = inicio.atStartOfDay().format(formatter);
-
-        return startOfWeekString;
+        String fechaFormato = localDate.format(formatter);
+        return fechaFormato;
     }
+    
+    public static Date getStartOfWeek(Date date) {
+    LocalDate localDate = LocalDate.ofInstant(date.toInstant(), java.time.ZoneId.systemDefault());
+    LocalDate startOfWeek = localDate.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+
+    Instant instant = startOfWeek.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant();
+    return Date.from(instant);
+}
+    
 //    private String obtenerFechaHoraInicio(int fila, int columna) {
 //        int horaInicio = fila + 7;
 //        // Asegúrate de que el nombre de la columna corresponde a una fecha adecuada
