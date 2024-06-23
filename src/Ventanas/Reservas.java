@@ -55,6 +55,7 @@ public class Reservas extends javax.swing.JPanel {
     private CRUDEReservas crudReservas;
     private CRUDHorarios crudHorarios;
     private DatabaseHandler databaseHandler;
+    private int idEspacio;
     
 
     public Reservas() {
@@ -260,6 +261,7 @@ public class Reservas extends javax.swing.JPanel {
             horario.setApellido1Responsable(rs.getString("apellido1Responsable"));
             horario.setIdResponsableReserva(rs.getInt("idResponsableReserva"));
             horario.setMotivoReserva(rs.getString("MotivoReserva"));
+            this.idEspacio = rs.getInt("idEspacioImparte");
 
             horarios.add(horario);
         }
@@ -847,7 +849,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
             // Verificar si el valor de la celda no es nulo y es una cadena de texto
             if (value == null) {
-                
+                JOptionPane.showMessageDialog(null, this.idEspacio);
                 crearReserva(row, col);
          
             } else if (value.toString().contains("RESERVA")) {
