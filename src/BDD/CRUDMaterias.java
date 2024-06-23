@@ -74,15 +74,18 @@ public class CRUDMaterias {
         setNombreMateria(paraNombreM.getText());
         String carreraSeleccionada = (String) paraCarreras.getSelectedItem();
         String responsableSeleccionado = (String) paraResponsable.getSelectedItem();
+        
+        String nombreCarrera = carreraSeleccionada.split(" - ")[0];
+        //String nombreResponsable = carreraSeleccionada.split(" ")[0];
 
-        int idCarrera = getIdCarreras(carreraSeleccionada);
+        int idCarrera = getIdCarreras(nombreCarrera);
         setIdCarrera(idCarrera);
         
         int idResponsable = getIdResponsables(responsableSeleccionado);
         setIdResponsable(idResponsable);
 
         try {
-            String sql = "INSERT INTO Materias (nombreMateria, idCarreraPertenece, idResponsablePertenece) VALUES (?, ?, ?);";
+            String sql = "INSERT INTO materias (nombreMateria, idCarreraPertenece, idResponsablePertenece) VALUES (?, ?, ?);";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.ps.setString(1, getNombreMateria());
             this.ps.setInt(2, getIdCarrera());
@@ -104,7 +107,7 @@ public class CRUDMaterias {
                      "JOIN carreras c ON m.idCarreraPertenece = c.idCarrera " +
                      "JOIN niveles n ON c.idNivelPertenece = n.idNivel " +
                      "JOIN responsables r ON m.idResponsablePertenece = r.idResponsable " +
-                     "WHERE c.nombreCarrera LIKE ?";
+                     "WHERE m.nombreMateria LIKE ?";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
             this.ps.setString(1, "%" + buscar + "%");
             this.rs = this.ps.executeQuery();
@@ -168,7 +171,7 @@ public class CRUDMaterias {
             
             Object responsablesObj = parametrosED.getValueAt(fila, 3);
             if (responsablesObj != null) {
-                String responsables= carreraObj.toString();
+                String responsables= responsablesObj.toString();
                 
                 // Busca el índice en el JComboBox y selecciona el item correspondiente
                 for (int i = 0; i < paraResponsable.getItemCount(); i++) {
@@ -178,7 +181,7 @@ public class CRUDMaterias {
                     }
                 }
             } else {
-                paraCarreras.setSelectedIndex(-1); // Si el valor es null, selecciona ningún elemento
+                paraResponsable.setSelectedIndex(-1); // Si el valor es null, selecciona ningún elemento
             }
             
         } else {
@@ -189,6 +192,67 @@ public class CRUDMaterias {
         JOptionPane.showMessageDialog(null, "Error de selección");
     }
 }
+        
+    public void updateMaterias(JTextField paraId, JTextField paraNombreM, JComboBox<String> paraCarreras, JComboBox<String> paraResponsable) {
+    // Establecer los valores de las variables de instancia
+    setIdMateria(Integer.parseInt(paraId.getText()));
+    setNombreMateria(paraNombreM.getText());
+    
+    // Obtener el id de la carrera seleccionada
+    String carreraSeleccionada = (String) paraCarreras.getSelectedItem();
+    String nombreCarrera = carreraSeleccionada.split(" - ")[0];
+    int idCarrera = getIdCarreras(nombreCarrera);
+    setIdCarrera(idCarrera);
+
+    // Obtener el id del responsable seleccionado
+    String responsableSeleccionado = (String) paraResponsable.getSelectedItem();
+    int idResponsable = getIdResponsables(responsableSeleccionado);
+    setIdResponsable(idResponsable);
+
+    try {
+        // Preparar la consulta SQL de actualización
+        String sql = "UPDATE materias SET nombreMateria = ?, idCarreraPertenece = ?, idResponsablePertenece = ? WHERE idMateria = ?;";
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+
+        // Establecer los valores en el PreparedStatement
+        this.ps.setString(1, getNombreMateria());
+        this.ps.setInt(2, getIdCarrera());
+        this.ps.setInt(3, getIdResponsable());
+        this.ps.setInt(4, getIdMateria());
+
+        // Ejecutar la actualización
+        int rowsUpdated = this.ps.executeUpdate();
+
+        // Verificar si la actualización fue exitosa
+        if (rowsUpdated > 0) {
+            JOptionPane.showMessageDialog(null, "Datos modificados");
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontraron registros para modificar");
+        }
+    } catch (SQLException e) {
+        // Manejo de excepciones y mensajes de error detallados
+        System.out.println("Error al actualizar la materia: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "No se han modificado los datos. Error: " + e.getMessage());
+    }
+}
+
+    
+   public void deleteEspacios(JTextField paraId){
+        
+        setIdCarrera(Integer.parseInt(paraId.getText()));
+        try{
+            String sql = "DELETE FROM  materias WHERE idMateria = ?";
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.ps.setInt(1,getIdCarrera());
+            this.ps.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Datos eliminados");
+        }catch(Exception e){
+            System.out.println(e);
+            
+            JOptionPane.showMessageDialog(null, "No se han eliminar los datos");
+        }
+    }
 
     public int getIdCarreras(String carrera) {
         String sql = "SELECT idCarrera FROM carreras WHERE nombreCarrera = ?";
@@ -206,7 +270,7 @@ public class CRUDMaterias {
     }
 
     public int getIdResponsables(String responsable) {
-        String sql = "SELECT idResponsable FROM responsables WHERE nombre1Responsable = ?";
+        String sql = "SELECT idResponsable FROM responsables WHERE CONCAT(nombre1Responsable, ' ', apellido1Responsable) = ?";
         try (PreparedStatement ps = this.conexion.getConnection().prepareStatement(sql)) {
             ps.setString(1, responsable);
             try (ResultSet resultSet = ps.executeQuery()) {
@@ -254,6 +318,39 @@ public class CRUDMaterias {
         } catch (SQLException e) {
             System.out.println(e);
         }
+    }
+    
+    public boolean materiaExistente(JTextField paraNombre) {
+    try {
+        String sql = "SELECT nombreMateria FROM materias WHERE nombreMateria = ?";
+        this.ps = this.conexion.getConnection().prepareStatement(sql);
+        
+       
+        String nombre = paraNombre.getText();
+        this.ps.setString(1, nombre);
+        
+        // Ejecutar la consulta
+        try (ResultSet resultSet = this.ps.executeQuery()) {
+            
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+        return false; // En caso de error, retornar false (o puedes manejarlo de otra manera)
+    }
+}
+
+    
+    public boolean datosVacios(JTextField paraNombre) {
+        if (paraNombre.getText().equals("")) {
+            return true;
+        }
+        
+        return false;
     }
     
     

@@ -7,6 +7,7 @@ package Ventanas;
 import BDD.CRUDMaterias;
 import static com.mysql.cj.protocol.x.XProtocolDecoder.instance;
 import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -32,6 +33,12 @@ public class Materias extends javax.swing.JPanel {
         }
         
         return instance;
+    }
+    
+    private void limpiarCampos() {
+    jtxtID.setText("");
+    jtxtNombre1.setText("");
+    
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -325,23 +332,43 @@ public class Materias extends javax.swing.JPanel {
     }//GEN-LAST:event_jtxtIDActionPerformed
 
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
-        // TODO add your handling code here
+       
+        CRUDMaterias objMaterias = new CRUDMaterias();
+        if (!"".equals(jtxtID.getText())) {
+           
+        }else{
+            if (objMaterias.datosVacios(jtxtNombre1)==true) {
+                JOptionPane.showMessageDialog(null, "Por favor, ingresar todos los campos");
+            } else {
+                if (objMaterias.materiaExistente(jtxtNombre1) == false) {
+                    objMaterias.insertarMateria(jtxtNombre1, comboCarreras, comboResponsable);
+                    objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
+                } else {
+                    JOptionPane.showMessageDialog(null, "La materia ya se encuentra registrada");
+                }
+            }
+        }
+         objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
         
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
     private void jbtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModificarActionPerformed
-        // TODO add your handling code here:
+         CRUDMaterias objMaterias = new CRUDMaterias();
+         objMaterias.updateMaterias(jtxtID, jtxtNombre1, comboCarreras, comboResponsable);
+         objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
         
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
-
+        CRUDMaterias objMaterias = new CRUDMaterias();
+         objMaterias.deleteEspacios(jtxtID);
+         objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
        
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        //limpiarCampos();
+        limpiarCampos();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void busquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaActionPerformed
@@ -349,15 +376,23 @@ public class Materias extends javax.swing.JPanel {
     }//GEN-LAST:event_busquedaActionPerformed
 
     private void busquedaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyPressed
-        
+        CRUDMaterias objMaterias = new CRUDMaterias();
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+            objMaterias.mostrarMateria(jtblListaMaterias,busqueda.getText());
+
+        }
     }//GEN-LAST:event_busquedaKeyPressed
 
     private void busquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyReleased
-        
+        CRUDMaterias objMaterias = new CRUDMaterias();
+        if (busqueda.getText().trim().equals("")) {
+        objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
+        }
     }//GEN-LAST:event_busquedaKeyReleased
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        
+        CRUDMaterias objMaterias = new CRUDMaterias();
+        objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
 
     }//GEN-LAST:event_btnBuscarActionPerformed
 

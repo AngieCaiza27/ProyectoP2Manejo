@@ -398,6 +398,7 @@ public class Aulas extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "El espacio ya se encuentra registrado");
         }
+        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
 
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
@@ -412,7 +413,7 @@ public class Aulas extends javax.swing.JPanel {
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
         objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
-      objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
     private void jtblListaAulasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaAulasMouseClicked
