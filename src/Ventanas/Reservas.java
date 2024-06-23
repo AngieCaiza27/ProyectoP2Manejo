@@ -407,17 +407,17 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
     public void crearReserva() {
         String[] datos = new String[2];
-                datos = mostrarDialogoDeReservas();
-                String id, motivo;
-                id = datos[0];
-                motivo = datos[1];
-                JOptionPane.showMessageDialog(null, id+motivo);
-                
+        datos = mostrarDialogoDeReservas();
+        String id, motivo;
+        id = datos[0];
+        motivo = datos[1];
+
     }
+    
 
-
-    public void eliminarReserva() {
-        
+    public String[] obtenerDatosDeCelda() {
+    String[] datosDeCelda = new String[2];
+    return datosDeCelda;
     }
 
 
