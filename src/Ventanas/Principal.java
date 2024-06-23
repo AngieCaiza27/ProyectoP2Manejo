@@ -304,6 +304,7 @@ public class Principal extends javax.swing.JFrame {
         panelReservas = new Reservas(); 
         
         JPanel reservas = Reservas.getPanelReservas();
+
          cardLayout.show(jpContent, "Reservas");
         
         reservas.setSize(1000, 800);

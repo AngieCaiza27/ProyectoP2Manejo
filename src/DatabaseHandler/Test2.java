@@ -35,16 +35,16 @@ public class Test2 {
             tipoComboBox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        String selectedTipo = (String) tipoComboBox.getSelectedItem();
-                        List<String> responsables = dbHandler.getResponsablesPorTipo(selectedTipo);
-                        responsablesComboBox.removeAllItems();
-                        for (String responsable : responsables) {
-                            responsablesComboBox.addItem(responsable);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+//                    try {
+//                        String selectedTipo = (String) tipoComboBox.getSelectedItem();
+//                        List<String> responsables = dbHandler.getResponsablesPorTipo(selectedTipo);
+//                        responsablesComboBox.removeAllItems();
+//                        for (String responsable : responsables) {
+//                            responsablesComboBox.addItem(responsable);
+//                        }
+//                    } catch (Exception ex) {
+//                        ex.printStackTrace();
+//                    }
                 }
             });
 
