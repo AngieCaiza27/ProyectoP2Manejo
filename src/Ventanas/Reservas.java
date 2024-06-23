@@ -384,16 +384,21 @@ public static String[] getWeekBoundaries(Date date) {
         return fechaCelda;
     }
     
-    private String[] obtenerFechaCelda(int columna) {
-        String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
-        return horarioIniFin;
+    private String obtenerFechaExactaInicio(int fila, int columna) {
+        String fechaIni = (obtenerFecha(columna)+" "+obtenerHoraInicio(fila));
+        return fechaIni;
+    }
+    
+    private String obtenerFechaExactaFin(int fila, int columna) {
+        String fechaFin = (obtenerFecha(columna)+" "+obtenerHoraFin(fila));
+        return fechaFin;
     }
     
     private String obtenerFecha(int columna) {
-        System.out.println(getStartOfWeek(calendario.getDate()));
+        //System.out.println(getStartOfWeek(calendario.getDate()));
         Date nuevaFecha = getStartOfWeek(calendario.getDate());
         nuevaFecha.setDate(nuevaFecha.getDate()+columna-1);
-        JOptionPane.showConfirmDialog(null, nuevaFecha);
+        //JOptionPane.showConfirmDialog(null, nuevaFecha);
         String fechaCelda = darFormatoFecha(nuevaFecha);
         return fechaCelda;
     }
@@ -479,16 +484,18 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         String id, motivo;
         id = datos[0];
         motivo = datos[1];
-        String[] horarioIniFin = obtenerFechaCelda(columna);
         
-//        private String[] obtenerFechaCelda(int columna) {
-//        String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
-//        return horarioIniFin;
-//    }
-        
+        JOptionPane.showMessageDialog(null, obtenerFechaExactaInicio(fila, columna)+" --- "+obtenerFechaExactaFin(fila, columna));
+//        String[] horarioIniFin = obtenerFechaExactaCelda(columna);
+//        
+////        private String[] obtenerFechaCelda(int columna) {
+////        String[] horarioIniFin = getWeekBoundaries(this.calendario.getDate());
+////        return horarioIniFin;
+////    }
+//        
 //                JOptionPane.showMessageDialog(null, obtenerHoraInicio(fila)+" Y "+obtenerHoraFin(fila));
-                JOptionPane.showMessageDialog(null, columna +" col "+ horarioIniFin[0]+ "Y" +horarioIniFin[1]);
-                JOptionPane.showMessageDialog(null, obtenerFecha(columna));
+//                //JOptionPane.showMessageDialog(null, columna +" col "+ horarioIniFin[0]+ "Y" +horarioIniFin[1]);
+//                //JOptionPane.showMessageDialog(null, obtenerFecha(columna));
     }
     
 
