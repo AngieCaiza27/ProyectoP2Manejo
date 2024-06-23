@@ -33,6 +33,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -404,6 +405,17 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     }
 }
 
+    public void crearReserva() {
+        String[] datos = new String[2];
+                datos = mostrarDialogoDeReservas();
+                String id, motivo;
+                id = datos[0];
+                motivo = datos[1];
+                JOptionPane.showMessageDialog(null, id+motivo);
+                
+    }
+
+
     public void eliminarReserva() {
         
     }
@@ -673,11 +685,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             // Verificar si el valor de la celda no es nulo y es una cadena de texto
             if (value == null) {
                 
-                String[] datos = new String[2];
-                datos = mostrarDialogoDeReservas();
-                String nombre, motivo;
-                nombre = datos[0];
-                motivo = datos[1];
+                crearReserva();
          
             } else if (value.toString().contains("RESERVA")) {
                 int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar esta reserva?");
@@ -777,85 +785,86 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     // End of variables declaration//GEN-END:variables
 
     private String[] mostrarDialogoDeReservas() {
-    String[] nombreYMotivo = new String[2];
-        try {
-            List<String> tiposResponsables = databaseHandler.getTiposResponsables();
-            JComboBox<String> tipoComboBox = new JComboBox<>(tiposResponsables.toArray(new String[0]));
-            JComboBox<String> responsablesComboBox = new JComboBox<>();
-            JTextArea motivoArea = new JTextArea(5, 20);
+    String[] idYMotivo = new String[2];
+    try {
+        List<String> tiposResponsables = databaseHandler.getTiposResponsables();
+        JComboBox<String> tipoComboBox = new JComboBox<>(tiposResponsables.toArray(new String[0]));
+        JComboBox<String> responsablesComboBox = new JComboBox<>();
+        JTextArea motivoArea = new JTextArea(5, 20);
 
-            tipoComboBox.addActionListener(ev -> {
-                try {
-                    String selectedTipo = (String) tipoComboBox.getSelectedItem();
-                    List<String> responsables = databaseHandler.getResponsablesPorTipo(selectedTipo);
-                    responsablesComboBox.removeAllItems();
-                    for (String responsable : responsables) {
-                        responsablesComboBox.addItem(responsable);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
-
-            JPanel panel = new JPanel(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5, 5, 5, 5);
-
-            // Tipo de Responsable
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.gridwidth = 1;
-            gbc.anchor = GridBagConstraints.EAST;
-            panel.add(new JLabel("Tipo de Responsable:"), gbc);
-
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            panel.add(tipoComboBox, gbc);
-
-            // Responsable
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.anchor = GridBagConstraints.EAST;
-            panel.add(new JLabel("Responsable:"), gbc);
-
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            panel.add(responsablesComboBox, gbc);
-
-            // Motivo
-            gbc.gridx = 0;
-            gbc.gridy = 2;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.anchor = GridBagConstraints.NORTHEAST;
-            panel.add(new JLabel("Motivo:"), gbc);
-
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.BOTH;
-            gbc.weightx = 1.0;
-            gbc.weighty = 1.0;
-            JScrollPane scrollPane = new JScrollPane(motivoArea);
-            panel.add(scrollPane, gbc);
-
-            int result = JOptionPane.showConfirmDialog(null, panel, "Seleccione Responsable y Motivo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-            if (result == JOptionPane.OK_OPTION) {
+        tipoComboBox.addActionListener(ev -> {
+            try {
                 String selectedTipo = (String) tipoComboBox.getSelectedItem();
-                String selectedResponsable = (String) responsablesComboBox.getSelectedItem();
-                String motivo = motivoArea.getText();
-                System.out.println("Tipo seleccionado: " + selectedTipo);
-                System.out.println("Responsable seleccionado: " + selectedResponsable);
-                System.out.println("Motivo: " + motivo);
-                nombreYMotivo[0] = selectedResponsable;
-                nombreYMotivo[1] = motivo;
-                return nombreYMotivo;
-            } else {
-                System.out.println("Diálogo cancelado");
+                Map<String, Integer> responsables = databaseHandler.getResponsablesPorTipo(selectedTipo);
+                responsablesComboBox.removeAllItems();
+                for (String responsable : responsables.keySet()) {
+                    responsablesComboBox.addItem(responsable);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        });
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Tipo de Responsable
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(new JLabel("Tipo de Responsable:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(tipoComboBox, gbc);
+
+        // Responsable
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(new JLabel("Responsable:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(responsablesComboBox, gbc);
+
+        // Motivo
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        panel.add(new JLabel("Motivo:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        JScrollPane scrollPane = new JScrollPane(motivoArea);
+        panel.add(scrollPane, gbc);
+
+        int result = JOptionPane.showConfirmDialog(null, panel, "Seleccione Responsable y Motivo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String selectedTipo = (String) tipoComboBox.getSelectedItem();
+            String selectedResponsable = (String) responsablesComboBox.getSelectedItem();
+            String motivo = motivoArea.getText();
+            System.out.println("Tipo seleccionado: " + selectedTipo);
+            System.out.println("Responsable seleccionado: " + selectedResponsable);
+            System.out.println("Motivo: " + motivo);
+            idYMotivo[0] = String.valueOf(databaseHandler.getResponsablesPorTipo(selectedTipo).get(selectedResponsable));
+            idYMotivo[1] = motivo;
+            return idYMotivo;
+        } else {
+            System.out.println("Diálogo cancelado");
         }
-        return nombreYMotivo;
+    } catch (Exception ex) {
+        ex.printStackTrace();
     }
+    return idYMotivo;
+}
+
     
 }
