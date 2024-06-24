@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package BDD;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -14,17 +11,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-/**
- *
- * @author Jake
- */
 public class CRUDEAulas {
-    
+
     int idEspacio;
-    String nombreEspacio; 
+    String nombreEspacio;
     int capacidadEspacio;
     int edificioEspacio;
     int tipoEspacio;
+
+    private Conexion conexion;
+    private PreparedStatement ps;
+    private ResultSet rs;
 
     public int getCapacidadEspacio() {
         return capacidadEspacio;
@@ -38,7 +35,7 @@ public class CRUDEAulas {
         return edificioEspacio;
     }
 
-    public void setEdificioEspacio( int edificioEspacio) {
+    public void setEdificioEspacio(int edificioEspacio) {
         this.edificioEspacio = edificioEspacio;
     }
 
@@ -49,10 +46,7 @@ public class CRUDEAulas {
     public void setTipospacio(int tipoEspacio) {
         this.tipoEspacio = tipoEspacio;
     }
-    
-    
-    
-    
+
     public int getIdEspacio() {
         return idEspacio;
     }
@@ -92,212 +86,288 @@ public class CRUDEAulas {
     public void setRs(ResultSet rs) {
         this.rs = rs;
     }
-    
-    private Conexion conexion;
-    private PreparedStatement ps;
-    private ResultSet rs;
-    
-    public CRUDEAulas(){
-        this.conexion = new Conexion();
-    }
-    
-    public void insertarAulas( JTextField paraNombre,JTextField paraCapacidad, JTextField paraEdificio, JTextField paraTipo ){
-        
+
+    public void insertarAulas(JTextField paraNombre, JTextField paraCapacidad, JComboBox<String> paraEdificio, JComboBox<String> paraTipo) {
+
         setNombreEspacio(paraNombre.getText());
         setCapacidadEspacio(Integer.parseInt(paraCapacidad.getText()));
-        setEdificioEspacio(Integer.parseInt(paraEdificio.getText()));
-        setTipospacio(Integer.parseInt(paraTipo.getText()));
-        
-        try{
-            String sql = "INSERT INTO espacios (nombreEspacio, capacidad, idEdificioPertenece, idTipoEspacioPertenece) values (?, ?, ?, ?);";
+        String edificioSeleccionado = (String) paraEdificio.getSelectedItem();
+        String tipoSeleccionado = (String) paraTipo.getSelectedItem();
+
+        int idEdificio = getIdEdificios(edificioSeleccionado);
+        setEdificioEspacio(idEdificio);
+
+        int idTipo = getIdTipo(tipoSeleccionado);
+        setTipospacio(idTipo);
+
+        try {
+            String sql = "INSERT INTO espacios (nombreEspacio, capacidad, idEdificioPertenece, idTipoEspacioPertenece) VALUES (?, ?, ?, ?);";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
-           
+
             this.ps.setString(1, getNombreEspacio());
             this.ps.setInt(2, getCapacidadEspacio());
             this.ps.setInt(3, getEdificioEspacio());
             this.ps.setInt(4, getTipoEspacio());
             this.ps.executeUpdate();
-            
+
             JOptionPane.showMessageDialog(null, "Se guardaron los datos");
-            
-                        
-        }catch(Exception e){
+
+        } catch (Exception e) {
             System.out.println(e);
-            
             JOptionPane.showMessageDialog(null, "No se guardaron los datos ERROR");
         }
     }
-    public void mostrarAulas(JTable parametrosCompletosED,String buscar ){
-        
-       
-        try{
-            String sql = "SELECT espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio " +
-             "FROM espacios " +
-             "JOIN edificios ON espacios.idEdificioPertenece = edificios.idEdificio " +
-             "JOIN tipoespacio ON espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio " +
-             "WHERE (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3 OR espacios.idTipoEspacioPertenece = 2) " +
-             "AND (espacios.nombreEspacio LIKE '%" + buscar + "%')";
 
+    public void mostrarAulas(JTable parametrosCompletosED, String buscar) {
+        try {
+            String sql = "SELECT espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, edificios.nombreEdificio, tipoespacio.nombreTipoEspacio "
+                    + "FROM espacios "
+                    + "JOIN edificios ON espacios.idEdificioPertenece = edificios.idEdificio "
+                    + "JOIN tipoespacio ON espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio "
+                    + "WHERE (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 2 OR espacios.idTipoEspacioPertenece = 3) "
+                    + "AND (espacios.nombreEspacio LIKE ?)";
 
             this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.ps.setString(1, "%" + buscar + "%");
             this.rs = this.ps.executeQuery();
-            
+
             DefaultTableModel modelo = new DefaultTableModel();
-            TableRowSorter<TableModel> OrdenarTabla = new TableRowSorter<TableModel>(modelo);
-            parametrosCompletosED.setRowSorter(OrdenarTabla);
-            
+            TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<TableModel>(modelo);
+            parametrosCompletosED.setRowSorter(ordenarTabla);
+
             modelo.addColumn("Id");
             modelo.addColumn("Nombre");
             modelo.addColumn("Capacidad");
             modelo.addColumn("Edificio Ubicado");
-            modelo.addColumn("Descripción");
-            
+            modelo.addColumn("Tipo Espacio");
+
             parametrosCompletosED.setModel(modelo);
-            
-            
-            while(this.rs.next()){
+
+            while (this.rs.next()) {
                 String[] datos = new String[5];
-                datos[0] = String.valueOf(this.rs.getInt(1));
-                datos[1] = this.rs.getString(2);
-                datos[2] = this.rs.getString(3);
-                datos[3] = this.rs.getString(6);
-                datos[4] = this.rs.getString(7);
-                
-               modelo.addRow(datos);
+                datos[0] = String.valueOf(this.rs.getInt("idEspacio"));
+                datos[1] = this.rs.getString("nombreEspacio");
+                datos[2] = this.rs.getString("capacidad");
+                datos[3] = this.rs.getString("nombreEdificio");
+                datos[4] = this.rs.getString("nombreTipoEspacio");
+
+                modelo.addRow(datos);
             }
-           
+
             parametrosCompletosED.setModel(modelo);
-            
-        }catch(Exception e){
+
+        } catch (Exception e) {
             System.out.println(e);
-            
             JOptionPane.showMessageDialog(null, "No se pudo mostrar los datos ERROR");
         }
     }
-    
-    /*public void buscarAulas(String buscar){
-        try{
-            String sql = "select espacios.idEspacio, espacios.nombreEspacio, espacios.capacidad, espacios.idEdificioPertenece, espacios.idTipoEspacioPertenece, edificios.nombreEdificio, tipoespacio.descripcionTipoEspacio from espacios, edificios, tipoespacio where espacios.idEdificioPertenece = edificios.idEdificio and espacios.idTipoEspacioPertenece = tipoespacio.idTipoEspacio AND (espacios.idTipoEspacioPertenece = 1 OR espacios.idTipoEspacioPertenece = 3 )where idEspacio LIKE '%"+buscar+"%', OR nombreEspacio LIKE '%"+buscar+"% ";
 
-            this.ps = this.conexion.getConnection().prepareStatement(sql);
-            this.rs = this.ps.executeQuery();
-            
-            DefaultTableModel modelo = new DefaultTableModel();
-           
-            
-            
-            
-            
-        }catch(Exception e){
-            System.out.println(e);
-            
-            JOptionPane.showMessageDialog(null, "No se pudo mostrar los datos ERROR");
-        }
-    }*/
-    
-    
-    
-    public void SelecionarAulas(JTable parametrosED, JTextField paraId, JTextField paraNombre,
-                             JTextField paraCapacidad, JTextField paraEdificio, JTextField paraTipo) {
-    try {
-        int fila = parametrosED.getSelectedRow();
+    public void SeleccionarEspacios(JTable parametrosED, JTextField paraId, JTextField paraNombre, JTextField paraCapacidad, JComboBox<String> paraEdificio, JComboBox<String> paraTipo) {
+        try {
+            int fila = parametrosED.getSelectedRow();
 
-        if (fila >= 0) {
-            paraId.setText((parametrosED.getValueAt(fila, 0).toString()));
-            paraNombre.setText((parametrosED.getValueAt(fila, 1).toString()));
-            paraCapacidad.setText((parametrosED.getValueAt(fila, 2).toString()));
-            paraEdificio.setText((parametrosED.getValueAt(fila, 3).toString()));
-            
+            if (fila >= 0) {
+                Object idObj = parametrosED.getValueAt(fila, 0);
+                paraId.setText(idObj != null ? idObj.toString() : "");
 
-            // Handle optional 'Descripcion' field (assuming it's the 5th column)
-            String descripcion = (String) parametrosED.getValueAt(fila, 4);
-            if (descripcion != null && !descripcion.isEmpty()) {
-                paraTipo.setText(descripcion);
+                Object nombreObj = parametrosED.getValueAt(fila, 1);
+                paraNombre.setText(nombreObj != null ? nombreObj.toString() : "");
+
+                Object idCapObj = parametrosED.getValueAt(fila, 2);
+                paraCapacidad.setText(idCapObj != null ? idCapObj.toString() : "");
+
+                Object edificioObj = parametrosED.getValueAt(fila, 3);
+                if (edificioObj != null) {
+                    String edificio = edificioObj.toString();
+
+                    for (int i = 0; i < paraEdificio.getItemCount(); i++) {
+                        if (paraEdificio.getItemAt(i).equals(edificio)) {
+                            paraEdificio.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                } else {
+                    paraEdificio.setSelectedIndex(-1);
+                }
+
+                Object tipoObj = parametrosED.getValueAt(fila, 4);
+                if (tipoObj != null) {
+                    String tipo = tipoObj.toString();
+
+                    for (int i = 0; i < paraTipo.getItemCount(); i++) {
+                        if (paraTipo.getItemAt(i).equals(tipo)) {
+                            paraTipo.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                } else {
+                    paraTipo.setSelectedIndex(-1);
+                }
+
             } else {
-                // If 'Descripcion' is empty or null, set it to an empty string
-                paraTipo.setText("");
+                JOptionPane.showMessageDialog(null, "Fila no seleccionada");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Fila no seleccionada");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error de selección");
         }
-    } catch (Exception e) {
-        System.out.println(e);
-        JOptionPane.showMessageDialog(null, "Error de seleccion");
     }
-}
 
-    
-    public void updateAulas(JTextField paraId,JTextField paraNombre,JTextField paraCapacidad, JTextField paraEdificio, JTextField paraTipo ){
-        
+    public void updateAulas(JTextField paraId, JTextField paraNombre, JTextField paraCapacidad, JComboBox<String> paraEdificio, JComboBox<String> paraTipo) {
+
         setIdEspacio(Integer.parseInt(paraId.getText()));
         setNombreEspacio(paraNombre.getText());
         setCapacidadEspacio(Integer.parseInt(paraCapacidad.getText()));
-        setEdificioEspacio(Integer.parseInt(paraEdificio.getText()));
-        setTipospacio(Integer.parseInt(paraTipo.getText()));
+        String edificioSeleccionado = paraEdificio.getSelectedItem().toString();
+        //String nombreEdificio = edificioSeleccionado.split(" ")[0];
+        int idEdificio = getIdEdificios(edificioSeleccionado);
+        setEdificioEspacio(idEdificio);
         
-        try{
-            String sql = "UPDATE espacios SET nombreEspacio = ?, capacidad = ? ,idEdificioPertenece = ? , idTipoEspacioPertenece= ? WHERE idEspacio = ?;";
+        System.out.println("Edificio:"+  idEdificio );
+
+        String tipoSeleccionado = (String) paraTipo.getSelectedItem();
+        int idTipo = getIdTipo(tipoSeleccionado);
+        setTipospacio(idTipo);
+        System.out.println("Espacio:"+  idTipo );
+
+        try {
+            String sql = "UPDATE espacios SET nombreEspacio = ?, capacidad = ?, idEdificioPertenece = ?, idTipoEspacioPertenece = ? WHERE idEspacio = ?;";
             this.ps = this.conexion.getConnection().prepareStatement(sql);
-            
-                       
+
             this.ps.setString(1, getNombreEspacio());
             this.ps.setInt(2, getCapacidadEspacio());
             this.ps.setInt(3, getEdificioEspacio());
             this.ps.setInt(4, getTipoEspacio());
             this.ps.setInt(5, getIdEspacio());
             this.ps.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Datos modificados");
-            
-        }catch(Exception e){
-            System.out.println(e);
-            
-            JOptionPane.showMessageDialog(null, "No se han modificado los datos");
-        }
-    }
-    
-    public void deleteEspacios(JTextField paraId){
-        
-        setIdEspacio(Integer.parseInt(paraId.getText()));
-        try{
-            String sql = "DELETE FROM  espacios WHERE idEspacio = ?";
-            this.ps = this.conexion.getConnection().prepareStatement(sql);
-            this.ps.setInt(1,getIdEspacio());
-            this.ps.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Datos eliminados");
-        }catch(Exception e){
-            System.out.println(e);
-            
-            JOptionPane.showMessageDialog(null, "No se han eliminar los datos");
-        }
-    }
-    
-    public boolean espacioExistente(JTextField paraNombre) {
-    try {
-        String sql = "SELECT nombreEspacio FROM espacios WHERE nombreEspacio = ?";
-        this.ps = this.conexion.getConnection().prepareStatement(sql);
-        
-        // Obtener la cédula del JTextField y establecerla en la consulta
-        String nombre = paraNombre.getText();
-        this.ps.setString(1, nombre);
-        
-        // Ejecutar la consulta
-        try (ResultSet resultSet = this.ps.executeQuery()) {
-            // Si hay resultados, la cédula existe
-            if (resultSet.next()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    } catch (SQLException e) {
-        System.out.println(e);
-        return false; // En caso de error, retornar false (o puedes manejarlo de otra manera)
-    }
-}
-    
-    
-}
-    
 
+            int rowsUpdated = this.ps.executeUpdate();
+
+            // Verificar si la actualización fue exitosa
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(null, "Datos modificados");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontraron registros para modificar");
+            }
+        } catch (SQLException e) {
+            // Manejo de excepciones y mensajes de error detallados
+            System.out.println("Error al actualizar la materia: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "No se han modificado los datos. Error: " + e.getMessage());
+        }
+    }
+
+    public void deleteAulas(JTextField paraId) {
+        setIdEspacio(Integer.parseInt(paraId.getText()));
+
+        try {
+            String sql = "DELETE FROM espacios WHERE idEspacio = ?;";
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            this.ps.setInt(1, getIdEspacio());
+            this.ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Se eliminó el registro correctamente");
+
+        } catch (Exception e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "No se eliminó el registro ERROR");
+        }
+    }
+
+    private int getIdEdificios(String edificio) {
+        String sql = "SELECT idEdificio FROM edificios WHERE nombreEdificio = ?";
+        try ( PreparedStatement ps = this.conexion.getConnection().prepareStatement(sql)) {
+            ps.setString(1, edificio);
+            try ( ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("idEdificio");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return -1;
+    }
+
+    private int getIdTipo(String tipo) {
+        String sql = "SELECT idTipoEspacio FROM tipoespacio WHERE nombreTipoEspacio= ?";
+        try ( PreparedStatement ps = this.conexion.getConnection().prepareStatement(sql)) {
+            ps.setString(1, tipo);
+            try ( ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("idTipoEspacio");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return -1;
+    }
+
+    public void llenarComboBoxEdificios(JComboBox<String> comboBox) {
+        try {
+            comboBox.removeAllItems(); // Limpiar el JComboBox antes de llenarlo
+            String sql = "SELECT nombreEdificio FROM edificios;";
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            try (ResultSet resultSet = this.ps.executeQuery()) {
+                while (resultSet.next()) {
+                    String item = resultSet.getString("nombreEdificio");
+                    comboBox.addItem(item);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void llenarComboBoxTipo(JComboBox<String> comboBox) {
+        try {
+            comboBox.removeAllItems(); // Limpiar el JComboBox antes de llenarlo
+            String sql = "SELECT nombreTipoEspacio FROM tipoespacio;";
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+            try (ResultSet resultSet = this.ps.executeQuery()) {
+                while (resultSet.next()) {
+                    String item = resultSet.getString("nombreTipoEspacio");
+                    comboBox.addItem(item);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public boolean espacioExistente(JTextField paraNombre) {
+        try {
+            String sql = "SELECT nombreEspacio FROM espacios WHERE nombreEspacio = ?";
+            this.ps = this.conexion.getConnection().prepareStatement(sql);
+
+            // Obtener la cédula del JTextField y establecerla en la consulta
+            String nombre = paraNombre.getText();
+            this.ps.setString(1, nombre);
+
+            // Ejecutar la consulta
+            try ( ResultSet resultSet = this.ps.executeQuery()) {
+                // Si hay resultados, la cédula existe
+                if (resultSet.next()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false; // En caso de error, retornar false (o puedes manejarlo de otra manera)
+        }
+    }
+    
+    public boolean datosVacios(JTextField paraNombre,JTextField paraCapacidad) {
+        if (paraNombre.getText().equals("")) {
+            return true;
+        }
+        
+        if (paraCapacidad.getText().equals("")) {
+            return true;
+        }
+        
+        return false;
+    }
+}

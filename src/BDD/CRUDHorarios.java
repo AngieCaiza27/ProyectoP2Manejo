@@ -499,7 +499,7 @@ public void deleteHorario(int idHorario) {
     try {
         String sql = "DELETE FROM horarios WHERE idHorario = ? ";
         this.ps = getConnection().prepareStatement(sql);
-        this.ps.setInt(1, idHorario);
+        this.ps.setInt(1, getIdHorario());
         this.ps.executeUpdate();
 
         JOptionPane.showMessageDialog(null, "Datos eliminados");

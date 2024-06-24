@@ -17,7 +17,6 @@ public class CRUDMaterias {
     String nombreMateria;  
     int idCarrera;
     int idResponsable;
-
     private Conexion conexion;
     private PreparedStatement ps;
     private ResultSet rs;
