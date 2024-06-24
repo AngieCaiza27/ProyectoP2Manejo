@@ -219,8 +219,8 @@ public class CRUDEAulas {
         setNombreEspacio(paraNombre.getText());
         setCapacidadEspacio(Integer.parseInt(paraCapacidad.getText()));
         String edificioSeleccionado = paraEdificio.getSelectedItem().toString();
-        String nombreEdificio = edificioSeleccionado.split(" ")[0];
-        int idEdificio = getIdEdificios(nombreEdificio);
+        //String nombreEdificio = edificioSeleccionado.split(" ")[0];
+        int idEdificio = getIdEdificios(edificioSeleccionado);
         setEdificioEspacio(idEdificio);
         
         System.out.println("Edificio:"+  idEdificio );

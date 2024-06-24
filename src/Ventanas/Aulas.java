@@ -430,7 +430,7 @@ public class Aulas extends javax.swing.JPanel {
     private void jbtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModificarActionPerformed
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, ComboTipo, ComboTipo);
+        objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, ComboEdificio, ComboTipo);
         objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
