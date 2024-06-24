@@ -33,6 +33,8 @@ public class Aulas extends javax.swing.JPanel {
         
         CRUDEAulas objAulas = new CRUDEAulas();
         objAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+        objAulas.llenarComboBoxEdificios(comboEdificio);
+        objAulas.llenarComboBoxTipo(comboTipo);
         
         limpiarCampos();
         botonesEditar();
@@ -55,8 +57,8 @@ public class Aulas extends javax.swing.JPanel {
     jtxtID.setText("");
     jtxtNombre1.setText("");
     jtxtCapacidad.setText("");
-    jtxtEdificio.setText("");
-    jtxtTipo.setText("");
+    //jtxtEdificio.setText("");
+    //jtxtTipo.setText("");
 }
      public void botonesInicio() {
         btnNuevo.setEnabled(true);
@@ -69,9 +71,10 @@ public class Aulas extends javax.swing.JPanel {
     public void textosInicio() {
         jtxtID.setEnabled(false);
         jtxtNombre1.setEnabled(false);
-        jtxtEdificio.setEnabled(false);
+        //jtxtEdificio.setEnabled(false);
         jtxtCapacidad.setEnabled(false);
-        jtxtTipo.setEnabled(false);
+        comboTipo.setEnabled(false);
+        comboEdificio.setEnabled(false);
         
 
     }
@@ -79,19 +82,21 @@ public class Aulas extends javax.swing.JPanel {
     public void textosActivados() {
         jtxtID.setEnabled(false);
         jtxtNombre1.setEnabled(true);
-        jtxtEdificio.setEnabled(true);
+        //jtxtEdificio.setEnabled(true);
         jtxtCapacidad.setEnabled(true);
-        jtxtTipo.setEnabled(true);
+        comboTipo.setEnabled(true);
+        comboEdificio.setEnabled(true);
+        //jtxtTipo.setEnabled(true);
         //jcmbCursos.setEnabled(true);
     }
 
     public void textosEditar() {
          jtxtID.setEnabled(false);
         jtxtNombre1.setEnabled(true);
-        jtxtEdificio.setEnabled(true);
+        //jtxtEdificio.setEnabled(true);
         jtxtCapacidad.setEnabled(true);
-        jtxtTipo.setEnabled(true);
-        //jcmbCursos.setEnabled(true);
+        comboTipo.setEnabled(true);
+        comboEdificio.setEnabled(true);
     }
 
     public void botonesNuevo() {
@@ -143,13 +148,13 @@ public class Aulas extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jtxtNombre1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jtxtEdificio = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jtxtTipo = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
+        comboEdificio = new javax.swing.JComboBox<>();
+        comboTipo = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblListaAulas = new javax.swing.JTable();
@@ -220,7 +225,7 @@ public class Aulas extends javax.swing.JPanel {
         jLabel7.setText("Edificio Ubicado");
 
         jLabel8.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
-        jLabel8.setText("Descripción");
+        jLabel8.setText("Tipo Espacio");
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/escoba.png"))); // NOI18N
 
@@ -245,33 +250,35 @@ public class Aulas extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(comboEdificio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtxtNombre1)
                             .addComponent(jtxtCapacidad, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jtxtEdificio)
-                            .addComponent(jtxtTipo)
+                            .addComponent(jtxtID)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel7)
                                     .addComponent(jLabel8))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jtxtID)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -284,7 +291,10 @@ public class Aulas extends javax.swing.JPanel {
                             .addComponent(jbtnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jbtnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                             .addComponent(jbtnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(comboTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -305,12 +315,12 @@ public class Aulas extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtxtEdificio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboEdificio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtxtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnNuevo)
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -330,7 +340,7 @@ public class Aulas extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -479,7 +489,7 @@ public class Aulas extends javax.swing.JPanel {
         // TODO add your handling code here
         CRUDEAulas objetoAulas = new CRUDEAulas();
         if (objetoAulas.espacioExistente(jtxtNombre1)==false) {
-        objetoAulas.insertarAulas(jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
+        objetoAulas.insertarAulas(jtxtNombre1, jtxtCapacidad, comboEdificio, comboTipo);
         objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());    
         } else {
             JOptionPane.showMessageDialog(null, "El espacio ya se encuentra registrado");
@@ -495,7 +505,7 @@ public class Aulas extends javax.swing.JPanel {
     int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
 
     if (respuesta == JOptionPane.YES_OPTION) {
-        objetoAulas.deleteEspacios(jtxtID);
+        objetoAulas.deleteAulas(jtxtID);
         objetoAulas.mostrarAulas(jtblListaAulas, busqueda.getText());
     }
     }//GEN-LAST:event_jbtnEliminarActionPerformed
@@ -507,7 +517,7 @@ public class Aulas extends javax.swing.JPanel {
     int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere modificar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
 
     if (respuesta == JOptionPane.YES_OPTION) {
-        objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
+        objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, comboEdificio, comboTipo);
         objetoAulas.mostrarAulas(jtblListaAulas, busqueda.getText());
         botonesEditar();
         textosEditar();
@@ -517,7 +527,7 @@ public class Aulas extends javax.swing.JPanel {
     private void jtblListaAulasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaAulasMouseClicked
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
-         objetoAulas.SelecionarAulas(jtblListaAulas,jtxtID,jtxtNombre1,jtxtCapacidad,jtxtEdificio,jtxtTipo);
+         objetoAulas.SeleccionarEspacios(jtblListaAulas, jtxtID, jtxtNombre1, jtxtCapacidad, comboEdificio, comboTipo);
          botonesEditar();
          textosEditar();
     }//GEN-LAST:event_jtblListaAulasMouseClicked
@@ -573,6 +583,8 @@ public class Aulas extends javax.swing.JPanel {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JTextField busqueda;
+    private javax.swing.JComboBox<String> comboEdificio;
+    private javax.swing.JComboBox<String> comboTipo;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -595,9 +607,7 @@ public class Aulas extends javax.swing.JPanel {
     private javax.swing.JButton jbtnModificar;
     private javax.swing.JTable jtblListaAulas;
     private javax.swing.JTextField jtxtCapacidad;
-    private javax.swing.JTextField jtxtEdificio;
     private javax.swing.JTextField jtxtID;
     private javax.swing.JTextField jtxtNombre1;
-    private javax.swing.JTextField jtxtTipo;
     // End of variables declaration//GEN-END:variables
 }
