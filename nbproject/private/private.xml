@@ -3,16 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/Ventanas/Aulas.java</file>
             <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/Ventanas/Materias.java</file>
             <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/BDD/CRUDEAulas.java</file>
             <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/BDD/CRUDMaterias.java</file>
-            <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/Ventanas/Reservas.java</file>
-            <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/Ventanas/EditDialog.java</file>
+            <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/Ventanas/Responsables.java</file>
+            <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/BDD/CRUDResponsables.java</file>
             <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/BDD/CRUDHorarios.java</file>
-            <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/DatabaseHandler/DatabaseHandler.java</file>
             <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/Ventanas/Principal.java</file>
             <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/Ventanas/Horarios.java</file>
-            <file>file:/C:/Users/Hola/Desktop/ProyectoP2Manejo/src/DatabaseHandler/Test2.java</file>
         </group>
     </open-files>
 </project-private>

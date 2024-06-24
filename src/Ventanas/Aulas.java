@@ -6,6 +6,7 @@ package Ventanas;
 
 import BDD.CRUDEAulas;
 import BDD.CRUDEdificios;
+import BDD.CRUDMaterias;
 import BDD.Conexion;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
@@ -30,11 +31,11 @@ public class Aulas extends javax.swing.JPanel {
     public Aulas() {
         initComponents();
          jtxtID.setEditable(false);
-        
+         //jtxtTipo.setEditable(false);
         CRUDEAulas objAulas = new CRUDEAulas();
         objAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
-        
-        limpiarCampos();
+        objAulas.llenarComboBoxEdificios(ComboEdificio);
+        objAulas.llenarComboBoxTipo(ComboTipo);
     }
     
     
@@ -50,8 +51,7 @@ public class Aulas extends javax.swing.JPanel {
     jtxtID.setText("");
     jtxtNombre1.setText("");
     jtxtCapacidad.setText("");
-    jtxtEdificio.setText("");
-    jtxtTipo.setText("");
+   
 }
     
 
@@ -78,11 +78,11 @@ public class Aulas extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jtxtNombre1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jtxtEdificio = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jtxtTipo = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        ComboTipo = new javax.swing.JComboBox<>();
+        ComboEdificio = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblListaAulas = new javax.swing.JTable();
@@ -153,7 +153,7 @@ public class Aulas extends javax.swing.JPanel {
         jLabel7.setText("Edificio Ubicado");
 
         jLabel8.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
-        jLabel8.setText("Descripción");
+        jLabel8.setText("Tipo");
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/escoba.png"))); // NOI18N
 
@@ -164,6 +164,8 @@ public class Aulas extends javax.swing.JPanel {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        ComboTipo.setToolTipText("");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -176,8 +178,6 @@ public class Aulas extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtxtNombre1)
                             .addComponent(jtxtCapacidad, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jtxtEdificio)
-                            .addComponent(jtxtTipo)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
@@ -203,7 +203,13 @@ public class Aulas extends javax.swing.JPanel {
                             .addComponent(jbtnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jbtnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                             .addComponent(jbtnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(ComboTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(ComboEdificio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -224,12 +230,12 @@ public class Aulas extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtxtEdificio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(ComboEdificio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtxtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addComponent(ComboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jbtnGuardar)
                     .addComponent(jLabel3))
@@ -391,35 +397,47 @@ public class Aulas extends javax.swing.JPanel {
 
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         // TODO add your handling code here
+      
+             
         CRUDEAulas objetoAulas = new CRUDEAulas();
-        if (objetoAulas.espacioExistente(jtxtNombre1)==false) {
-        objetoAulas.insertarAulas(jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
-        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());    
-        } else {
-            JOptionPane.showMessageDialog(null, "El espacio ya se encuentra registrado");
+        if (!"".equals(jtxtID.getText())) {
+           
+        }else{
+            if (objetoAulas.datosVacios(jtxtNombre1, jtxtCapacidad)==true) {
+                JOptionPane.showMessageDialog(null, "Por favor, ingresar todos los campos");
+            } else {
+                if (objetoAulas.espacioExistente(jtxtNombre1) == false) {
+                    objetoAulas.insertarAulas(jtxtNombre1, jtxtCapacidad, ComboEdificio, ComboTipo);
+                    objetoAulas.mostrarAulas(jtblListaAulas, busqueda.getText());
+                } else {
+                    JOptionPane.showMessageDialog(null, "El espacio ya se encuentra registrado");
+                }
+            }
         }
-        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+         objetoAulas.mostrarAulas(jtblListaAulas, busqueda.getText());
+        
+                                               
 
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.deleteEspacios(jtxtID);
+        objetoAulas.deleteAulas(jtxtID);
         objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
     private void jbtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModificarActionPerformed
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
-        objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
+        objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, ComboTipo, ComboTipo);
         objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
     private void jtblListaAulasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaAulasMouseClicked
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
-         objetoAulas.SelecionarAulas(jtblListaAulas,jtxtID,jtxtNombre1,jtxtCapacidad,jtxtEdificio,jtxtTipo);
+         objetoAulas.SeleccionarEspacios(jtblListaAulas, jtxtID, jtxtNombre1, jtxtCapacidad, ComboEdificio, ComboTipo);
     }//GEN-LAST:event_jtblListaAulasMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -462,6 +480,8 @@ public class Aulas extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboEdificio;
+    private javax.swing.JComboBox<String> ComboTipo;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JTextField busqueda;
     private javax.swing.JButton jButton1;
@@ -485,9 +505,7 @@ public class Aulas extends javax.swing.JPanel {
     private javax.swing.JButton jbtnModificar;
     private javax.swing.JTable jtblListaAulas;
     private javax.swing.JTextField jtxtCapacidad;
-    private javax.swing.JTextField jtxtEdificio;
     private javax.swing.JTextField jtxtID;
     private javax.swing.JTextField jtxtNombre1;
-    private javax.swing.JTextField jtxtTipo;
     // End of variables declaration//GEN-END:variables
 }
