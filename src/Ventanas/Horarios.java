@@ -257,7 +257,21 @@ public class Horarios extends javax.swing.JPanel {
     }//GEN-LAST:event_buscarActionPerformed
 
     private void jComboCarrerasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboCarrerasActionPerformed
-
+       
+        String carreraSeleccionada = jComboCarreras.getSelectedItem().toString();
+        cargarNiveles(carreraSeleccionada);
+        String nivelPa;
+        if(jComboNiveles.getSelectedItem() != null ){
+            nivelPa = jComboNiveles.getSelectedItem().toString();
+        }
+        else {
+            nivelPa=jComboNiveles.getItemAt(0);
+        }
+                
+        this.carrera = carreraSeleccionada;
+        this.nivel = nivelPa.split(" - ")[0];
+        this.paralelo = nivelPa.split(" - ")[1];
+        actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(), (String) jComboNiveles.getSelectedItem());
     }//GEN-LAST:event_jComboCarrerasActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -275,15 +289,12 @@ public class Horarios extends javax.swing.JPanel {
     }//GEN-LAST:event_buscarKeyPressed
 
     private void jComboNivelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboNivelesActionPerformed
-        actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(), (String) jComboNiveles.getSelectedItem());
-        String carreraSeleccionada = jComboCarreras.getSelectedItem().toString();
-        String nivelPa = jComboNiveles.getSelectedItem().toString();
-        this.carrera = carreraSeleccionada;
-        this.nivel = nivelPa.split(" - ")[0];
-        this.paralelo = nivelPa.split(" - ")[1];
-
-        cargarNiveles(carreraSeleccionada);
-
+        String nivelPa = null;
+        if(jComboNiveles.getSelectedItem() != null ){
+            nivelPa = jComboNiveles.getSelectedItem().toString();
+            this.nivel = nivelPa.split(" - ")[0];
+            this.paralelo = nivelPa.split(" - ")[1];
+        }
     }//GEN-LAST:event_jComboNivelesActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -312,7 +323,6 @@ public class Horarios extends javax.swing.JPanel {
 
                     // Abrir el diálogo de edición
                     EditDialog dialog = new EditDialog((Frame) SwingUtilities.getWindowAncestor(jTable1));
-                    JOptionPane.showMessageDialog(null, this.carrera + this.nivel + this.paralelo);
                     dialog.llenarLista(this.carrera, this.nivel, this.paralelo);
                     dialog.setVisible(true);
 
@@ -380,41 +390,39 @@ public class Horarios extends javax.swing.JPanel {
 
         // Asumiendo que la primera columna es la hora
         String hora = jTable1.getValueAt(row, 0).toString();
-        String[] parts = hora.split(":");
+        String[] parts = hora.split("-");
+        parts = parts[0].split(":");
         int hours = Integer.parseInt(parts[0]);
-        int minutes = Integer.parseInt(parts[1]);
-
+        int minutes = 0;
+        String horaInicio = hours < 10 ? "0" + hours : String.valueOf(hours);
         // Calcular la hora de fin, sumando una hora
         int horaFin = hours + 1;
-        String horaFinString = String.format("%02d:%02d", horaFin, minutes);
+        String horaFinString = horaFin < 10 ? "0" + horaFin : String.valueOf(horaFin);
 
         // Crear la consulta SQL para actualizar los datos en la base de datos
-        String sql = " UPDATE horarios "
-                + "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria "
-                + "JOIN carreras ON carreras.idCarrera = materias.idCarreraPertenece "
-                + "JOIN niveles ON niveles.idNivel = carreras.idNivelPertenece "
-                + "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio "
-                + "SET horarios.idMateriaPertenece = ?, horarios.idEspacioImparte = ?, "
-                + "horarios.Fecha_HoraInicio = CONCAT(DATE(Fecha_HoraInicio), ' ', ?), "
-                + "horarios.Fecha_HoraFin = CONCAT(DATE(Fecha_HoraFin), ' ', ?) "
-                + "WHERE DAYOFWEEK(Fecha_HoraInicio) = ? "
-                + "AND carreras.nombreCarrera = ? "
-                + "AND niveles.nombreNivel = ? "
-                + "AND niveles.paralelo = ?"
-                + "AND DATE_FORMAT(horarios.Fecha_HoraInicio,'%H:%i')  = ?;";
-        //DATE_FORMAT(tu_campo_datetime, '%H:%i')
-
+        String sql = """
+                     UPDATE horarios 
+                     JOIN materias ON horarios.idMateriaPertenece = materias.idMateria 
+                     JOIN carreras ON carreras.idCarrera = materias.idCarreraPertenece 
+                     JOIN niveles ON niveles.idNivel = carreras.idNivelPertenece
+                     JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio
+                     SET horarios.idMateriaPertenece = ?, horarios.idEspacioImparte = ?
+                     WHERE DAYOFWEEK(Fecha_HoraInicio) = ?
+                     AND carreras.nombreCarrera = ?
+                     AND niveles.nombreNivel = ?
+                     AND niveles.paralelo = ?
+                     AND DATE_FORMAT(horarios.Fecha_HoraInicio,'%H:%i')  = ?
+                     AND DATE_FORMAT(horarios.Fecha_HoraFin,'%H:%i')  = ?;
+                     """;
         try ( PreparedStatement ps = crudHorarios.getConnection().prepareStatement(sql)) {
-            //ps.setInt(1, materia); // Parámetro 1: idResponsablePertenece
             ps.setInt(1, materia); // Parámetro 2: idMateriaPertenece
             ps.setInt(2, espacio); // Parámetro 3: idEspacioImparte
-            ps.setString(3, hora + ":00"); // Parámetro 4: Fecha_HoraInicio 07
-            ps.setString(4, horaFinString + ":00"); // Parámetro 5: Fecha_HoraFin
-            ps.setInt(5, numDia); // Parámetro 6: Día de la semana
-            ps.setString(6, this.carrera);
-            ps.setString(7, this.nivel);
-            ps.setString(8, this.paralelo);
-            ps.setString(9, hora);
+            ps.setInt(3, numDia); // Parámetro 6: Día de la semana
+            ps.setString(4, this.carrera);
+            ps.setString(5, this.nivel);
+            ps.setString(6, this.paralelo);
+            ps.setString(7, horaInicio + ":00"); // Parámetro 4: Fecha_HoraInicio 07
+            ps.setString(8, horaFinString + ":00"); // Parámetro 5: Fecha_HoraFin
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Datos actualizados en la base de datos correctamente.");
 
