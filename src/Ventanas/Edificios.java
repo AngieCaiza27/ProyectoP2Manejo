@@ -8,6 +8,7 @@ import BDD.CRUDEdificios;
 import BDD.Conexion;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.util.HashSet;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,7 +29,13 @@ public class Edificios extends javax.swing.JPanel {
         objEdificios.mostrarEdificios(tbEdificios,busqueda.getText());
         
       //btnGuardar.setIcon(setIcono("/images/icguardar.png",btnGuardar));
-        
+        botonesEditar();
+        textosEditar();
+        textosInicio();
+        botonesInicio();
+        botonesNuevo();
+        textosActivados();
+        limpiarCampos(); 
         
     }
     public static JPanel getPanelEdificios (){
@@ -42,7 +49,66 @@ public class Edificios extends javax.swing.JPanel {
     txtId.setText("");
     txtNombre.setText("");
     
-}
+} public void botonesInicio() {
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnModificar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        //System.out.println("jokassa");
+        btnLimpiar.setEnabled(false);
+    }
+
+    public void textosInicio() {
+        txtId.setEnabled(false);
+        txtNombre.setEnabled(false);
+        //jtxtEdificio.setEnabled(false);
+        //jtxtCapacidad.setEnabled(false);
+        //jtxtTipo.setEnabled(false);
+        //jbtnReporteIndividual.setEnabled(false);
+        //jcmbCursos.setEnabled(false);
+
+    }
+
+    public void textosActivados() {
+        txtId.setEnabled(false);
+        txtNombre.setEnabled(true);
+        //jtxtEdificio.setEnabled(true);
+        //jtxtCapacidad.setEnabled(true);
+        //jtxtTipo.setEnabled(true);
+        //jcmbCursos.setEnabled(true);
+    }
+
+    public void textosEditar() {
+        txtId.setEnabled(false);
+        txtNombre.setEnabled(true);
+        //jtxtEdificio.setEnabled(true);
+        //jtxtCapacidad.setEnabled(true);
+        //jtxtTipo.setEnabled(true);
+        //jcmbCursos.setEnabled(true);
+    }
+
+    public void botonesNuevo() {
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnModificar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnLimpiar.setEnabled(true);
+
+    }
+
+    public void botonesEditar() {
+        int var = tbEdificios.getSelectedRow();
+        if (var != -1) {
+            
+             btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(false);
+        btnModificar.setEnabled(true);
+        btnEliminar.setEnabled(true);
+        //System.out.println("jokassa");
+        btnLimpiar.setEnabled(true);
+
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -67,6 +133,8 @@ public class Edificios extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         btnLimpiar = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
+        btnNuevo = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbEdificios = new javax.swing.JTable();
@@ -140,6 +208,15 @@ public class Edificios extends javax.swing.JPanel {
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/escoba.png"))); // NOI18N
 
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/usuario.png"))); // NOI18N
+
         javax.swing.GroupLayout jPDatosEdificiosLayout = new javax.swing.GroupLayout(jPDatosEdificios);
         jPDatosEdificios.setLayout(jPDatosEdificiosLayout);
         jPDatosEdificiosLayout.setHorizontalGroup(
@@ -153,21 +230,6 @@ public class Edificios extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPDatosEdificiosLayout.createSequentialGroup()
                         .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
-                                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)))
-                                    .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnModificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPDatosEdificiosLayout.createSequentialGroup()
                                 .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,7 +237,25 @@ public class Edificios extends javax.swing.JPanel {
                                         .addComponent(jLabel5)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
+                                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel3))))
+                                    .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnModificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(10, 10, 10))
                     .addComponent(txtId))
                 .addContainerGap())
@@ -192,6 +272,10 @@ public class Edificios extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNuevo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPDatosEdificiosLayout.createSequentialGroup()
                         .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,7 +397,7 @@ public class Edificios extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jPDatosEdificios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -359,19 +443,31 @@ public class Edificios extends javax.swing.JPanel {
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         CRUDEdificios objetoEdificio = new CRUDEdificios();
+
+    int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+    if (respuesta == JOptionPane.YES_OPTION) {
         objetoEdificio.deleteEdidicios(txtId);
-        objetoEdificio.mostrarEdificios(tbEdificios,busqueda.getText());
+        objetoEdificio.mostrarEdificios(tbEdificios, busqueda.getText());
+    }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void tbEdificiosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbEdificiosMouseClicked
         CRUDEdificios objEdificios = new CRUDEdificios();
         objEdificios.SelecionarEdificios(tbEdificios, txtId, txtNombre);
+        botonesEditar();
+        textosEditar();
     }//GEN-LAST:event_tbEdificiosMouseClicked
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         CRUDEdificios objetoEdificio = new CRUDEdificios();
+
+    int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere modificar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+    if (respuesta == JOptionPane.YES_OPTION) {
         objetoEdificio.updateEdificios(txtId, txtNombre);
-        objetoEdificio.mostrarEdificios(tbEdificios,busqueda.getText());
+        objetoEdificio.mostrarEdificios(tbEdificios, busqueda.getText());
+    }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -380,7 +476,9 @@ public class Edificios extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-    limpiarCampos();        // TODO add your handling code here:
+    limpiarCampos();   
+    botonesInicio();
+    textosInicio();// TODO add your handling code here:
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void busquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyReleased
@@ -396,6 +494,12 @@ public class Edificios extends javax.swing.JPanel {
             objetoEdificio.mostrarEdificios(tbEdificios,busqueda.getText());
             } 
     }//GEN-LAST:event_busquedaKeyPressed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+        botonesNuevo();
+        textosActivados();
+    }//GEN-LAST:event_btnNuevoActionPerformed
 
     /*public Icon setIcono(String root,JButton btn){
         ImageIcon icon = new ImageIcon(getClass().getResource(root));
@@ -413,6 +517,7 @@ public class Edificios extends javax.swing.JPanel {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JTextField busqueda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -422,6 +527,7 @@ public class Edificios extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPDatosEdificios;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

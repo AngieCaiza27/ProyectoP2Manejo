@@ -54,6 +54,7 @@ public class Principal extends javax.swing.JFrame {
         this.rol=rolPersonal;
     }
     
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

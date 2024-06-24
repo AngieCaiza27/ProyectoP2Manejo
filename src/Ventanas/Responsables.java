@@ -28,7 +28,12 @@ public class Responsables extends javax.swing.JPanel {
         objResponsables.mostrarResponsables(tbResponsables, busqueda.getText());
         objResponsables.llenarComboBox(jCmbxTipoResponsable);
       //btnGuardar.setIcon(setIcono("/images/icguardar.png",btnGuardar));
-        
+        botonesEditar();
+        textosEditar();
+        textosInicio();
+        botonesInicio();
+        botonesNuevo();
+        textosActivados();
         
     }
     public static JPanel getPanelResponsables(){
@@ -37,6 +42,66 @@ public class Responsables extends javax.swing.JPanel {
         }
         
         return instance;
+    }
+    public void botonesInicio() {
+        //jbtnNuevo.setEnabled(true);
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnModificar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        //System.out.println("jokassa");
+        ButtonLimpiar.setEnabled(false);
+    }
+
+    public void textosInicio() {
+        txtId.setEnabled(false);
+        txtNombre.setEnabled(false);
+        txtApellido.setEnabled(false);
+        txtCedula.setEnabled(false);
+        jCmbxTipoResponsable.setEnabled(false);
+        //jbtnReporteIndividual.setEnabled(false);
+        //jcmbCursos.setEnabled(false);
+
+    }
+
+    public void textosActivados() {
+         txtId.setEnabled(false);
+        txtNombre.setEnabled(true);
+        txtApellido.setEnabled(true);
+        txtCedula.setEnabled(true);
+        jCmbxTipoResponsable.setEnabled(true);
+        //jcmbCursos.setEnabled(true);
+    }
+
+    public void textosEditar() {
+        txtId.setEnabled(false);
+        txtNombre.setEnabled(true);
+        txtApellido.setEnabled(true);
+        txtCedula.setEnabled(true);
+        jCmbxTipoResponsable.setEnabled(true);
+        //jcmbCursos.setEnabled(true);
+    }
+
+    public void botonesNuevo() {
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnModificar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        //System.out.println("jokassa");
+        ButtonLimpiar.setEnabled(true);
+
+    }
+
+    public void botonesEditar() {
+        int var = tbResponsables.getSelectedRow();
+        if (var != -1) {
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(false);
+        btnModificar.setEnabled(true);
+        btnEliminar.setEnabled(true);
+        ButtonLimpiar.setEnabled(true);
+
+        }
     }
 
     /**
@@ -67,6 +132,8 @@ public class Responsables extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jCmbxTipoResponsable = new javax.swing.JComboBox<>();
+        btnNuevo = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbResponsables = new javax.swing.JTable();
@@ -167,6 +234,15 @@ public class Responsables extends javax.swing.JPanel {
             }
         });
 
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/usuario.png"))); // NOI18N
+
         javax.swing.GroupLayout jPDatosEdificiosLayout = new javax.swing.GroupLayout(jPDatosEdificios);
         jPDatosEdificios.setLayout(jPDatosEdificiosLayout);
         jPDatosEdificiosLayout.setHorizontalGroup(
@@ -176,21 +252,6 @@ public class Responsables extends javax.swing.JPanel {
                 .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
                         .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
-                                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel5)))
-                                    .addComponent(jLabel9))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnModificar)
-                                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ButtonLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jLabel2)
                             .addComponent(jLabel1)
                             .addComponent(jLabel6)
@@ -198,7 +259,24 @@ public class Responsables extends javax.swing.JPanel {
                             .addComponent(txtApellido)
                             .addComponent(txtCedula)
                             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jCmbxTipoResponsable, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jCmbxTipoResponsable, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
+                                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel12)))
+                                    .addComponent(jLabel9))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                    .addComponent(btnModificar)
+                                    .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                    .addComponent(ButtonLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                    .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(13, 13, 13))
                     .addGroup(jPDatosEdificiosLayout.createSequentialGroup()
                         .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -230,6 +308,10 @@ public class Responsables extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCmbxTipoResponsable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNuevo)
+                    .addComponent(jLabel12))
+                .addGap(18, 18, 18)
                 .addGroup(jPDatosEdificiosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnGuardar)
                     .addComponent(jLabel3))
@@ -387,25 +469,36 @@ public class Responsables extends javax.swing.JPanel {
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         
         CRUDResponsables objetoResponsable = new CRUDResponsables();
+    
+    int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
+    
+    if (respuesta == JOptionPane.YES_OPTION) {
         objetoResponsable.deleteEdidicios(txtId);
         objetoResponsable.mostrarResponsables(tbResponsables, busqueda.getText());
+    }
         
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         CRUDResponsables objetoResponsable = new CRUDResponsables();
+    
+    if (objetoResponsable.datosVacios(txtNombre, txtApellido, txtCedula)) {
+        JOptionPane.showMessageDialog(null, "Por favor, ingresar todos los campos");
+    } else {
+        int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere modificar los datos?", "Confirmación", JOptionPane.YES_NO_OPTION);
         
-        if (objetoResponsable.datosVacios(txtNombre, txtApellido, txtCedula)==true) {
-            JOptionPane.showMessageDialog(null, "Por favor, ingresar todos los campos");
-        } else {
-        objetoResponsable.updateResponsables(txtId, txtNombre, txtApellido, txtCedula, jCmbxTipoResponsable);
-        objetoResponsable.mostrarResponsables(tbResponsables, busqueda.getText());
+        if (respuesta == JOptionPane.YES_OPTION) {
+            objetoResponsable.updateResponsables(txtId, txtNombre, txtApellido, txtCedula, jCmbxTipoResponsable);
+            objetoResponsable.mostrarResponsables(tbResponsables, busqueda.getText());
         }
+    }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void tbResponsablesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbResponsablesMouseClicked
         CRUDResponsables objResponsables = new CRUDResponsables();
         objResponsables.SelecionarResponsables(tbResponsables, txtId, txtNombre, txtApellido, txtCedula, jCmbxTipoResponsable);
+        botonesEditar();
+        textosEditar();
     }//GEN-LAST:event_tbResponsablesMouseClicked
 
     private void ButtonLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonLimpiarActionPerformed
@@ -415,6 +508,8 @@ public class Responsables extends javax.swing.JPanel {
         txtNombre.setText(null);
         txtApellido.setText(null);
         txtCedula.setText(null);
+        botonesInicio();
+        textosInicio();
 
     }//GEN-LAST:event_ButtonLimpiarActionPerformed
 
@@ -473,6 +568,12 @@ public class Responsables extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+        botonesNuevo();
+        textosActivados();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonLimpiar;
@@ -480,11 +581,13 @@ public class Responsables extends javax.swing.JPanel {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JTextField busqueda;
     private javax.swing.JComboBox<String> jCmbxTipoResponsable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
