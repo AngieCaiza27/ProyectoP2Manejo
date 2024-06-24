@@ -35,6 +35,46 @@ public class CRUDHorarios {
     private int idPeriodoPertenece;
     private int idResponsableReserva;
     private String motivoReserva;
+    
+    int idFechaNoDisponible;
+    Timestamp fechaInicio;
+    Timestamp fechaFin;
+    String motivo;
+
+    public int getIdFechaNoDisponible() {
+        return idFechaNoDisponible;
+    }
+
+    public void setIdFechaNoDisponible(int idFechaNoDisponible) {
+        this.idFechaNoDisponible = idFechaNoDisponible;
+    }
+
+    public Timestamp getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Timestamp fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public Timestamp getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Timestamp fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+    
+    
+    
   
   public int getIdHorario() {
         return idHorario;
