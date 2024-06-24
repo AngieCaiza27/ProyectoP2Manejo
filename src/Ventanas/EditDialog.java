@@ -14,6 +14,7 @@ public class EditDialog extends JDialog {
     private JComboBox<CRUDHorarios.Materia> materiaBox;
     private JComboBox<CRUDHorarios.Espacio> espacioBox;
     private int idHorario;
+    
     private JButton okButton;
     private JButton cancelButton;
     private JButton eliminarButton;
@@ -39,7 +40,7 @@ private void initComponents() {
     panel.add(materiaLabel, constraints);
 
     materiaBox = new JComboBox<CRUDHorarios.Materia>();
-    horarios.llenarComboBoxMaterias(materiaBox);
+    horarios.llenarComboBoxMaterias(materiaBox,"","","");
     constraints.gridx = 1;
     constraints.gridwidth = 2;
     panel.add(materiaBox, constraints);
@@ -101,6 +102,9 @@ private void initComponents() {
 
     public boolean isConfirmed() {
         return confirmed;
+    }
+    public void llenarLista(String carrera, String nivel, String paralelo){
+        horarios.llenarComboBoxMaterias(materiaBox,carrera,nivel,paralelo);
     }
 
     public Materia getMateria() {
