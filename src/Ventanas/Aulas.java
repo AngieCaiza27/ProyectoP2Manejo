@@ -35,7 +35,12 @@ public class Aulas extends javax.swing.JPanel {
         objAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
         
         limpiarCampos();
-    }
+        botonesEditar();
+        textosEditar();
+        textosInicio();
+        botonesInicio();
+        botonesNuevo();
+        textosActivados();    }
     
     
         
@@ -53,6 +58,66 @@ public class Aulas extends javax.swing.JPanel {
     jtxtEdificio.setText("");
     jtxtTipo.setText("");
 }
+     public void botonesInicio() {
+        btnNuevo.setEnabled(true);
+        jbtnGuardar.setEnabled(false);
+        jbtnModificar.setEnabled(false);
+        jbtnEliminar.setEnabled(false);
+        jButton1.setEnabled(false);
+    }
+
+    public void textosInicio() {
+        jtxtID.setEnabled(false);
+        jtxtNombre1.setEnabled(false);
+        jtxtEdificio.setEnabled(false);
+        jtxtCapacidad.setEnabled(false);
+        jtxtTipo.setEnabled(false);
+        
+
+    }
+
+    public void textosActivados() {
+        jtxtID.setEnabled(false);
+        jtxtNombre1.setEnabled(true);
+        jtxtEdificio.setEnabled(true);
+        jtxtCapacidad.setEnabled(true);
+        jtxtTipo.setEnabled(true);
+        //jcmbCursos.setEnabled(true);
+    }
+
+    public void textosEditar() {
+         jtxtID.setEnabled(false);
+        jtxtNombre1.setEnabled(true);
+        jtxtEdificio.setEnabled(true);
+        jtxtCapacidad.setEnabled(true);
+        jtxtTipo.setEnabled(true);
+        //jcmbCursos.setEnabled(true);
+    }
+
+    public void botonesNuevo() {
+        btnNuevo.setEnabled(false);
+         jbtnGuardar.setEnabled(true);
+        jbtnModificar.setEnabled(false);
+        jbtnEliminar.setEnabled(false);
+        //System.out.println("jokassa");
+        jButton1.setEnabled(true);
+
+    }
+
+    public void botonesEditar() {
+        int var = jtblListaAulas.getSelectedRow();
+        if (var != -1) {
+            btnNuevo.setEnabled(false);
+        jbtnGuardar.setEnabled(false);
+        jbtnModificar.setEnabled(true);
+        jbtnEliminar.setEnabled(true);
+        //System.out.println("jokassa");
+        jButton1.setEnabled(true);
+
+        }
+    }
+
+    
     
 
     /**
@@ -83,6 +148,8 @@ public class Aulas extends javax.swing.JPanel {
         jtxtTipo = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblListaAulas = new javax.swing.JTable();
@@ -165,6 +232,15 @@ public class Aulas extends javax.swing.JPanel {
             }
         });
 
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/usuario.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -191,6 +267,11 @@ public class Aulas extends javax.swing.JPanel {
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -201,7 +282,7 @@ public class Aulas extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jbtnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jbtnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                            .addComponent(jbtnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                             .addComponent(jbtnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
@@ -229,7 +310,11 @@ public class Aulas extends javax.swing.JPanel {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtxtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addGap(52, 52, 52)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnNuevo)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jbtnGuardar)
                     .addComponent(jLabel3))
@@ -245,7 +330,7 @@ public class Aulas extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -366,7 +451,7 @@ public class Aulas extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
@@ -376,8 +461,9 @@ public class Aulas extends javax.swing.JPanel {
                                 .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 22, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jPanel1.getAccessibleContext().setAccessibleName("Datos aulas");
@@ -405,21 +491,35 @@ public class Aulas extends javax.swing.JPanel {
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
+
+    int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+    if (respuesta == JOptionPane.YES_OPTION) {
         objetoAulas.deleteEspacios(jtxtID);
-        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+        objetoAulas.mostrarAulas(jtblListaAulas, busqueda.getText());
+    }
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
     private void jbtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModificarActionPerformed
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
+
+    int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere modificar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+    if (respuesta == JOptionPane.YES_OPTION) {
         objetoAulas.updateAulas(jtxtID, jtxtNombre1, jtxtCapacidad, jtxtEdificio, jtxtTipo);
-        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+        objetoAulas.mostrarAulas(jtblListaAulas, busqueda.getText());
+        botonesEditar();
+        textosEditar();
+    }
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
     private void jtblListaAulasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaAulasMouseClicked
         // TODO add your handling code here:
         CRUDEAulas objetoAulas = new CRUDEAulas();
          objetoAulas.SelecionarAulas(jtblListaAulas,jtxtID,jtxtNombre1,jtxtCapacidad,jtxtEdificio,jtxtTipo);
+         botonesEditar();
+         textosEditar();
     }//GEN-LAST:event_jtblListaAulasMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -435,6 +535,8 @@ public class Aulas extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
       limpiarCampos();
+      botonesInicio();
+      textosInicio();
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -460,14 +562,22 @@ public class Aulas extends javax.swing.JPanel {
         
     }//GEN-LAST:event_busquedaKeyPressed
 
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+         botonesNuevo();
+        textosActivados();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JTextField busqueda;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

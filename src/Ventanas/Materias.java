@@ -25,6 +25,13 @@ public class Materias extends javax.swing.JPanel {
         objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
         objMaterias.llenarComboBoxCarreras(comboCarreras);
         objMaterias.llenarComboBoxResponsables(comboResponsable);
+         botonesEditar();
+        textosEditar();
+        textosInicio();
+        botonesInicio();
+        botonesNuevo();
+        textosActivados();
+        limpiarCampos();
     }
 
     public static JPanel getPanelMaterias(){
@@ -39,6 +46,60 @@ public class Materias extends javax.swing.JPanel {
     jtxtID.setText("");
     jtxtNombre1.setText("");
     
+    }
+    public void botonesInicio() {
+        btnNuevo.setEnabled(true);
+        jbtnGuardar.setEnabled(false);
+        jbtnModificar.setEnabled(false);
+        jbtnEliminar.setEnabled(false);
+        jButton1.setEnabled(false);
+    }
+
+    public void textosInicio() {
+        jtxtID.setEnabled(false);
+        jtxtNombre1.setEnabled(false);
+        comboResponsable.setEnabled(false);
+        comboCarreras.setEnabled(false);
+        //jbtnReporteIndividual.setEnabled(false);
+        //jcmbCursos.setEnabled(false);
+
+    }
+
+    public void textosActivados() {
+         jtxtID.setEnabled(false);
+        jtxtNombre1.setEnabled(true);
+        comboResponsable.setEnabled(true);
+        comboCarreras.setEnabled(true);
+        //jcmbCursos.setEnabled(true);
+    }
+
+    public void textosEditar() {
+        jtxtID.setEnabled(false);
+        jtxtNombre1.setEnabled(true);
+        comboResponsable.setEnabled(true);
+        comboCarreras.setEnabled(true);
+        //jcmbCursos.setEnabled(true);
+    }
+
+    public void botonesNuevo() {
+        btnNuevo.setEnabled(false);
+        jbtnGuardar.setEnabled(true);
+        jbtnModificar.setEnabled(false);
+        jbtnEliminar.setEnabled(false);
+        jButton1.setEnabled(true);
+
+    }
+
+    public void botonesEditar() {
+        int var = jtblListaMaterias.getSelectedRow();
+        if (var != -1) {
+        btnNuevo.setEnabled(false);
+        jbtnGuardar.setEnabled(false);
+        jbtnModificar.setEnabled(true);
+        jbtnEliminar.setEnabled(true);
+        jButton1.setEnabled(true);
+
+        }
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -61,6 +122,8 @@ public class Materias extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         comboCarreras = new javax.swing.JComboBox<>();
         comboResponsable = new javax.swing.JComboBox<>();
+        btnNuevo = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         busqueda = new javax.swing.JTextField();
@@ -132,6 +195,15 @@ public class Materias extends javax.swing.JPanel {
             }
         });
 
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/usuario.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -154,25 +226,27 @@ public class Materias extends javax.swing.JPanel {
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(comboCarreras, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(comboResponsable, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel4)
-                                .addComponent(jLabel3))
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jbtnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jbtnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                            .addComponent(jbtnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                             .addComponent(jbtnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(comboCarreras, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(comboResponsable, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -195,6 +269,10 @@ public class Materias extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(comboResponsable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNuevo)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jbtnGuardar)
                     .addComponent(jLabel3))
@@ -313,7 +391,7 @@ public class Materias extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28)
@@ -354,21 +432,33 @@ public class Materias extends javax.swing.JPanel {
 
     private void jbtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnModificarActionPerformed
          CRUDMaterias objMaterias = new CRUDMaterias();
-         objMaterias.updateMaterias(jtxtID, jtxtNombre1, comboCarreras, comboResponsable);
-         objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
+
+    int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere modificar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+    if (respuesta == JOptionPane.YES_OPTION) {
+        objMaterias.updateMaterias(jtxtID, jtxtNombre1, comboCarreras, comboResponsable);
+        objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
+    }
         
     }//GEN-LAST:event_jbtnModificarActionPerformed
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
-        CRUDMaterias objMaterias = new CRUDMaterias();
-         objMaterias.deleteEspacios(jtxtID);
-         objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
+         CRUDMaterias objMaterias = new CRUDMaterias();
+
+    int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+    if (respuesta == JOptionPane.YES_OPTION) {
+        objMaterias.deleteEspacios(jtxtID);
+        objMaterias.mostrarMateria(jtblListaMaterias, busqueda.getText());
+    }
        
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         limpiarCampos();
+        botonesInicio();
+        textosInicio();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void busquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaActionPerformed
@@ -399,11 +489,22 @@ public class Materias extends javax.swing.JPanel {
     private void jtblListaMateriasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblListaMateriasMouseClicked
       CRUDMaterias objMaterias = new CRUDMaterias();
       objMaterias.SelecionarMaterias(jtblListaMaterias, jtxtID, jtxtNombre1, comboCarreras, comboResponsable);
+      botonesEditar();
+      textosEditar();
+      
     }//GEN-LAST:event_jtblListaMateriasMouseClicked
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+         botonesNuevo();
+        textosActivados();
+        
+    }//GEN-LAST:event_btnNuevoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JTextField busqueda;
     private javax.swing.JComboBox<String> comboCarreras;
     private javax.swing.JComboBox<String> comboResponsable;
@@ -416,6 +517,7 @@ public class Materias extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
