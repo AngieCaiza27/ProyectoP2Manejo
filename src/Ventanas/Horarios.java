@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Ventanas;
+
 import java.sql.PreparedStatement;
 import BDD.CRUDHorarios;
 import BDD.CRUDHorarios.Espacio;
@@ -18,16 +19,19 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.sql.Connection;
 
-
 /**
  *
  * @author Hola
  */
 public class Horarios extends javax.swing.JPanel {
 
-    private  static JPanel instance = null;
+    private static JPanel instance = null;
     private CRUDHorarios crudHorarios;
-    
+    private int idHorario;
+    private String carrera;
+    private String nivel;
+    private String paralelo;
+
     public Horarios() {
         initComponents();
         crudHorarios = new CRUDHorarios();
@@ -41,19 +45,16 @@ public class Horarios extends javax.swing.JPanel {
         jComboNiveles.addActionListener(e -> actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(), (String) jComboNiveles.getSelectedItem()));
         jTable1.setDefaultRenderer(Object.class, new MultiLineCellRenderer());
     }
-    
-    public static JPanel getPanelHorarios (){
-        if (instance == null){
+
+    public static JPanel getPanelHorarios() {
+        if (instance == null) {
             instance = new Horarios();
         }
-        
+
         return instance;
-                     
-        
+
     }
 
-    
-     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -256,159 +257,180 @@ public class Horarios extends javax.swing.JPanel {
     }//GEN-LAST:event_buscarActionPerformed
 
     private void jComboCarrerasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboCarrerasActionPerformed
-       actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(),(String) jComboNiveles.getSelectedItem());
-           String carreraSeleccionada = jComboCarreras.getSelectedItem().toString();
-           cargarNiveles(carreraSeleccionada);
+       
+        String carreraSeleccionada = jComboCarreras.getSelectedItem().toString();
+        cargarNiveles(carreraSeleccionada);
+        String nivelPa;
+        if(jComboNiveles.getSelectedItem() != null ){
+            nivelPa = jComboNiveles.getSelectedItem().toString();
+        }
+        else {
+            nivelPa=jComboNiveles.getItemAt(0);
+        }
+                
+        this.carrera = carreraSeleccionada;
+        this.nivel = nivelPa.split(" - ")[0];
+        this.paralelo = nivelPa.split(" - ")[1];
+        actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(), (String) jComboNiveles.getSelectedItem());
     }//GEN-LAST:event_jComboCarrerasActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(),(String) jComboNiveles.getSelectedItem());
+        actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(), (String) jComboNiveles.getSelectedItem());
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void buscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarKeyReleased
         if (buscar.getText().trim().equals("")) {
-        actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(),(String) jComboNiveles.getSelectedItem());
-          }        // TODO add your handling code here:
+            actualizarTabla(buscar.getText(), (String) jComboCarreras.getSelectedItem(), (String) jComboNiveles.getSelectedItem());
+        }        
     }//GEN-LAST:event_buscarKeyReleased
 
     private void buscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarKeyPressed
-            // TODO add your handling code here:
+        
     }//GEN-LAST:event_buscarKeyPressed
 
     private void jComboNivelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboNivelesActionPerformed
-        // TODO add your handling code here:
+        String nivelPa = null;
+        if(jComboNiveles.getSelectedItem() != null ){
+            nivelPa = jComboNiveles.getSelectedItem().toString();
+            this.nivel = nivelPa.split(" - ")[0];
+            this.paralelo = nivelPa.split(" - ")[1];
+        }
     }//GEN-LAST:event_jComboNivelesActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int row = jTable1.rowAtPoint(evt.getPoint());
-    int col = jTable1.columnAtPoint(evt.getPoint());
-    
-    // Verificar si el clic se realizó en una celda válida
-    if (row >= 0 && col >= 0) {
-        // Obtener el valor de la celda
-        Object value = jTable1.getValueAt(row, col);
-        
-        // Verificar si el valor de la celda no es nulo y es una cadena de texto
-        if (value != null && value instanceof String) {
-            String cellValue = (String) value;
-            
-            // Separar la cadena de texto en sus partes
-            String[] parts = cellValue.split("\n");
-            
-            // Verificar si hay suficientes partes para obtener la información necesaria
-            if (parts.length >= 3) {
-                String nombreResponsable = parts[0];  // El primer elemento es el nombre del responsable
-                String Materia = parts[1];            // El segundo elemento es el nombre de la materia
-                String espacio = parts[2];            // El tercer elemento es el nombre del espacio
-                
-                // Abrir el diálogo de edición
-                EditDialog dialog = new EditDialog((Frame) SwingUtilities.getWindowAncestor(jTable1));
-                dialog.setVisible(true);
-                
-                // Verificar si se confirmó la edición
-                if (dialog.isConfirmed()) {
-                    // Obtener los nuevos valores del diálogo
+        int col = jTable1.columnAtPoint(evt.getPoint());
 
-                    Materia nuevaMateria = dialog.getMateria();
-                    Espacio nuevoEspacio = dialog.getEspacio();
-                    
-                    // Actualizar la celda con los nuevos valores
-                    String newValue =  nuevaMateria.getNombre() + "\n" + nuevoEspacio.getNombre();
-                    jTable1.setValueAt(newValue, row, col);
-                    
-                    
-                    // Actualizar los datos en la base de datos
-                    actualizarBaseDeDatos(jTable1, row, col, nuevaMateria.getId(), nuevoEspacio.getId());
+        // Verificar si el clic se realizó en una celda válida
+        if (row >= 0 && col >= 0) {
+            // Obtener el valor de la celda
+            Object value = jTable1.getValueAt(row, col);
+
+            // Verificar si el valor de la celda no es nulo y es una cadena de texto
+            if (value != null && value instanceof String) {
+                String cellValue = (String) value;
+
+                // Separar la cadena de texto en sus partes
+                String[] parts = cellValue.split("\n");
+
+                // Verificar si hay suficientes partes para obtener la información necesaria
+                if (parts.length >= 3) {
+                    String nombreResponsable = parts[0];  // El primer elemento es el nombre del responsable
+                    String Materia = parts[1];            // El segundo elemento es el nombre de la materia
+                    String espacio = parts[2];            // El tercer elemento es el nombre del espacio
+                    //this.materia = Materia;
+                    // String nombreCarrera = espacio.split(" - ")[0];
+
+                    // Abrir el diálogo de edición
+                    EditDialog dialog = new EditDialog((Frame) SwingUtilities.getWindowAncestor(jTable1));
+                    dialog.llenarLista(this.carrera, this.nivel, this.paralelo);
+                    dialog.setVisible(true);
+
+                    // Verificar si se confirmó la edición
+                    if (dialog.isConfirmed()) {
+                        // Obtener los nuevos valores del diálogo
+
+                        Materia nuevaMateria = dialog.getMateria();
+                        Espacio nuevoEspacio = dialog.getEspacio();
+
+                        // Actualizar la celda con los nuevos valores
+                        String newValue = nuevaMateria.getNombre() + "\n" + nuevoEspacio.getNombre();
+                        jTable1.setValueAt(newValue, row, col);
+
+                        // Actualizar los datos en la base de datos
+                        actualizarBaseDeDatos(jTable1, row, col, nuevaMateria.getId(), nuevoEspacio.getId());
+                    }
                 }
             }
         }
-    }
-    
+
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void actualizarTabla(String buscar,String carrera,String nivel) {
-       crudHorarios.mostrarHorariosEnTabla(jTable1, buscar, carrera,nivel); // Llama al método para mostrar los horarios en la tabla.
+    private void actualizarTabla(String buscar, String carrera, String nivel) {
+        crudHorarios.mostrarHorariosEnTabla(jTable1, buscar, carrera, nivel); // Llama al método para mostrar los horarios en la tabla.
     }
 
-private void cargarNiveles(String carrera) {
-    List<String> niveles = crudHorarios.obtenerNivelesPorCarrera(carrera);
-    if (niveles != null) {
-        jComboNiveles.removeAllItems();
-        for (String nivel : niveles) {
-            jComboNiveles.addItem(nivel);
+    private void cargarNiveles(String carrera) {
+        List<String> niveles = crudHorarios.obtenerNivelesPorCarrera(carrera);
+        if (niveles != null) {
+            jComboNiveles.removeAllItems();
+            for (String nivel : niveles) {
+                jComboNiveles.addItem(nivel);
+            }
+        } else {
+            System.out.println("No se encontraron niveles para la carrera: " + carrera);
         }
-    } else {
-        System.out.println("No se encontraron niveles para la carrera: " + carrera);
     }
-}
-private void actualizarBaseDeDatos(JTable jTable1, int row, int col,  int materia, int espacio) {
-    // Asumiendo que los nombres de las columnas son los días
-    String dia = jTable1.getColumnName(col); 
-    
-    int numDia =0;
-    switch(dia) {
-        case "Lunes": 
-            numDia=2;
-            break;
-        case "Martes": 
-            numDia=3;
-            break;
-        case "Miércoles": 
-            numDia=4;
-            break;    
-        case "Jueves": 
-            numDia=5;
-            break;
-        case "Viernes": 
-            numDia=6;
-            break;
-        case "Sábado": 
-            numDia=7;
-            break;
-          
+
+    private void actualizarBaseDeDatos(JTable jTable1, int row, int col, int materia, int espacio) {
+        // Asumiendo que los nombres de las columnas son los días
+        String dia = jTable1.getColumnName(col);
+
+        int numDia = 0;
+        switch (dia) {
+            case "Lunes":
+                numDia = 2;
+                break;
+            case "Martes":
+                numDia = 3;
+                break;
+            case "Miércoles":
+                numDia = 4;
+                break;
+            case "Jueves":
+                numDia = 5;
+                break;
+            case "Viernes":
+                numDia = 6;
+                break;
+            case "Sábado":
+                numDia = 7;
+                break;
+        }
+
+        // Asumiendo que la primera columna es la hora
+        String hora = jTable1.getValueAt(row, 0).toString();
+        String[] parts = hora.split("-");
+        parts = parts[0].split(":");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = 0;
+        String horaInicio = hours < 10 ? "0" + hours : String.valueOf(hours);
+        // Calcular la hora de fin, sumando una hora
+        int horaFin = hours + 1;
+        String horaFinString = horaFin < 10 ? "0" + horaFin : String.valueOf(horaFin);
+
+        // Crear la consulta SQL para actualizar los datos en la base de datos
+        String sql = """
+                     UPDATE horarios 
+                     JOIN materias ON horarios.idMateriaPertenece = materias.idMateria 
+                     JOIN carreras ON carreras.idCarrera = materias.idCarreraPertenece 
+                     JOIN niveles ON niveles.idNivel = carreras.idNivelPertenece
+                     JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio
+                     SET horarios.idMateriaPertenece = ?, horarios.idEspacioImparte = ?
+                     WHERE DAYOFWEEK(Fecha_HoraInicio) = ?
+                     AND carreras.nombreCarrera = ?
+                     AND niveles.nombreNivel = ?
+                     AND niveles.paralelo = ?
+                     AND DATE_FORMAT(horarios.Fecha_HoraInicio,'%H:%i')  = ?
+                     AND DATE_FORMAT(horarios.Fecha_HoraFin,'%H:%i')  = ?;
+                     """;
+        try ( PreparedStatement ps = crudHorarios.getConnection().prepareStatement(sql)) {
+            ps.setInt(1, materia); // Parámetro 2: idMateriaPertenece
+            ps.setInt(2, espacio); // Parámetro 3: idEspacioImparte
+            ps.setInt(3, numDia); // Parámetro 6: Día de la semana
+            ps.setString(4, this.carrera);
+            ps.setString(5, this.nivel);
+            ps.setString(6, this.paralelo);
+            ps.setString(7, horaInicio + ":00"); // Parámetro 4: Fecha_HoraInicio 07
+            ps.setString(8, horaFinString + ":00"); // Parámetro 5: Fecha_HoraFin
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Datos actualizados en la base de datos correctamente.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al actualizar los datos en la base de datos. ERROR: " + e.getMessage());
+        }
     }
-    // Asumiendo que la primera columna es la hora
-    String hora = jTable1.getValueAt(row, 0).toString(); 
-    String[] parts = hora.split(":");
-    int hours = 0;
-    
-    hours++;
-    String horaFin = String.format("%02d:%02d", hours, 0);
-    
-    
-
-    // Crear la consulta SQL para actualizar los datos en la base de datos
-    String sql = " UPDATE horarios " +
-             "JOIN materias ON horarios.idMateriaPertenece = materias.idMateria " +
-             "JOIN espacios ON horarios.idEspacioImparte = espacios.idEspacio " +
-             "SET materias.IdResponsablePertenece = ?, horarios.IdMateriaPertenece = ?, espacios.idEspacio = ?, " +
-             "horarios.Fecha_HoraInicio = CONCAT(DATE(Fecha_HoraInicio), ' ', ?), " +
-             "horarios.Fecha_HoraFin = CONCAT(DATE(Fecha_HoraFin), ' ', ?) " +
-             "WHERE DAYOFWEEK(Fecha_HoraInicio) = ?;";
-
-    
-    try (PreparedStatement ps = crudHorarios.getConnection().prepareStatement(sql)) {
-         // Usamos la variable responsable en lugar de profesor
-        ps.setInt(1, materia); // Usamos la variable materia
-        ps.setInt(2, espacio);
-        ps.setString(3, hora+":00"); // Concatenamos el día con la hora
-        ps.setString(4, horaFin + ":00"); // Concatenamos la hora de fin, asumiendo que termina al final del minuto
-        ps.setInt(5, numDia); // Día de la semana
-        
-        // Ejecutar la consulta
-         ps.executeUpdate();
-     
-        
-        JOptionPane.showMessageDialog(null, "Datos actualizados en la base de datos correctamente.");
-        
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Error al actualizar los datos en la base de datos. ERROR: " + e.getMessage());
-    }
-}
-
-
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -426,6 +448,7 @@ private void actualizarBaseDeDatos(JTable jTable1, int row, int col,  int materi
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 public class MultiLineCellRenderer extends DefaultTableCellRenderer {
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             JTextArea textArea = new JTextArea();
@@ -443,8 +466,4 @@ public class MultiLineCellRenderer extends DefaultTableCellRenderer {
         }
     }
 
-
 }
-
-
- 

@@ -6,6 +6,7 @@ package Ventanas;
 
 import BDD.CRUDEAulas;
 import BDD.CRUDEdificios;
+import BDD.CRUDMaterias;
 import BDD.Conexion;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
@@ -30,7 +31,7 @@ public class Aulas extends javax.swing.JPanel {
     public Aulas() {
         initComponents();
          jtxtID.setEditable(false);
-        
+         //jtxtTipo.setEditable(false);
         CRUDEAulas objAulas = new CRUDEAulas();
         objAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
         objAulas.llenarComboBoxEdificios(comboEdificio);
@@ -487,6 +488,8 @@ public class Aulas extends javax.swing.JPanel {
 
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         // TODO add your handling code here
+      
+             
         CRUDEAulas objetoAulas = new CRUDEAulas();
         if (objetoAulas.espacioExistente(jtxtNombre1)==false) {
         objetoAulas.insertarAulas(jtxtNombre1, jtxtCapacidad, comboEdificio, comboTipo);
@@ -494,7 +497,9 @@ public class Aulas extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "El espacio ya se encuentra registrado");
         }
-        objetoAulas.mostrarAulas(jtblListaAulas,busqueda.getText());
+         objetoAulas.mostrarAulas(jtblListaAulas, busqueda.getText());
+        
+                                               
 
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
@@ -580,6 +585,8 @@ public class Aulas extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboEdificio;
+    private javax.swing.JComboBox<String> ComboTipo;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JTextField busqueda;
