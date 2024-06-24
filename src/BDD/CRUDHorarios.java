@@ -25,8 +25,76 @@ public class CRUDHorarios {
     private String nombrePeriodo;
     private String nombre1Responsable;
     private String apellido1Responsable;
+    
+    
+    private int idEspacio;
+    private int idMateria;
+    private int idPeriodoPertenece;
+    private int idResponsableReserva;
+    private String motivoReserva;
+
+    public int getIdResponsableReserva() {
+        return idResponsableReserva;
+    }
+
+    public void setIdResponsableReserva(int idResponsableReserva) {
+        this.idResponsableReserva = idResponsableReserva;
+    }
+
+    public String getMotivoReserva() {
+        return motivoReserva;
+    }
+
+    public void setMotivoReserva(String motivoReserva) {
+        this.motivoReserva = motivoReserva;
+    }
+    
+    
+    
 
     // Getters y setters...
+
+    public int getIdEspacio() {
+        return idEspacio;
+    }
+
+    public void setIdEspacio(int idEspacio) {
+        this.idEspacio = idEspacio;
+    }
+
+    public int getIdMateria() {
+        return idMateria;
+    }
+
+    public void setIdMateria(int idMateria) {
+        this.idMateria = idMateria;
+    }
+
+    public int getIdPeriodoPertenece() {
+        return idPeriodoPertenece;
+    }
+
+    public void setIdPeriodoPertenece(int idPeriodoPertenece) {
+        this.idPeriodoPertenece = idPeriodoPertenece;
+    }
+
+    public PreparedStatement getPs() {
+        return ps;
+    }
+
+    public void setPs(PreparedStatement ps) {
+        this.ps = ps;
+    }
+
+    public ResultSet getRs() {
+        return rs;
+    }
+
+    public void setRs(ResultSet rs) {
+        this.rs = rs;
+    }
+    
+    
 
     public Timestamp getFechaHoraInicio() {
         return Fecha_HoraInicio;
@@ -172,12 +240,12 @@ public class CRUDHorarios {
         modelo.addColumn("Sábado");
 
         // Agregar filas para cada hora del día (de 7 AM a 8 PM)
-        for (int hora = 7; hora <= 20; hora++) {
+        for (int hora = 7; hora <= 19; hora++) {
         Object[] fila = new Object[7];
-        String ceroInicial=hora<=9 ? "0":"";
-        fila[0] = ceroInicial+hora + ":00";
+        String ceroInicial = hora <= 9 ? "0" : "";
+        fila[0] = ceroInicial + hora + ":00 - " + (hora + 1) + ":00";
         modelo.addRow(fila);
-        }
+    }
 
         for (CRUDHorarios horario : horarios) {
             // Calcular la fila y la columna donde se debe insertar el horario
