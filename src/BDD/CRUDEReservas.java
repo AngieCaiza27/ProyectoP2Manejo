@@ -100,6 +100,30 @@ public class CRUDEReservas {
     public Connection getConnection() {
     return Conexion.getConnection(); // Devuelve el objeto de conexión
 }
+    
+    public List<CRUDHorarios> obtenerFechasNoDisponibles() {
+    List<CRUDHorarios> fechasNoDisponibles = new ArrayList<>();
+
+    try {
+        String sql = "SELECT * FROM fechasnodisponibles";
+        this.ps = getConnection().prepareStatement(sql);
+        this.rs = this.ps.executeQuery();
+
+        while (this.rs.next()) {
+            CRUDHorarios fechaNoDisponible = new CRUDHorarios();
+            fechaNoDisponible.setIdFechaNoDisponible(this.rs.getInt("idFechasNODisponibles"));
+            fechaNoDisponible.setFechaInicio(this.rs.getTimestamp("fechaInicio"));
+            fechaNoDisponible.setFechaFin(this.rs.getTimestamp("fechaFin"));
+            fechaNoDisponible.setMotivo(this.rs.getString("motivo"));
+            fechasNoDisponibles.add(fechaNoDisponible);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "No se pudieron obtener las fechas no disponibles de la base de datos. ERROR: " + e.getMessage());
+    }
+
+    return fechasNoDisponibles;
+}
 
     
     

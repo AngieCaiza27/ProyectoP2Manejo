@@ -29,6 +29,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -38,6 +40,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -286,9 +290,30 @@ public static String[] getWeekBoundaries(Date date) {
         return new String[]{startOfWeekString, endOfWeekString};
     }
 
-
+public static Timestamp stringToTimestamp(String dateString) throws ParseException {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    java.util.Date parsedDate = format.parse(dateString);
+    Timestamp timestamp = new Timestamp(parsedDate.getTime());
+    return timestamp;
+}
     
-    
+    public boolean isFechaHoraDisponible(String fechaHoraInicio) {
+        try {
+            List<CRUDHorarios> fechasNoDisponibles = crudReservas.obtenerFechasNoDisponibles();
+            
+            Timestamp fechaHoraInicioTime = stringToTimestamp(fechaHoraInicio);
+            
+            for (CRUDHorarios fechaNoDisponible : fechasNoDisponibles) {
+                if (fechaNoDisponible.getFechaInicio().compareTo(fechaHoraInicioTime) <= 0
+                        && fechaNoDisponible.getFechaFin().compareTo(fechaHoraInicioTime) >= 0) {
+                    return false;
+                }
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(Reservas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+}
 
     
     private int calcularDiaDeLaSemana(Timestamp timestamp) {
@@ -299,6 +324,7 @@ public static String[] getWeekBoundaries(Date date) {
 
     public void actualizarTabla(String nombreEspacio, String fechaInicio, String fechaFin) {
     List<CRUDHorarios> horarios = obtenerDatosDeLaBaseDeDatos(nombreEspacio, fechaInicio, fechaFin);
+    List<CRUDHorarios> horarios1 = crudReservas.obtenerFechasNoDisponibles();
 
     DefaultTableModel tablaHorario = new DefaultTableModel();
     TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(tablaHorario);
@@ -349,6 +375,11 @@ public static String[] getWeekBoundaries(Date date) {
 
         for (int i = filaInicio; i <= filaFin; i++) {
             // Asegurarse de no sobrescribir el descanso
+////            if (i != filaDescanso && esFechaDisponible(i, columna)==false) {
+////                String contenidoCelda = "FERIADO";
+////                tablaHorario.setValueAt(contenidoCelda, i, columna);
+////            }
+            
             if (i != filaDescanso && horario.getNombreMateria()!=null) {
                 
                 String contenidoCelda = nombreCompletoResponsable + "\n" + horario.getNombreMateria() + "\n" + horario.getNombreEspacio();
@@ -357,6 +388,15 @@ public static String[] getWeekBoundaries(Date date) {
                 }
                 tablaHorario.setValueAt(contenidoCelda, i, columna);
             }
+
+              
+            
+//            if (i != filaDescanso && esFechaDisponible(i, columna)==false) {
+//                String contenidoCelda = "FERIADO";
+//                tablaHorario.setValueAt(contenidoCelda, i, columna);
+//            }
+            
+            
             if (i != filaDescanso && horario.getNombreMateria()==null) {
                 String contenidoCelda = "RESERVA \n"+nombreCompletoResponsable + "\n" + horario.getNombreEspacio();
                 if (!idResponsableReserva.equals("N/A")) {
@@ -364,6 +404,8 @@ public static String[] getWeekBoundaries(Date date) {
                 }
                 tablaHorario.setValueAt(contenidoCelda, i, columna);
             }
+            
+            
         }
     }
 
@@ -669,6 +711,47 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     return false; // La fecha de reserva ya pasó
 }
     
+    public boolean esFechaDisponible(int fila, int columna) {
+
+        try {
+            
+            String fechaReservaStr = obtenerFechaExactaInicio(fila, columna);
+            
+            // Parsear la fechaReservaStr a Date
+            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaReserva = dateTimeFormat.parse(fechaReservaStr);
+            String fechaReservaFormatoCorto = dateFormat.format(fechaReserva);
+            
+            String sql = "SELECT COUNT(*) FROM fechasnodisponibles WHERE fechaInicio <= ? AND fechaFin >= ?";
+            ResultSet rs;
+            
+            try (PreparedStatement ps = crudReservas.getConnection().prepareStatement(sql)) {
+                ps.setString(1, fechaReservaFormatoCorto);
+                ps.setString(2, fechaReservaFormatoCorto);
+                
+                rs = ps.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return false; // La fecha no está disponible
+                }
+                
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos. ERROR: ");
+                System.out.println(e.getMessage());
+                
+            }
+            
+            return true;
+        } catch (ParseException ex) {
+            Logger.getLogger(Reservas.class.getName()).log(Level.SEVERE,null, ex);
+
+        }
+        return false;
+    }
+
+
+
+
 
 
 
@@ -937,8 +1020,8 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                 
                 if (esCeldaReservable(row, col)) {
                     
-                
-                    
+                    if (esFechaDisponible(row, col)) {
+
                     crearReserva(row, col);
 
                     if (jComboEdificios.getSelectedItem() != null && jComboTipoEspacio.getSelectedItem() != null
@@ -954,6 +1037,9 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                         JOptionPane.showMessageDialog(null, "Seleccione todos los campos");
                     }
                     
+                    } else {
+                        JOptionPane.showMessageDialog(null, "no se puede reservar en esta fecha porque es feriado");
+                    }
                     } else {
                     JOptionPane.showMessageDialog(null, "No se puede reservar en esta fecha, porque la hora ya pasó");
                 }
