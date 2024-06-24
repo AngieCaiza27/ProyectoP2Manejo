@@ -13,7 +13,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DatabaseHandler {
     private static final String URL = "jdbc:mysql://localhost:3306/mydb";
@@ -37,9 +39,9 @@ public class DatabaseHandler {
         return tipos;
     }
 
-    public List<String> getResponsablesPorTipo(String tipo) throws Exception {
-        List<String> responsables = new ArrayList<>();
-        String query = "SELECT CONCAT(nombre1Responsable, ' ', apellido1Responsable) AS nombreCompleto " +
+    public Map<String, Integer> getResponsablesPorTipo(String tipo) throws Exception {
+        Map<String, Integer> responsables = new HashMap<>();
+        String query = "SELECT r.idResponsable, CONCAT(r.nombre1Responsable, ' ', r.apellido1Responsable) AS nombreCompleto " +
                        "FROM responsables r " +
                        "JOIN tiporesponsables t ON r.idTipoResponsablePer = t.idTipoResponsables " +
                        "WHERE t.nombreTipoResponsable = ? " +
@@ -49,12 +51,13 @@ public class DatabaseHandler {
             stmt.setString(1, tipo);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    responsables.add(rs.getString("nombreCompleto"));
+                    responsables.put(rs.getString("nombreCompleto"), rs.getInt("idResponsable"));
                 }
             }
         }
         return responsables;
     }
 }
+
 
 

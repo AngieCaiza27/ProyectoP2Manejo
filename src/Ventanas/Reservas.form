@@ -70,7 +70,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jComboEspacio" min="-2" pref="276" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="Calendario" min="-2" pref="132" max="-2" attributes="0"/>
+                                  <Component id="calendario" min="-2" pref="132" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="btnBuscar" min="-2" pref="34" max="-2" attributes="0"/>
                               </Group>
@@ -99,7 +99,7 @@
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jComboEdificios" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="Calendario" min="-2" max="-2" attributes="0"/>
+                      <Component id="calendario" min="-2" max="-2" attributes="0"/>
                       <Component id="btnBuscar" min="-2" pref="19" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -316,7 +316,7 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="com.toedter.calendar.JDateChooser" name="Calendario">
+        <Component class="com.toedter.calendar.JDateChooser" name="calendario">
         </Component>
         <Component class="javax.swing.JButton" name="btnBuscar">
           <Properties>
