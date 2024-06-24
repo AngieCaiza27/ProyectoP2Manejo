@@ -25,8 +25,46 @@ public class CRUDHorarios {
     private String nombrePeriodo;
     private String nombre1Responsable;
     private String apellido1Responsable;
+    private int idHorario;
+    private String carrera;
+    private String nivel;
+    private String paralelo;
+    
+
+    public int getIdHorario() {
+        return idHorario;
+    }
 
     // Getters y setters...
+    public void setIdHorario(int idHorario) {
+        this.idHorario = idHorario;
+    }
+
+    public String getCarrera() {
+        return carrera;
+    }
+
+    public void setCarrera(String carrera) {
+        this.carrera = carrera;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
+
+    public String getParalelo() {
+        return paralelo;
+    }
+
+    public void setParalelo(String paralelo) {
+        this.paralelo = paralelo;
+    }
+    
+    
 
     public Timestamp getFechaHoraInicio() {
         return Fecha_HoraInicio;
@@ -108,6 +146,7 @@ public class CRUDHorarios {
         List<CRUDHorarios> horarios = new ArrayList<>();
         try {
             String sql = "SELECT horarios.Fecha_HoraInicio, " +
+                         "horarios.idHorario, " +
                          "horarios.Fecha_HoraFin, " +
                          "horarios.Disponible, " +
                          "espacios.nombreEspacio, " +
@@ -143,7 +182,7 @@ public class CRUDHorarios {
                 horario.setNombrePeriodo(this.rs.getString("nombrePeriodo"));
                 horario.setNombre1Responsable(this.rs.getString("nombre1Responsable"));
                 horario.setApellido1Responsable(this.rs.getString("apellido1Responsable"));
-
+                horario.setIdHorario(this.rs.getInt("idHorario"));
                 horarios.add(horario);
             }
         } catch (Exception e) {
@@ -289,10 +328,21 @@ public class Materia {
     }
 }
 
- public void llenarComboBoxMaterias(JComboBox<CRUDHorarios.Materia> comboBox) {
+ public void llenarComboBoxMaterias(JComboBox<CRUDHorarios.Materia> comboBox,String carrera,String nivel,String paralelo) {
     try {
-        String sql = "SELECT idMateria,nombreMateria FROM materias"; // Ajusta la consulta según tus necesidades
+        String sql = "SELECT idMateria,nombreMateria "
+                    + "FROM materias "
+                    + "JOIN carreras ON carreras.idCarrera = materias.idCarreraPertenece " +
+                     "JOIN niveles ON niveles.idNivel = carreras.idNivelPertenece " 
+                    +"WHERE carreras.nombreCarrera = ? " +
+                    "AND niveles.nombreNivel = ? " +
+                    "AND niveles.paralelo = ?";
+        
+        
         this.ps = getConnection().prepareStatement(sql);
+        this.ps.setString(1,carrera);
+        this.ps.setString(2,nivel);
+        this.ps.setString(3,paralelo);
         try (ResultSet resultSet = this.ps.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("idMateria");
@@ -380,7 +430,7 @@ public class Materia {
 
 public void deleteHorario(int idHorario) {
     try {
-        String sql = "DELETE FROM ";
+        String sql = "DELETE FROM horarios WHERE idHorario = ? ";
         this.ps = getConnection().prepareStatement(sql);
         this.ps.setInt(1, idHorario);
         this.ps.executeUpdate();
